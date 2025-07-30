@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\RolePermissionRequest;
+use App\Http\Requests\Admin\RoleRequest;
+use App\Http\Resources\Admin\PermissionResource;
+use App\Http\Resources\Admin\RoleResource;
+use App\Models\User\Permission;
+use App\Models\User\Role;
+use Inertia\Inertia;
+
+class RoleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $search = request('search', '');
+        $page = request('page', 1);
+        $per_page = request('per_page', 5);
+
+        $roles = Role::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('display_name', 'like', "%{$search}%");
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($per_page, ['*'], 'page', $page);
+
+        return Inertia::render('admin/role/Index', [
+            'roles' => RoleResource::collection($roles),
+            'search' => $search,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(RoleRequest $request)
+    {
+        $role = Role::create($request->validated());
+
+        return back()
+            ->with('success', 'Role created successfully.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Role $role)
+    {
+        $role->load('permissions');
+
+        $search = request('search', '');
+        $page = request('page', 1);
+        $per_page = request('per_page', 5);
+
+        $permissions = Permission::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('display_name', 'like', "%{$search}%");
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($per_page, ['*'], 'page', $page);
+
+        return Inertia::render('admin/role/Show', [
+            'role' => new RoleResource($role),
+            'permissions' => PermissionResource::collection($permissions),
+            'search' => $search,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Role $role)
+    {
+        return response()->json(new RoleResource($role));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(RoleRequest $request, Role $role)
+    {
+        $role->update($request->validated());
+
+        return back()
+            ->with('success', 'Role updated successfully.');
+    }
+
+    public function updatePermission(RolePermissionRequest $request, Role $role, Permission $permission)
+    {
+        if ($request->status) {
+            $role->assignPermission($permission);
+        } else {
+            $role->revokePermission($permission);
+        }
+
+        return back()
+            ->with('success', 'Role permissions updated successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Role $role)
+    {
+        if ($role->id === 1) {
+            return back()->withErrors(['message' => 'This role cannot be deleted.']);
+        }
+
+        // If the role is associated with any users, do not allow deletion
+        if ($role->users()->exists()) {
+            return back()->withErrors(['message' => 'This role cannot be deleted because it is associated with one or more users.']);
+        }
+
+        $role->delete();
+
+        return back()
+            ->with('success', 'Role deleted successfully.');
+    }
+}
