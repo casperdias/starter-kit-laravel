@@ -39,7 +39,7 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
         $user = $request->user();
-        $user->load('roles.permissions');
+        $user?->load('roles.permissions');
 
         $userData = $user ? [
             'id' => $user->id,
@@ -48,7 +48,7 @@ class HandleInertiaRequests extends Middleware
             'email_verified_at' => $user->email_verified_at,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
-            'role' => $user->role->only(['id', 'display_name']) ?? null,
+            'role' => $user->role?->only(['id', 'display_name']) ?? null,
             'roles' => $user->roles->map(fn ($role) => [
                 'id' => $role->id,
                 'display_name' => $role->display_name,

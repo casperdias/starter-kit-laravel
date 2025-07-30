@@ -3,12 +3,13 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { AppPageProps, BreadcrumbItemType } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { toast } from 'vue-sonner';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 const page = usePage<AppPageProps>();
-const roles = page.props.auth.user.roles || [];
+const roles = computed(() => page.props.auth.user.roles || []);
 
 const form = useForm({
     role: page.props.auth.user.role?.id || null,
