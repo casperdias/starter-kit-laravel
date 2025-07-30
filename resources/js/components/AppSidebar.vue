@@ -10,7 +10,7 @@ import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
 const page = usePage<AppPageProps>();
-const permissions = page.props.auth.user.permissions;
+const permissions = computed(() => page.props.auth.user.permissions);
 
 const navItems: { [key: string]: NavItem[] } = {
     platform: [
@@ -45,7 +45,7 @@ const footerNavItems: NavItem[] = [
 ];
 
 function filterNavItems(items: NavItem[]): NavItem[] {
-    return items.filter((item) => !item.permission || permissions.includes(item.permission));
+    return items.filter((item) => !item.permission || permissions.value.includes(item.permission));
 }
 
 // Apply filtering to navigation items

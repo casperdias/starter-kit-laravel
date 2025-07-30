@@ -21,7 +21,7 @@ class ChangeRoleController extends Controller
         $role = Role::findOrFail($request->input('role'));
         $user->changeRole($role);
 
-        return redirect($request->header('referer') ?: '/dashboard')
+        return back()
             ->with('success', 'Role changed successfully.');
     }
 }

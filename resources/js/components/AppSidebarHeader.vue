@@ -2,7 +2,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { AppPageProps, BreadcrumbItemType } from '@/types';
-import { router, useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { toast } from 'vue-sonner';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -27,9 +27,9 @@ const changeRole = () => {
     form.put(route('change-role'), {
         preserveScroll: true,
         onSuccess: () => {
-            router.visit(window.location.href, {
-                method: 'get',
-                replace: true,
+            toast.success('Role changed successfully.', {
+                description: 'Your role has been updated.',
+                closeButton: true,
             });
         },
         onError: (errors) => {
