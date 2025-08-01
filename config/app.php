@@ -123,4 +123,22 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | External Services
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure all of the external services used by your
+    | application. This includes services like Mailgun, Postmark, AWS, etc.
+    | This file provides a default location for this type of information.
+    |
+    */
+
+    'passport' => [
+        'client_id' => env('SSO_CLIENT_ID'),
+        'client_secret' => env('SSO_CLIENT_SECRET'),
+        'callback_path' => env('SSO_CLIENT_CALLBACK_PATH', '/sso/callback'),
+        'login_url' => env('SSO_LOGIN_URL', 'http://127.0.0.1:8000/oauth/authorize'),
+    ],
+
 ];
