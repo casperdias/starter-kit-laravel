@@ -61,7 +61,7 @@ class AuthenticatedSessionController extends Controller
         // Implement SSO login logic here
         $request->session()->put('state', $state = Str::random(40));
         // Store the state in Cache (Backup if session is lost)
-        cache()->put('sso_state_' . $state, $state, now()->addMinutes(5));
+        cache()->put('sso_state_'.$state, $state, now()->addMinutes(5));
         $query = http_build_query([
             'client_id' => config('app.passport.client_id'),
             'redirect_uri' => config('app.passport.callback_path'),
@@ -78,7 +78,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function ssoCallback(Request $request)
     {
-        $state = $request->session()->pull('state') ?? cache()->pull('sso_state_' . $request->state);
+        if ($request->error) {
+            return redirect()->route('login')->withErrors(['email' => 'SSO login failed: '.$request->error]);
+        }
+
+        $state = $request->session()->pull('state') ?? cache()->pull('sso_state_'.$request->state);
 
         throw_unless(
             strlen($state) > 0 && $state === $request->state,

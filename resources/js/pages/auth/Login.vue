@@ -13,6 +13,7 @@ import { LoaderCircle } from 'lucide-vue-next';
 defineProps<{
     status?: string;
     canResetPassword: boolean;
+    errors: Record<string, string>;
 }>();
 
 const form = useForm({
@@ -52,6 +53,7 @@ const submit = () => {
                             placeholder="email@example.com"
                         />
                         <InputError :message="form.errors.email" />
+                        <InputError v-if="errors.email" :message="errors.email" />
                     </div>
 
                     <div class="grid gap-2">
