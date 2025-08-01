@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         JsonResource::withoutWrapping();
+
+        Passport::authorizationView(
+            fn ($parameters) => Inertia::render('auth/OAuth', [
+                'request' => $parameters['request'],
+                'authToken' => $parameters['authToken'],
+                'client' => $parameters['client'],
+                'user' => $parameters['user'],
+                'scopes' => $parameters['scopes'],
+            ])
+        );
 
         if (Schema::hasTable('permissions')) {
             $permissions = cache()->rememberForever('permissions', function () {
