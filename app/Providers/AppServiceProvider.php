@@ -48,5 +48,10 @@ class AppServiceProvider extends ServiceProvider
                 });
             });
         }
+
+        // Passport Tokens Can Is Permission Scopes
+        Passport::tokensCan(
+            $permissions->pluck('description', 'name')->toArray()
+        );
     }
 }
