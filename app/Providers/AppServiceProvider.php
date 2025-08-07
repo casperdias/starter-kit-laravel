@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
 
         Passport::authorizationView(
-            fn ($parameters) => Inertia::render('auth/OAuth', [
+            fn ($parameters) => Inertia::render('auth/OAuth/Authorize', [
                 'request' => $parameters['request'],
                 'authToken' => $parameters['authToken'],
                 'client' => $parameters['client'],
@@ -47,11 +47,12 @@ class AppServiceProvider extends ServiceProvider
                     return $user->role->permissions->contains($permission);
                 });
             });
+
+            // Passport Tokens Can Is Permission Scopes
+            Passport::tokensCan(
+                $permissions->pluck('description', 'name')->toArray()
+            );
         }
 
-        // Passport Tokens Can Is Permission Scopes
-        Passport::tokensCan(
-            $permissions->pluck('description', 'name')->toArray()
-        );
     }
 }

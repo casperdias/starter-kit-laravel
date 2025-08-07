@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Passport\ClientController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,6 +36,12 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
         Route::post('email/verification-notification/{user}', [EmailVerificationNotificationController::class, 'storeCustom'])
             ->middleware('throttle:6,1')
             ->name('verification.send.id');
+    });
+
+    Route::prefix('passport')->name('passport.')->group(function () {
+        Route::get('clients', [ClientController::class, 'index'])->name('clients.index');
+        Route::post('clients', [ClientController::class, 'store'])->name('clients.store');
+        Route::delete('clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
     });
 });
 
