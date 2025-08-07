@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { Globe, LoaderCircle, Shield, User } from 'lucide-vue-next';
+import { Globe, LoaderCircle, Shield, Smartphone, User } from 'lucide-vue-next';
 
 interface Props {
     request: Record<string, string | number | boolean>;
@@ -40,31 +40,31 @@ const denyForm = useForm({
 });
 
 const approve = () => {
-    approveForm.post('/oauth/authorize', {
+    approveForm.post('/oauth/device/authorize', {
         preserveScroll: true,
     });
 };
 
 const deny = () => {
-    denyForm.delete('/oauth/authorize', {
+    denyForm.delete('/oauth/device/authorize', {
         preserveScroll: true,
     });
 };
 </script>
 
 <template>
-    <AuthLayout title="Authorize Application" :description="`${client.name} is requesting access to your account`">
-        <Head title="Authorize Application" />
+    <AuthLayout title="Authorize Device" :description="`${client.name} device is requesting access to your account`">
+        <Head title="Authorize Device" />
 
         <div class="space-y-6">
             <!-- Application Info -->
             <Card>
                 <CardHeader class="text-center">
                     <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                        <Shield class="h-6 w-6 text-primary" />
+                        <Smartphone class="h-6 w-6 text-primary" />
                     </div>
                     <CardTitle class="text-xl">{{ client.name }}</CardTitle>
-                    <CardDescription> This application is requesting access to your account </CardDescription>
+                    <CardDescription> This device is requesting access to your account </CardDescription>
                 </CardHeader>
             </Card>
 
@@ -90,6 +90,29 @@ const deny = () => {
                 </CardContent>
             </Card>
 
+            <!-- Device Info -->
+            <Card>
+                <CardHeader>
+                    <CardTitle class="flex items-center gap-2 text-lg">
+                        <Smartphone class="h-5 w-5" />
+                        Device Information
+                    </CardTitle>
+                    <CardDescription> The device will be authorized to access your account with the permissions below </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-muted-foreground">Application:</span>
+                            <span class="text-sm font-medium">{{ client.name }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-muted-foreground">Client ID:</span>
+                            <span class="font-mono text-sm">{{ client.id }}</span>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
             <!-- Scopes/Permissions -->
             <Card v-if="scopes && scopes.length > 0">
                 <CardHeader>
@@ -97,7 +120,7 @@ const deny = () => {
                         <Globe class="h-5 w-5" />
                         Requested Permissions
                     </CardTitle>
-                    <CardDescription> This application is requesting the following permissions: </CardDescription>
+                    <CardDescription> This device is requesting the following permissions: </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div class="space-y-2">
@@ -108,31 +131,34 @@ const deny = () => {
                 </CardContent>
             </Card>
 
-            <!-- Redirect URL Info -->
-            <Card>
-                <CardHeader>
-                    <CardTitle class="text-lg">Redirect Information</CardTitle>
-                    <CardDescription> After authorization, you will be redirected to: </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <code class="block rounded bg-muted p-2 text-sm break-all" v-for="uri in client.redirect_uris" :key="uri">
-                        {{ uri }}
-                    </code>
-                </CardContent>
-            </Card>
-
             <!-- Action Buttons -->
             <div class="flex flex-col gap-3 sm:flex-row">
                 <Button @click="approve" class="flex-1" :disabled="approveForm.processing || denyForm.processing">
                     <LoaderCircle v-if="approveForm.processing" class="mr-2 h-4 w-4 animate-spin" />
-                    Authorize Application
+                    Authorize Device
                 </Button>
 
                 <Button @click="deny" variant="outline" class="flex-1" :disabled="approveForm.processing || denyForm.processing">
                     <LoaderCircle v-if="denyForm.processing" class="mr-2 h-4 w-4 animate-spin" />
-                    Cancel
+                    Deny Access
                 </Button>
             </div>
+
+            <!-- Device Flow Info -->
+            <Card>
+                <CardHeader>
+                    <CardTitle class="text-lg">Device Authorization Flow</CardTitle>
+                    <CardDescription> This is a secure device authorization request </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div class="space-y-2 text-sm text-muted-foreground">
+                        <p>• Your device has generated a unique authorization request</p>
+                        <p>• Authorizing will grant the device access with the requested permissions</p>
+                        <p>• You can revoke this access at any time from your account settings</p>
+                        <p>• The device will not have access to your password or other sensitive information</p>
+                    </div>
+                </CardContent>
+            </Card>
 
             <!-- Security Notice -->
             <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950">
@@ -141,8 +167,8 @@ const deny = () => {
                     <div class="text-sm">
                         <p class="font-medium text-amber-800 dark:text-amber-200">Security Notice</p>
                         <p class="mt-1 text-amber-700 dark:text-amber-300">
-                            Only authorize applications you trust. This will give the application access to your account with the requested
-                            permissions.
+                            Only authorize devices you own and trust. This will give the device access to your account with the requested permissions.
+                            You can always revoke access later from your account settings.
                         </p>
                     </div>
                 </div>

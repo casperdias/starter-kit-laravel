@@ -37,6 +37,23 @@ class AppServiceProvider extends ServiceProvider
             ])
         );
 
+        // Device Flow Authorization View
+        Passport::deviceUserCodeView(
+            fn ($parameters) => Inertia::render('auth/OAuth/device/UserCode', [
+                'error' => $parameters['error'] ?? null,
+            ])
+        );
+
+        Passport::deviceAuthorizationView(
+            fn ($parameters) => Inertia::render('auth/OAuth/device/Authorize', [
+                'request' => $parameters['request'],
+                'authToken' => $parameters['authToken'],
+                'client' => $parameters['client'],
+                'user' => $parameters['user'],
+                'scopes' => $parameters['scopes'],
+            ])
+        );
+
         if (Schema::hasTable('permissions')) {
             $permissions = cache()->rememberForever('permissions', function () {
                 return Permission::all();
