@@ -75,10 +75,6 @@ export interface Pagination<T> {
     };
 }
 
-export interface Show<T> {
-    data: T;
-}
-
 export interface Permission {
     id: number;
     name: string;
@@ -93,6 +89,17 @@ export interface Role {
     display_name: string;
     description: string;
     created_at: string;
+}
+
+export interface PassportClient {
+    id: string;
+    name: string;
+    provider: string | null;
+    redirect_uris: string[];
+    grant_types: string[];
+    revoked: boolean;
+    created_at: string;
+    owner: User | null;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

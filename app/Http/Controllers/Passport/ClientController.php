@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Passport;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Passport\ClientRequest;
+use App\Http\Resources\Passport\ClientResource;
 use Inertia\Inertia;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
@@ -17,6 +18,7 @@ class ClientController extends Controller
         $per_page = request('per_page', 5);
 
         $clients = Client::query()
+            ->with('owner')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             })
@@ -24,7 +26,7 @@ class ClientController extends Controller
             ->paginate($per_page, ['*'], 'page', $page);
 
         return Inertia::render('passport/client/Index', [
-            'clients' => $clients,
+            'clients' => ClientResource::collection($clients),
             'search' => $search,
         ]);
     }

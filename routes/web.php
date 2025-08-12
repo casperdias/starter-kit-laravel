@@ -39,9 +39,11 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
     });
 
     Route::prefix('passport')->name('passport.')->group(function () {
-        Route::get('clients', [ClientController::class, 'index'])->name('clients.index');
-        Route::post('clients', [ClientController::class, 'store'])->name('clients.store');
-        Route::delete('clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+        Route::controller(ClientController::class)->prefix('clients')->name('clients.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::post('', 'store')->name('store');
+            Route::delete('{client}', 'destroy')->name('destroy');
+        });
     });
 });
 
