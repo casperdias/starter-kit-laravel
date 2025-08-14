@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Wrench } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
-import RoleForm from './RoleForm.vue';
+import { RoleForm } from '.';
 
 const page = usePage();
 

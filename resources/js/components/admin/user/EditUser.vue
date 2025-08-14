@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Wrench } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
-import UserForm from './UserForm.vue';
+import { UserForm } from '.';
 
 const page = usePage();
 
