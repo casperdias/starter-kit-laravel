@@ -19,6 +19,11 @@ const navItems: { [key: string]: NavItem[] } = {
             href: '/dashboard',
             icon: LayoutGrid,
         },
+        {
+            title: 'Passport Clients',
+            href: '/passport-clients',
+            icon: LayoutGrid,
+        },
     ],
     admin: [
         {
