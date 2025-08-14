@@ -5,7 +5,7 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { Plus } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { toast } from 'vue-sonner';
-import UserForm from './UserForm.vue';
+import { UserForm } from '.';
 
 const page = usePage();
 
