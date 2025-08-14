@@ -22,6 +22,7 @@ class ClientController extends Controller
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             })
+            ->where('revoked', false)
             ->orderBy('id', 'desc')
             ->paginate($per_page, ['*'], 'page', $page);
 
@@ -48,8 +49,11 @@ class ClientController extends Controller
             ->with('message', 'ID: '.$client->id.' Secret: '.($request->input('confidential') ? $client->plainSecret : 'N/A'));
     }
 
-    public function destroy($client)
+    public function destroy(Client $client)
     {
-        // Logic to delete a passport client
+        $client->revoked = true;
+        $client->save();
+
+        return back()->with('success', 'Client deleted successfully.');
     }
 }

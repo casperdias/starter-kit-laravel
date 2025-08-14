@@ -9,9 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Pagination, PassportClient } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { ArchiveX, BookKey, Search, Trash2 } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { onBeforeUnmount, ref, watch } from 'vue';
+import { toast } from 'vue-sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,10 +27,47 @@ interface Props {
 }
 
 const deleteClient = (clientId: string) => {
-    console.log(clientId);
+    router.delete(route('passport-clients.destroy', clientId), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            toast.success('Client deleted successfully', {
+                description: 'The client has been removed from the list.',
+                closeButton: true,
+            });
+        },
+        onError: (error) => {
+            toast.error('Failed to delete client', {
+                description: error.message || 'An error occurred while deleting the client.',
+                closeButton: true,
+            });
+        },
+    });
 };
 
 const searchTerm = ref(route().params.search || '');
+let searchTimeout: ReturnType<typeof setTimeout>;
+
+watch(searchTerm, (newTerm) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        router.get(
+            props.clients.meta.path,
+            {
+                search: newTerm,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            },
+        );
+    }, 500);
+});
+
+onBeforeUnmount(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+});
 </script>
 
 <template>

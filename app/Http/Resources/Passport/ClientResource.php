@@ -20,7 +20,7 @@ class ClientResource extends JsonResource
             'name' => $this->name,
             'provider' => $this->provider,
             'redirect' => $this->redirect_uris,
-            'confidential' => $this->secret ? true : false,
+            'confidential' => $this->confidential(),
             'grant_types' => $this->grant_types,
             'revoked' => $this->revoked,
             'owner' => $this->owner_id ? new UserResource($this->whenLoaded('owner')) : null,
