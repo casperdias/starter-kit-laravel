@@ -95,7 +95,8 @@ export interface PassportClient {
     id: string;
     name: string;
     provider: string | null;
-    redirect_uris: string[];
+    redirect: string[];
+    confidential: boolean;
     grant_types: string[];
     revoked: boolean;
     created_at: string;

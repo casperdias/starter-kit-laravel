@@ -45,8 +45,7 @@ class ClientController extends Controller
 
         return back()
             ->with('success', 'Client created successfully.')
-            ->with('client_id', $client->id)
-            ->with('client_secret', $client->secret);
+            ->with('message', 'ID: '.$client->id.' Secret: '.($request->input('confidential') ? $client->plainSecret : 'N/A'));
     }
 
     public function destroy($client)
