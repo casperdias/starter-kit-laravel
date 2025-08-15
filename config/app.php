@@ -135,10 +135,10 @@ return [
     */
 
     'passport' => [
-        'client_id' => env('SSO_CLIENT_ID'),
-        'client_secret' => env('SSO_CLIENT_SECRET'),
-        'callback_path' => env('SSO_CLIENT_CALLBACK_PATH', '/sso/callback'),
-        'login_url' => env('SSO_LOGIN_URL', 'http://127.0.0.1:8000/oauth/authorize'),
+        'client_id' => env('OAUTH_CLIENT_ID'),
+        'client_secret' => env('OAUTH_CLIENT_SECRET'),
+        'callback_path' => env('OAUTH_CLIENT_CALLBACK_PATH', '/oauth-callback'),
+        'login_url' => env('OAUTH_LOGIN_URL', 'http://127.0.0.1:8000/oauth/authorize'),
     ],
 
 ];

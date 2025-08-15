@@ -98,11 +98,11 @@ const submit = () => {
                 <span class="mx-4 text-sm text-muted-foreground"><i>or</i></span>
                 <Separator class="!w-1/3 bg-black dark:bg-white" />
             </div>
-            <!-- Or SSO Login -->
+            <!-- Or Oauth Login -->
             <div class="text-center">
-                <a :href="route('sso.login')">
+                <a :href="route('oauth.login')">
                     <Button type="button" class="w-full">
-                        <span>Log in with SSO</span>
+                        <span>Log in with Oauth</span>
                     </Button>
                 </a>
             </div>

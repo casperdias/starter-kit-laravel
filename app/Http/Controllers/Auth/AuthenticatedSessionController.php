@@ -54,9 +54,9 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle SSO login.
+     * Handle Oauth login.
      */
-    public function ssoLogin(Request $request)
+    public function oauthLogin(Request $request)
     {
         $request->session()->put('state', $state = Str::random(40));
         $query = http_build_query([
@@ -71,12 +71,12 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle the SSO callback.
+     * Handle the Oauth callback.
      */
-    public function ssoCallback(Request $request)
+    public function oauthCallback(Request $request)
     {
         if ($request->error) {
-            return redirect()->route('login')->withErrors(['email' => 'SSO login failed: '.$request->error]);
+            return redirect()->route('login')->withErrors(['email' => 'Oauth login failed: '.$request->error]);
         }
 
         $state = $request->session()->pull('state');

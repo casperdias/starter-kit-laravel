@@ -21,11 +21,11 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    Route::get('sso-login', [AuthenticatedSessionController::class, 'ssoLogin'])
-        ->name('sso.login');
+    Route::get('oauth-login', [AuthenticatedSessionController::class, 'oauthLogin'])
+        ->name('oauth.login');
 
-    Route::get('sso-callback', [AuthenticatedSessionController::class, 'ssoCallback'])
-        ->name('sso.callback');
+    Route::get('oauth-callback', [AuthenticatedSessionController::class, 'oauthCallback'])
+        ->name('oauth.callback');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
