@@ -58,10 +58,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function ssoLogin(Request $request)
     {
-        // Implement SSO login logic here
         $request->session()->put('state', $state = Str::random(40));
-        // Store the state in Cache (Backup if session is lost)
-        cache()->put('sso_state_'.$state, $state, now()->addMinutes(5));
         $query = http_build_query([
             'client_id' => config('app.passport.client_id'),
             'redirect_uri' => config('app.passport.callback_path'),
@@ -70,7 +67,7 @@ class AuthenticatedSessionController extends Controller
             'state' => $state,
         ]);
 
-        return redirect($loginUrl = config('app.passport.login_url').'/oauth/authorize'.'?'.$query);
+        return redirect(config('app.passport.login_url').'/oauth/authorize'.'?'.$query);
     }
 
     /**
@@ -82,7 +79,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login')->withErrors(['email' => 'SSO login failed: '.$request->error]);
         }
 
-        $state = $request->session()->pull('state') ?? cache()->pull('sso_state_'.$request->state);
+        $state = $request->session()->pull('state');
 
         throw_unless(
             strlen($state) > 0 && $state === $request->state,
@@ -98,21 +95,17 @@ class AuthenticatedSessionController extends Controller
             'code' => $request->code,
         ]);
 
-        // Get the user information from the response
         $user = Http::withToken($response->json('access_token'))
             ->get(config('app.passport.login_url').'/api/user')
             ->json();
 
-        // Find or create the user in your local database from email, if not found redirect to login
         $localUser = User::where('email', $user['email'])->first();
         if (! $localUser) {
             return redirect()->route('login')->withErrors(['email' => 'User not found. Please register first.']);
         }
 
-        // Log the user in
         Auth::login($localUser, true);
 
-        // Redirect to intended route
         return redirect()->intended(route('dashboard', absolute: false));
     }
 }
