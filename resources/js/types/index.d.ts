@@ -101,6 +101,17 @@ export interface PassportClient {
     revoked: boolean;
     created_at: string;
     owner: User | null;
+    tokens?: Pagination<PassportAccessToken>;
+}
+
+export interface PassportAccessToken {
+    id: string;
+    user: User | null;
+    name: string | null;
+    scopes: string[];
+    revoked: boolean;
+    created_at: string;
+    client?: PassportClient;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

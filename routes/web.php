@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
     Route::controller(ClientController::class)->prefix('passport-clients')->name('passport-clients.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::post('', 'store')->name('store');
+        Route::get('{client}', 'show')->name('show');
         Route::delete('{client}', 'destroy')->name('destroy');
     });
 });

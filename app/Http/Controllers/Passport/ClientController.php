@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Passport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Passport\ClientRequest;
 use App\Http\Resources\Passport\ClientResource;
+use App\Http\Resources\Passport\TokenResource;
 use Inertia\Inertia;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
@@ -47,6 +48,21 @@ class ClientController extends Controller
         return back()
             ->with('success', 'Client created successfully.')
             ->with('message', 'ID: '.$client->id.' Secret: '.($request->input('confidential') ? $client->plainSecret : 'N/A'));
+    }
+
+    public function show(Client $client)
+    {
+        $client->load('tokens');
+        $page = request('page', 1);
+        $per_page = request('per_page', 5);
+
+        $tokens = $client->tokens()
+            ->paginate($per_page, ['*'], 'page', $page);
+
+        return Inertia::render('passport/client/Show', [
+            'client' => new ClientResource($client),
+            'tokens' => TokenResource::collection($tokens),
+        ]);
     }
 
     public function destroy(Client $client)

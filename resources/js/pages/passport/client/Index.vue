@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Pagination, PassportClient } from '@/types';
-import { Head, router } from '@inertiajs/vue3';
-import { ArchiveX, BookKey, Search, Trash2 } from 'lucide-vue-next';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ArchiveX, BookKey, Eye, Search, Trash2 } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 
@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
                                 <TableHead>Confidential</TableHead>
                                 <TableHead>Grant Types</TableHead>
                                 <TableHead>Created By</TableHead>
-                                <TableHead>Actions</TableHead>
+                                <TableHead class="text-center">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -128,7 +128,12 @@ onBeforeUnmount(() => {
                                     <TableCell>
                                         {{ client.owner ? client.owner.name : 'N/A' }}
                                     </TableCell>
-                                    <TableCell class="text-center">
+                                    <TableCell class="space-x-2 text-center">
+                                        <Link :href="route('passport-clients.show', client.id)">
+                                            <Button>
+                                                <Eye />
+                                            </Button>
+                                        </Link>
                                         <Confirmation
                                             :on-confirm="() => deleteClient(client.id)"
                                             :title="'Delete Client'"
