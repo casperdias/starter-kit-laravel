@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User\Chat;
-use App\Http\Requests\ChatRequest;
-use Inertia\Inertia;
 use App\Events\ChatSent;
+use App\Http\Requests\ChatRequest;
+use App\Http\Resources\ChatResource;
+use App\Models\User\Chat;
+use Inertia\Inertia;
 
 class ChatController extends Controller
 {
     public function index()
     {
         return Inertia::render('admin/Chat');
+    }
+
+    public function get()
+    {
+        $chats = Chat::with('user', 'taggedUser')->get();
+
+        return ChatResource::collection($chats);
     }
 
     public function send(ChatRequest $request)

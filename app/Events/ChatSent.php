@@ -36,7 +36,6 @@ class ChatSent implements ShouldBroadcast
 
     public function broadcastWhen(): bool
     {
-        dd(auth()->user()->can('admin'));
         return auth()->user()->can('admin') ||
             auth()->id() === $this->chat->user_id ||
             auth()->id() === $this->chat->tagged_id;

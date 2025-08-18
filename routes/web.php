@@ -17,7 +17,10 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
     Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     // Send Chat
-    Route::post('chat', [ChatController::class, 'send'])->name('chat.send');
+    Route::controller(ChatController::class)->group(function () {
+        Route::get('chat', 'get')->name('chat.get');
+        Route::post('chat', 'send')->name('chat.send');
+    });
 
     // ADMIN
     Route::middleware(['permission:admin'])->group(function () {

@@ -7,10 +7,10 @@ import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import type { AppPageProps, BreadcrumbItemType, Message } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { useEcho } from '@laravel/echo-vue';
+import axios from 'axios';
 import { MessageCircleMore, Send } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import 'vue-sonner/style.css';
-import axios from 'axios';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -26,7 +26,6 @@ withDefaults(defineProps<Props>(), {
 
 const messages = ref<Message[]>([]);
 if (!isAdmin.value) {
-    // Get Message
     useEcho('user-complain-chat', 'ChatSent', (message: Message) => {
         // Handle incoming messages
         console.log('New message received:', message);
@@ -41,7 +40,6 @@ const form = useForm({
 // Send Message
 const sendMessage = () => {
     axios.post(route('chat.send'), form).then((response) => {
-        form.message = '';
         messages.value.push({
             id: response.data.id,
             user: page.props.auth.user,
@@ -49,6 +47,7 @@ const sendMessage = () => {
             taggedUser: null,
             created_at: new Date().toISOString(),
         });
+        form.message = '';
     });
 };
 </script>
