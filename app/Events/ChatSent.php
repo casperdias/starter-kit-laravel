@@ -3,12 +3,11 @@
 namespace App\Events;
 
 use App\Models\User\Chat;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
 
 class ChatSent implements ShouldBroadcast
 {
@@ -30,16 +29,15 @@ class ChatSent implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [
-            new PrivateChannel('user-complain-chat'),
+        $channels = [
+            new PrivateChannel('admin-chat'),
         ];
-    }
 
-    public function broadcastWhen(): bool
-    {
-        return auth()->user()->can('admin') ||
-            auth()->id() === $this->chat->tagged_id;
-        // return true; // Always broadcast to all listeners on the channel
+        if ($this->chat->tagged_id !== null) {
+            $channels[] = new PrivateChannel('user-complain.'.$this->chat->tagged_id);
+        }
+
+        return $channels;
     }
 
     public function broadcastWith(): array

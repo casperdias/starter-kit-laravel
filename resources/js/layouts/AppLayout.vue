@@ -26,7 +26,7 @@ withDefaults(defineProps<Props>(), {
 
 const messages = ref<Message[]>([]);
 if (!isAdmin.value) {
-    useEcho<Message>('user-complain-chat', 'ChatSent', (message) => {
+    useEcho<Message>('user-complain.' + page.props.auth.user.id, 'ChatSent', (message) => {
         // Handle incoming messages
         console.log('New message received:', message);
         messages.value.push(message);
