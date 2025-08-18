@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
 
             $permissions->each(function ($permission) {
                 Gate::define($permission->name, function ($user) use ($permission) {
-                    return $user->role->permissions->contains($permission);
+                    return $user->role && $user->role->permissions->contains($permission);
                 });
             });
         }
