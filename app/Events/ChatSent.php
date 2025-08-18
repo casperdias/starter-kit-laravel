@@ -8,6 +8,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
 
 class ChatSent implements ShouldBroadcast
 {
@@ -30,15 +31,15 @@ class ChatSent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('user-complain-chat'),
+            new PrivateChannel('user-complain-chat'),
         ];
     }
 
     public function broadcastWhen(): bool
     {
         return auth()->user()->can('admin') ||
-            auth()->id() === $this->chat->user_id ||
             auth()->id() === $this->chat->tagged_id;
+        // return true; // Always broadcast to all listeners on the channel
     }
 
     public function broadcastWith(): array

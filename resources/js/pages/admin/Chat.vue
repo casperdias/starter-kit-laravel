@@ -19,9 +19,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 const page = usePage<AppPageProps>();
 
 const messages = ref<Message[]>([]);
-useEcho('user-complain-chat', 'ChatSent', (e: { message: Message }) => {
+useEcho<Message>('user-complain-chat', 'ChatSent', (message) => {
     // Handle incoming messages
-    console.log('New message received:', e);
+    console.log('New message received:', message);
+    messages.value.push(message);
 });
 
 const form = useForm({

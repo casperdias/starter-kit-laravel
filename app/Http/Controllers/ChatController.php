@@ -31,7 +31,7 @@ class ChatController extends Controller
             'tagged_id' => $request->tagged_id ?? null,
         ]);
 
-        broadcast(new ChatSent($chat));
+        broadcast(new ChatSent($chat))->toOthers();
 
         return response()->json([
             'message' => 'Chat message sent successfully.',

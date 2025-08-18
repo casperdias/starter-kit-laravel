@@ -26,10 +26,10 @@ withDefaults(defineProps<Props>(), {
 
 const messages = ref<Message[]>([]);
 if (!isAdmin.value) {
-    useEcho('user-complain-chat', 'ChatSent', (e: { message: Message }) => {
+    useEcho<Message>('user-complain-chat', 'ChatSent', (message) => {
         // Handle incoming messages
-        console.log('New message received:', e);
-        // messages.value.push(message);
+        console.log('New message received:', message);
+        messages.value.push(message);
     });
 }
 
