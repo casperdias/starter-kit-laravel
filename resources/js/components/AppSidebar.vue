@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { AppPageProps, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, MessageCircleMore } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -25,6 +25,12 @@ const navItems: { [key: string]: NavItem[] } = {
             title: 'Master',
             href: '/admin',
             icon: LayoutGrid,
+            permission: 'admin',
+        },
+        {
+            title: 'Chat',
+            href: '/chat-admin',
+            icon: MessageCircleMore,
             permission: 'admin',
         },
     ],

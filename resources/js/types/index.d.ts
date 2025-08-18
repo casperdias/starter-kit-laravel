@@ -51,6 +51,14 @@ export interface User {
     permissions: string[];
 }
 
+export interface Message {
+    id: string;
+    message: string;
+    user: User;
+    taggedUser: User | null;
+    created_at: string;
+}
+
 export interface Pagination<T> {
     data: T[];
     links: {
