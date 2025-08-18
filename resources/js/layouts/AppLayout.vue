@@ -9,7 +9,7 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { useEcho } from '@laravel/echo-vue';
 import axios from 'axios';
 import { MessageCircleMore, Send } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import 'vue-sonner/style.css';
 
 interface Props {
@@ -26,10 +26,10 @@ withDefaults(defineProps<Props>(), {
 
 const messages = ref<Message[]>([]);
 if (!isAdmin.value) {
-    useEcho('user-complain-chat', 'ChatSent', (message: Message) => {
+    useEcho('user-complain-chat', 'ChatSent', (e: { message: Message }) => {
         // Handle incoming messages
-        console.log('New message received:', message);
-        messages.value.push(message);
+        console.log('New message received:', e);
+        // messages.value.push(message);
     });
 }
 
@@ -50,6 +50,13 @@ const sendMessage = () => {
         form.message = '';
     });
 };
+
+onMounted(() => {
+    // Fetch initial messages if needed
+    axios.get(route('chat.get')).then((response) => {
+        messages.value = response.data;
+    });
+});
 </script>
 
 <template>

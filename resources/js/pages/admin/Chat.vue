@@ -7,7 +7,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { useEcho } from '@laravel/echo-vue';
 import axios from 'axios';
 import { Send } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,10 +19,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 const page = usePage<AppPageProps>();
 
 const messages = ref<Message[]>([]);
-useEcho('user-complain-chat', 'ChatSent', (message: Message) => {
+useEcho('user-complain-chat', 'ChatSent', (e: { message: Message }) => {
     // Handle incoming messages
-    console.log('New message received:', message);
-    messages.value.push(message);
+    console.log('New message received:', e);
 });
 
 const form = useForm({
@@ -42,6 +41,13 @@ const sendMessage = () => {
         form.message = '';
     });
 };
+
+onMounted(() => {
+    // Fetch initial messages if needed
+    axios.get(route('chat.get')).then((response) => {
+        messages.value = response.data;
+    });
+});
 </script>
 
 <template>
