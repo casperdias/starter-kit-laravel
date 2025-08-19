@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Message, User } from '@/types';
-import { onUpdated, ref } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
 
 defineProps<{
     messages: Message[];
@@ -9,11 +9,14 @@ defineProps<{
 
 const scrollRef = ref<HTMLElement | null>(null);
 
-onUpdated(() => {
+function scrollToBottom() {
     if (scrollRef.value) {
         scrollRef.value.scrollTop = scrollRef.value.scrollHeight;
     }
-});
+}
+
+onMounted(scrollToBottom);
+onUpdated(scrollToBottom);
 </script>
 
 <template>
