@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Message, User } from '@/types';
-import { ref, onUpdated } from 'vue';
+import { onUpdated, ref } from 'vue';
 
 defineProps<{
     messages: Message[];
@@ -17,10 +17,7 @@ onUpdated(() => {
 </script>
 
 <template>
-    <div
-        ref="scrollRef"
-        class="flex-1 space-y-3 overflow-y-auto rounded border bg-sidebar px-3 py-2 text-xs"
-    >
+    <div ref="scrollRef" class="flex-1 space-y-3 overflow-y-auto rounded border bg-sidebar px-3 py-2 text-xs">
         <!-- Message List -->
         <div
             v-for="(msg, idx) in messages"
