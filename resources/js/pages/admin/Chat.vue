@@ -38,6 +38,7 @@ const sendMessage = () => {
             route('chat.send'),
             {
                 message: form.message,
+                tagged_id: form.tagged_id,
             },
             {
                 headers: {
@@ -46,27 +47,42 @@ const sendMessage = () => {
             },
         )
         .then((response) => {
+            const now = new Date();
+            const formattedDate = new Intl.DateTimeFormat('en-GB', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZoneName: 'short',
+            })
+                .format(now)
+                .replace(',', '');
             messages.value.push({
                 id: response.data.id,
                 user: page.props.auth.user,
                 message: form.message,
-                taggedUser: null,
-                created_at: new Date().toISOString(),
+                taggedUser: taggedUser.value,
+                created_at: formattedDate,
             });
             form.message = '';
         });
 };
 
+const taggedUser = ref();
+const tagOpen = ref(false);
+const users = ref<User[]>([]);
+
 onMounted(() => {
     axios.get(route('chat.get')).then((response) => {
         messages.value = response.data;
     });
+    axios.get(route('chat-admin.tagable')).then((response) => {
+        users.value = response.data;
+    });
 });
-
-// Users example
-const taggedUser = ref();
-const tagOpen = ref(false)
-const users = ref<User[]>([]);
 </script>
 
 <template>
@@ -75,7 +91,7 @@ const users = ref<User[]>([]);
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
             <div class="flex h-96 flex-col space-y-4">
-                <ChatBox :messages="messages" />
+                <ChatBox :messages="messages" :user="page.props.auth.user" />
                 <form @submit.prevent="sendMessage" class="flex gap-2">
                     <Popover v-model:open="tagOpen">
                         <PopoverTrigger as-child>
@@ -83,9 +99,7 @@ const users = ref<User[]>([]);
                                 <template v-if="taggedUser">
                                     {{ taggedUser.name }}
                                 </template>
-                                <template v-else>
-                                    @
-                                </template>
+                                <template v-else> @ </template>
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent class="p-0" align="start">
@@ -98,13 +112,19 @@ const users = ref<User[]>([]);
                                             v-for="user in users"
                                             :key="user.id"
                                             :value="user.id"
-                                            @select="() => {
-                                                taggedUser = user;
-                                                tagOpen = false;
-                                                form.tagged_id = user.id;
-                                            }"
+                                            @select="
+                                                () => {
+                                                    taggedUser = user;
+                                                    tagOpen = false;
+                                                    form.tagged_id = user.id;
+                                                }
+                                            "
+                                            class="p-2"
                                         >
-                                            {{ user.name }}
+                                            <div class="flex flex-col text-xs">
+                                                <p class="font-semibold">{{ user.name }}</p>
+                                                <p>{{ user.email }}</p>
+                                            </div>
                                         </CommandItem>
                                     </CommandGroup>
                                 </CommandList>

@@ -29,11 +29,11 @@ class ChatController extends Controller
         return ChatResource::collection($chats);
     }
 
-    public function search()
+    public function tagable()
     {
-        $query = request()->input('q', '');
-        $users = User::where('name', 'like', "%{$query}%")
-            ->simplePaginate(5);
+        $users = User::all()->filter(function ($user) {
+            return ! $user->can('admin');
+        });
 
         return response()->json(UserResource::collection($users));
     }

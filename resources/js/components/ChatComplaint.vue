@@ -39,12 +39,25 @@ const sendMessage = () => {
             },
         )
         .then((response) => {
+            const now = new Date();
+            const formattedDate = new Intl.DateTimeFormat('en-GB', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZoneName: 'short',
+            })
+                .format(now)
+                .replace(',', '');
             messages.value.push({
                 id: response.data.id,
                 user: props.user,
                 message: form.message,
                 taggedUser: null,
-                created_at: new Date().toISOString(),
+                created_at: formattedDate,
             });
             form.message = '';
         });
@@ -70,7 +83,7 @@ onMounted(() => {
                     <DialogTitle>Chat with Admin</DialogTitle>
                     <DialogDescription> Ask your questions or report issues here. </DialogDescription>
                 </DialogHeader>
-                <ChatBox :messages="messages" />
+                <ChatBox :messages="messages" :user="user" />
                 <form @submit.prevent="sendMessage" class="flex gap-2">
                     <Input
                         v-model="form.message"

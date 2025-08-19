@@ -49,7 +49,7 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
         Route::prefix('chat-admin')->name('chat-admin.')->group(function () {
             Route::controller(ChatController::class)->group(function () {
                 Route::get('', 'index')->name('index');
-                Route::get('search', 'search')->name('search');
+                Route::get('tagable', 'tagable')->name('tagable');
             });
         });
 
