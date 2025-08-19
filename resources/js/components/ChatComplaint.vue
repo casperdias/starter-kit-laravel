@@ -68,10 +68,12 @@ onMounted(() => {
         messages.value = response.data;
     });
 });
+
+const open = ref(false);
 </script>
 
 <template>
-    <Dialog>
+    <Dialog v-model:open="open">
         <DialogTrigger as-child>
             <Button class="fixed right-6 bottom-6 z-50" size="lg">
                 <MessageCircleMore />

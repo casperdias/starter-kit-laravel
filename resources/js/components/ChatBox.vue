@@ -1,14 +1,26 @@
 <script setup lang="ts">
 import { Message, User } from '@/types';
+import { ref, onUpdated } from 'vue';
 
 defineProps<{
     messages: Message[];
     user: User;
 }>();
+
+const scrollRef = ref<HTMLElement | null>(null);
+
+onUpdated(() => {
+    if (scrollRef.value) {
+        scrollRef.value.scrollTop = scrollRef.value.scrollHeight;
+    }
+});
 </script>
 
 <template>
-    <div class="flex-1 space-y-3 overflow-y-auto rounded border bg-sidebar px-3 py-2 text-xs">
+    <div
+        ref="scrollRef"
+        class="flex-1 space-y-3 overflow-y-auto rounded border bg-sidebar px-3 py-2 text-xs"
+    >
         <!-- Message List -->
         <div
             v-for="(msg, idx) in messages"
