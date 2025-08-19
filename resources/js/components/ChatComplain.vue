@@ -1,24 +1,20 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { AppPageProps, BreadcrumbItem, Message } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Message, User } from '@/types';
+import { useForm } from '@inertiajs/vue3';
 import { echo, useEcho } from '@laravel/echo-vue';
 import axios from 'axios';
-import { Send } from 'lucide-vue-next';
+import { MessageCircleMore, Send } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Chat Admin',
-        href: '/chat-admin',
-    },
-];
-const page = usePage<AppPageProps>();
+const props = defineProps<{
+    user: User;
+}>();
 
 const messages = ref<Message[]>([]);
-useEcho<Message>('admin-chat', 'ChatSent', (message) => {
+useEcho<Message>('user-complain.' + props.user.id, 'ChatSent', (message) => {
     messages.value.push(message);
 });
 
@@ -44,7 +40,7 @@ const sendMessage = () => {
         .then((response) => {
             messages.value.push({
                 id: response.data.id,
-                user: page.props.auth.user,
+                user: props.user,
                 message: form.message,
                 taggedUser: null,
                 created_at: new Date().toISOString(),
@@ -61,11 +57,18 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="Chat Admin" />
-
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
+    <Dialog>
+        <DialogTrigger as-child>
+            <Button class="fixed right-6 bottom-6 z-50" size="lg">
+                <MessageCircleMore />
+            </Button>
+        </DialogTrigger>
+        <DialogContent>
             <div class="flex h-96 flex-col space-y-4">
+                <DialogHeader>
+                    <DialogTitle>Chat with Admin</DialogTitle>
+                    <DialogDescription> Ask your questions or report issues here. </DialogDescription>
+                </DialogHeader>
                 <div class="flex-1 space-y-3 overflow-y-auto rounded border bg-sidebar px-3 py-2 text-xs">
                     <!-- Message List -->
                     <div v-for="(msg, idx) in messages" :key="idx" class="space-y-1">
@@ -90,6 +93,6 @@ onMounted(() => {
                     </Button>
                 </form>
             </div>
-        </div>
-    </AppLayout>
+        </DialogContent>
+    </Dialog>
 </template>
