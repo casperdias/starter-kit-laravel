@@ -17,7 +17,12 @@ class ChatController extends Controller
 
     public function get()
     {
-        $chats = Chat::with('user', 'taggedUser')->get();
+        $chats = Chat::with('user', 'taggedUser')
+            ->when(! auth()->user()->can('admin'), function ($query) {
+                $query->where('tagged_id', auth()->id())
+                    ->orWhere('user_id', auth()->id());
+            })
+            ->get();
 
         return ChatResource::collection($chats);
     }
