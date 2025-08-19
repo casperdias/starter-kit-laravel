@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { AppPageProps, BreadcrumbItem, Message } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { useEcho } from '@laravel/echo-vue';
+import { echo, useEcho } from '@laravel/echo-vue';
 import axios from 'axios';
 import { Send } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
@@ -15,13 +15,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/chat-admin',
     },
 ];
-
 const page = usePage<AppPageProps>();
 
 const messages = ref<Message[]>([]);
 useEcho<Message>('admin-chat', 'ChatSent', (message) => {
-    // Handle incoming messages
-    console.log('New message received:', message);
     messages.value.push(message);
 });
 
@@ -31,16 +28,29 @@ const form = useForm({
 
 // Send Message
 const sendMessage = () => {
-    axios.post(route('chat.send'), form).then((response) => {
-        messages.value.push({
-            id: response.data.id,
-            user: page.props.auth.user,
-            message: form.message,
-            taggedUser: null,
-            created_at: new Date().toISOString(),
+    const socketId = echo().socketId();
+    axios
+        .post(
+            route('chat.send'),
+            {
+                message: form.message,
+            },
+            {
+                headers: {
+                    'X-Socket-Id': socketId,
+                },
+            },
+        )
+        .then((response) => {
+            messages.value.push({
+                id: response.data.id,
+                user: page.props.auth.user,
+                message: form.message,
+                taggedUser: null,
+                created_at: new Date().toISOString(),
+            });
+            form.message = '';
         });
-        form.message = '';
-    });
 };
 
 onMounted(() => {

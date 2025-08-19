@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/sonner';
 import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import type { AppPageProps, BreadcrumbItemType, Message } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { useEcho } from '@laravel/echo-vue';
+import { echo, useEcho } from '@laravel/echo-vue';
 import axios from 'axios';
 import { MessageCircleMore, Send } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
@@ -27,8 +27,6 @@ withDefaults(defineProps<Props>(), {
 const messages = ref<Message[]>([]);
 if (!isAdmin.value) {
     useEcho<Message>('user-complain.' + page.props.auth.user.id, 'ChatSent', (message) => {
-        // Handle incoming messages
-        console.log('New message received:', message);
         messages.value.push(message);
     });
 }
@@ -39,16 +37,29 @@ const form = useForm({
 
 // Send Message
 const sendMessage = () => {
-    axios.post(route('chat.send'), form).then((response) => {
-        messages.value.push({
-            id: response.data.id,
-            user: page.props.auth.user,
-            message: form.message,
-            taggedUser: null,
-            created_at: new Date().toISOString(),
+    const socketId = echo().socketId();
+    axios
+        .post(
+            route('chat.send'),
+            {
+                message: form.message,
+            },
+            {
+                headers: {
+                    'X-Socket-Id': socketId,
+                },
+            },
+        )
+        .then((response) => {
+            messages.value.push({
+                id: response.data.id,
+                user: page.props.auth.user,
+                message: form.message,
+                taggedUser: null,
+                created_at: new Date().toISOString(),
+            });
+            form.message = '';
         });
-        form.message = '';
-    });
 };
 
 onMounted(() => {
