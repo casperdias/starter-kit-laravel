@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Resources\ChatResource;
 use App\Models\User\Chat;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -19,7 +20,7 @@ class ChatSent implements ShouldBroadcast
     public function __construct(
         public Chat $chat
     ) {
-        //
+        $this->chat->load(['user', 'taggedUser']);
     }
 
     /**
@@ -42,12 +43,6 @@ class ChatSent implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        return [
-            'id' => $this->chat->id,
-            'message' => $this->chat->message,
-            'user' => $this->chat->user,
-            'taggedUser' => $this->chat->taggedUser ?? null,
-            'created_at' => $this->chat->created_at->toDateTimeString(),
-        ];
+        return new ChatResource($this->chat)->toArray(request());
     }
 }

@@ -33,6 +33,10 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
                 'permissions' => PermissionController::class,
             ]);
 
+            Route::prefix('search-users')->name('search-users.')->group(function () {
+                Route::get('', [UserController::class, 'search'])->name('search');
+            });
+
             Route::prefix('users/{user}/role')->name('users.roles.')->group(function () {
                 Route::put('{role}', [UserController::class, 'updateRole'])->name('update');
             });
