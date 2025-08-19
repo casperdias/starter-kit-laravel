@@ -34,7 +34,7 @@ class ChatSent implements ShouldBroadcast
         ];
 
         if ($this->chat->tagged_id !== null) {
-            $channels[] = new PrivateChannel('user-complain.'.$this->chat->tagged_id);
+            $channels[] = new PrivateChannel('user-complaint.'.$this->chat->tagged_id);
         }
 
         return $channels;

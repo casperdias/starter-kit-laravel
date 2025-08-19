@@ -7,6 +7,6 @@ Broadcast::channel('admin-chat', function (User $user) {
     return $user->can('admin');
 });
 
-Broadcast::channel('user-complain.{id}', function (User $user, $id) {
+Broadcast::channel('user-complaint.{id}', function (User $user, $id) {
     return $user->id === (int) $id;
 });

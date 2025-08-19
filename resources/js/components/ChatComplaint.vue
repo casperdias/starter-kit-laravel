@@ -14,7 +14,7 @@ const props = defineProps<{
 }>();
 
 const messages = ref<Message[]>([]);
-useEcho<Message>('user-complain.' + props.user.id, 'ChatSent', (message) => {
+useEcho<Message>('user-complaint.' + props.user.id, 'ChatSent', (message) => {
     messages.value.push(message);
 });
 

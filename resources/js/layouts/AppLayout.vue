@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ChatComplain from '@/components/ChatComplain.vue';
+import ChatComplaint from '@/components/ChatComplaint.vue';
 import { Toaster } from '@/components/ui/sonner';
 import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import type { AppPageProps, BreadcrumbItemType } from '@/types';
@@ -26,5 +26,5 @@ withDefaults(defineProps<Props>(), {
         <slot />
     </AppLayout>
     <!-- Chat Button -->
-    <ChatComplain v-if="!isAdmin" :user="page.props.auth.user" />
+    <ChatComplaint v-if="!isAdmin" :user="page.props.auth.user" />
 </template>
