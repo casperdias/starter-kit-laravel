@@ -36,15 +36,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function search()
-    {
-        $query = request()->input('q', '');
-        $users = User::where('name', 'like', "%{$query}%")
-            ->simplePaginate(1);
-
-        return response()->json($users);
-    }
-
     /**
      * Show the form for creating a new resource.
      */

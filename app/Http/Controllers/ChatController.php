@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Events\ChatSent;
 use App\Http\Requests\ChatRequest;
+use App\Http\Resources\Admin\UserResource;
 use App\Http\Resources\ChatResource;
 use App\Models\User\Chat;
+use App\Models\User\User;
 use Inertia\Inertia;
 
 class ChatController extends Controller
@@ -25,6 +27,15 @@ class ChatController extends Controller
             ->get();
 
         return ChatResource::collection($chats);
+    }
+
+    public function search()
+    {
+        $query = request()->input('q', '');
+        $users = User::where('name', 'like', "%{$query}%")
+            ->simplePaginate(5);
+
+        return response()->json(UserResource::collection($users));
     }
 
     public function send(ChatRequest $request)

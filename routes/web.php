@@ -33,10 +33,6 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
                 'permissions' => PermissionController::class,
             ]);
 
-            Route::prefix('search-users')->name('search-users.')->group(function () {
-                Route::get('', [UserController::class, 'search'])->name('search');
-            });
-
             Route::prefix('users/{user}/role')->name('users.roles.')->group(function () {
                 Route::put('{role}', [UserController::class, 'updateRole'])->name('update');
             });
@@ -50,7 +46,13 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
                 ->name('verification.send.id');
         });
 
-        Route::get('chat-admin', [ChatController::class, 'index'])->name('chat-admin.index');
+        Route::prefix('chat-admin')->name('chat-admin.')->group(function () {
+            Route::controller(ChatController::class)->group(function () {
+                Route::get('', 'index')->name('index');
+                Route::get('search', 'search')->name('search');
+            });
+        });
+
     });
 });
 

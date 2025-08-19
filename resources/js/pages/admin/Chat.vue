@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import ChatBox from '@/components/ChatBox.vue';
 import { Button } from '@/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { AppPageProps, BreadcrumbItem, Message } from '@/types';
+import { AppPageProps, BreadcrumbItem, Message, User } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { echo, useEcho } from '@laravel/echo-vue';
 import axios from 'axios';
@@ -25,6 +27,7 @@ useEcho<Message>('admin-chat', 'ChatSent', (message) => {
 
 const form = useForm({
     message: '',
+    tagged_id: 0,
 });
 
 // Send Message
@@ -59,6 +62,11 @@ onMounted(() => {
         messages.value = response.data;
     });
 });
+
+// Users example
+const taggedUser = ref();
+const tagOpen = ref(false)
+const users = ref<User[]>([]);
 </script>
 
 <template>
@@ -69,6 +77,40 @@ onMounted(() => {
             <div class="flex h-96 flex-col space-y-4">
                 <ChatBox :messages="messages" />
                 <form @submit.prevent="sendMessage" class="flex gap-2">
+                    <Popover v-model:open="tagOpen">
+                        <PopoverTrigger as-child>
+                            <Button variant="outline">
+                                <template v-if="taggedUser">
+                                    {{ taggedUser.name }}
+                                </template>
+                                <template v-else>
+                                    @
+                                </template>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent class="p-0" align="start">
+                            <Command>
+                                <CommandInput placeholder="Search User" />
+                                <CommandList>
+                                    <CommandEmpty>No users found</CommandEmpty>
+                                    <CommandGroup>
+                                        <CommandItem
+                                            v-for="user in users"
+                                            :key="user.id"
+                                            :value="user.id"
+                                            @select="() => {
+                                                taggedUser = user;
+                                                tagOpen = false;
+                                                form.tagged_id = user.id;
+                                            }"
+                                        >
+                                            {{ user.name }}
+                                        </CommandItem>
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                     <Input
                         v-model="form.message"
                         type="text"
@@ -76,7 +118,7 @@ onMounted(() => {
                         class="flex-1 rounded border px-2 py-1"
                         autocomplete="off"
                     />
-                    <Button type="submit" :disabled="!form.message.trim()">
+                    <Button type="submit" :disabled="!form.message.trim() || !form.tagged_id">
                         <Send />
                     </Button>
                 </form>
