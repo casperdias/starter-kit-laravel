@@ -7,7 +7,7 @@ import { useForm } from '@inertiajs/vue3';
 import { echo, useEchoPresence } from '@laravel/echo-vue';
 import axios from 'axios';
 import { MessageCircleMore, Send } from 'lucide-vue-next';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ChatBox from './ChatBox.vue';
 
 const props = defineProps<{
@@ -69,10 +69,6 @@ onMounted(() => {
     channel().listen('ChatSent', (message: Message) => {
         messages.value.push(message);
     });
-});
-
-onUnmounted(() => {
-    channel().stopListening('ChatSent');
 });
 
 const open = ref(false);

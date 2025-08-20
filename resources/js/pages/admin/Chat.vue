@@ -10,7 +10,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { echo, useEchoPresence } from '@laravel/echo-vue';
 import axios from 'axios';
 import { Send } from 'lucide-vue-next';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -84,10 +84,6 @@ onMounted(() => {
     channel().listen('ChatSent', (message: Message) => {
         messages.value.push(message);
     });
-});
-
-onUnmounted(() => {
-    channel().stopListening('ChatSent');
 });
 </script>
 
