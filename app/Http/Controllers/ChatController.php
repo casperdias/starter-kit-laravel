@@ -31,11 +31,11 @@ class ChatController extends Controller
 
     public function tagable()
     {
-        $users = User::all()->filter(function ($user) {
-            return ! $user->can('admin');
-        });
+        $users = User::whereDoesntHave('activeRole.permissions', function ($query) {
+            $query->where('name', 'admin');
+        })->get();
 
-        return response()->json(UserResource::collection($users));
+        return UserResource::collection($users);
     }
 
     public function send(ChatRequest $request)
