@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from '@/components/ui/input';
 import { Message, User } from '@/types';
 import { useForm } from '@inertiajs/vue3';
-import { echo, useEcho } from '@laravel/echo-vue';
+import { echo } from '@laravel/echo-vue';
 import axios from 'axios';
 import { MessageCircleMore, Send } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
@@ -15,9 +15,6 @@ const props = defineProps<{
 }>();
 
 const messages = ref<Message[]>([]);
-useEcho<Message>('user-complaint.' + props.user.id, 'ChatSent', (message) => {
-    messages.value.push(message);
-});
 
 const form = useForm({
     message: '',
@@ -67,6 +64,11 @@ onMounted(() => {
     axios.get(route('chat.get')).then((response) => {
         messages.value = response.data;
     });
+    echo()
+        .join('user-complaint.' + props.user.id)
+        .listen('ChatSent', (message: Message) => {
+            messages.value.push(message);
+        });
 });
 
 const open = ref(false);

@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import AppLayout from '@/layouts/AppLayout.vue';
 import { AppPageProps, BreadcrumbItem, Message, User } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { echo, useEcho } from '@laravel/echo-vue';
+import { echo } from '@laravel/echo-vue';
 import axios from 'axios';
 import { Send } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
@@ -21,9 +21,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 const page = usePage<AppPageProps>();
 
 const messages = ref<Message[]>([]);
-useEcho<Message>('admin-chat', 'ChatSent', (message) => {
-    messages.value.push(message);
-});
 
 const form = useForm({
     message: '',
@@ -82,6 +79,11 @@ onMounted(() => {
     axios.get(route('chat-admin.tagable')).then((response) => {
         users.value = response.data;
     });
+    echo()
+        .join('admin-chat')
+        .listen('ChatSent', (message: Message) => {
+            messages.value.push(message);
+        });
 });
 </script>
 

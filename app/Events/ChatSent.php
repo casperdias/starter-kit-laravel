@@ -5,7 +5,7 @@ namespace App\Events;
 use App\Http\Resources\ChatResource;
 use App\Models\User\Chat;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -31,11 +31,11 @@ class ChatSent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         $channels = [
-            new PrivateChannel('admin-chat'),
+            new PresenceChannel('admin-chat'),
         ];
 
         if ($this->chat->tagged_id !== null) {
-            $channels[] = new PrivateChannel('user-complaint.'.$this->chat->tagged_id);
+            $channels[] = new PresenceChannel('user-complaint.'.$this->chat->tagged_id);
         }
 
         return $channels;
