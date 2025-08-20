@@ -7,10 +7,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import AppLayout from '@/layouts/AppLayout.vue';
 import { AppPageProps, BreadcrumbItem, Message, User } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { echo } from '@laravel/echo-vue';
+import { echo, useEchoPresence } from '@laravel/echo-vue';
 import axios from 'axios';
 import { Send } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,6 +19,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 const page = usePage<AppPageProps>();
+
+const { channel } = useEchoPresence('admin-chat');
 
 const messages = ref<Message[]>([]);
 
@@ -79,11 +81,13 @@ onMounted(() => {
     axios.get(route('chat-admin.tagable')).then((response) => {
         users.value = response.data;
     });
-    echo()
-        .join('admin-chat')
-        .listen('ChatSent', (message: Message) => {
-            messages.value.push(message);
-        });
+    channel().listen('ChatSent', (message: Message) => {
+        messages.value.push(message);
+    });
+});
+
+onUnmounted(() => {
+    channel().stopListening('ChatSent');
 });
 </script>
 
