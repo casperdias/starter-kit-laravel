@@ -10,7 +10,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { echo, useEchoPresence } from '@laravel/echo-vue';
 import axios from 'axios';
 import { Send } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 const page = usePage<AppPageProps>();
 
-const { channel } = useEchoPresence('admin-chat');
+const { channel, leaveChannel } = useEchoPresence('admin-chat');
 
 const messages = ref<Message[]>([]);
 
@@ -84,6 +84,30 @@ onMounted(() => {
     channel().listen('ChatSent', (message: Message) => {
         messages.value.push(message);
     });
+});
+
+const lastChannel = ref<string | null>(null);
+
+onUnmounted(() => {
+    leaveChannel();
+    if (lastChannel.value) {
+        echo().leave(lastChannel.value);
+    }
+});
+
+watch(taggedUser, (user, oldUser) => {
+    if (user && user.id !== oldUser?.id) {
+        if (lastChannel.value) {
+            echo().leave(lastChannel.value);
+        }
+        if (user && user.id) {
+            const channelName = `user-complaint.${user.id}`;
+            echo().join(channelName);
+            lastChannel.value = channelName;
+        } else {
+            lastChannel.value = null;
+        }
+    }
 });
 </script>
 

@@ -62,13 +62,27 @@ const sendMessage = () => {
         });
 };
 
+const adminOnline = ref<{ id: string | number; name: string; is_admin: boolean }[]>([]);
+
 onMounted(() => {
     axios.get(route('chat.get')).then((response) => {
         messages.value = response.data;
     });
-    channel().listen('ChatSent', (message: Message) => {
-        messages.value.push(message);
-    });
+    channel()
+        .listen('ChatSent', (message: Message) => {
+            messages.value.push(message);
+        })
+        .here((users: { id: string | number; name: string; is_admin: boolean }[]) => {
+            adminOnline.value = users.filter((user) => user.is_admin);
+        })
+        .joining((user: { id: string | number; name: string; is_admin: boolean }) => {
+            if (user.is_admin) {
+                adminOnline.value.push(user);
+            }
+        })
+        .leaving((user: { id: string | number; name: string; is_admin: boolean }) => {
+            adminOnline.value = adminOnline.value.filter((u) => u.id !== user.id);
+        });
 });
 
 const open = ref(false);
@@ -86,6 +100,18 @@ const open = ref(false);
                 <DialogHeader>
                     <DialogTitle>Chat with Admin</DialogTitle>
                     <DialogDescription> Ask your questions or report issues here. </DialogDescription>
+                    <div class="flex items-center gap-2">
+                        <div class="group relative flex h-3 w-3">
+                            <span
+                                class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                :class="adminOnline.length > 0 ? 'bg-green-600' : 'bg-red-600'"
+                            ></span>
+                            <span class="inline-block h-3 w-3 rounded-full" :class="adminOnline.length > 0 ? 'bg-green-600' : 'bg-red-600'"></span>
+                        </div>
+                        <p class="text-xs font-semibold">
+                            {{ adminOnline.length > 0 ? 'Online' : 'Offline' }}
+                        </p>
+                    </div>
                 </DialogHeader>
                 <ChatBox :messages="messages" :user="user" />
                 <form @submit.prevent="sendMessage" class="flex gap-2">
