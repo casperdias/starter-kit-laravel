@@ -1,0 +1,32 @@
+name: Auto Merge Branches on Main Push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  merge-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into all branches
+        run: |
+          # Get all remote branches except main
+          branches=$(git branch -r | grep -v main | grep -v HEAD | sed 's/origin\///')
+
+          for branch in $branches; do
+            echo "Merging main into $branch"
+            git checkout $branch
+            git merge origin/main --no-edit || echo "Merge conflict in $branch"
+            git push origin $branch || echo "Push failed for $branch"
+          done
