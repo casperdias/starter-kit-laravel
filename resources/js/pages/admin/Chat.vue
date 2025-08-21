@@ -2,8 +2,8 @@
 import ChatBox from '@/components/ChatBox.vue';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { AppPageProps, BreadcrumbItem, Message, User } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 const page = usePage<AppPageProps>();
 
-const { channel, leaveChannel } = useEchoPresence('admin-chat');
+const { channel } = useEchoPresence('admin-chat');
 
 const messages = ref<Message[]>([]);
 
@@ -89,7 +89,6 @@ onMounted(() => {
 const lastChannel = ref<string | null>(null);
 
 onUnmounted(() => {
-    leaveChannel();
     if (lastChannel.value) {
         echo().leave(lastChannel.value);
     }
@@ -157,13 +156,7 @@ watch(taggedUser, (user, oldUser) => {
                             </Command>
                         </PopoverContent>
                     </Popover>
-                    <Input
-                        v-model="form.message"
-                        type="text"
-                        placeholder="Type your message..."
-                        class="flex-1 rounded border px-2 py-1"
-                        autocomplete="off"
-                    />
+                    <Textarea v-model="form.message" placeholder="Type your message..." class="flex-1 rounded border px-2 py-1" autocomplete="off" />
                     <Button type="submit" :disabled="!form.message.trim() || !form.tagged_id">
                         <Send />
                     </Button>

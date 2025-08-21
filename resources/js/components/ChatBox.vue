@@ -34,7 +34,7 @@ onUpdated(scrollToBottom);
                 <p class="font-bold">
                     {{ msg.user.name }}
                 </p>
-                <div class="rounded p-2" :class="msg.user.id === user.id ? 'bg-blue-100' : 'bg-background'">
+                <div class="rounded p-2 whitespace-pre-line" :class="msg.user.id === user.id ? 'bg-blue-100' : 'bg-background'">
                     <span v-if="msg.taggedUser" class="font-bold"> @{{ msg.taggedUser.name }} </span>
                     {{ msg.message }}
                 </div>

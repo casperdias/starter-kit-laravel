@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Message, User } from '@/types';
 import { useForm } from '@inertiajs/vue3';
 import { echo, useEchoPresence } from '@laravel/echo-vue';
@@ -9,6 +8,7 @@ import axios from 'axios';
 import { MessageCircleMore, Send } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 import ChatBox from './ChatBox.vue';
+import { Textarea } from './ui/textarea';
 
 const props = defineProps<{
     user: User;
@@ -115,13 +115,7 @@ const open = ref(false);
                 </DialogHeader>
                 <ChatBox :messages="messages" :user="user" />
                 <form @submit.prevent="sendMessage" class="flex gap-2">
-                    <Input
-                        v-model="form.message"
-                        type="text"
-                        placeholder="Type your message..."
-                        class="flex-1 rounded border px-2 py-1"
-                        autocomplete="off"
-                    />
+                    <Textarea v-model="form.message" placeholder="Type your message..." class="flex-1 rounded border px-2 py-1" autocomplete="off" />
                     <Button type="submit" :disabled="!form.message.trim()">
                         <Send />
                     </Button>

@@ -20,7 +20,7 @@ class ChatResource extends JsonResource
             'message' => $this->message,
             'user' => $this->whenLoaded('user', fn () => new UserResource($this->user)),
             'taggedUser' => $this->whenLoaded('taggedUser', fn () => new UserResource($this->taggedUser)),
-            'created_at' => $this->created_at->format('d/m/Y H:i:s').' GMT'.str_replace(':00', '', $this->created_at->format('P')),
+            'created_at' => $this->created_at->format('d/m/Y H:i:s').' GMT'.str_replace([':00', '+0', '-0'], ['', '+', '-'], $this->created_at->format('P')),
         ];
     }
 }
