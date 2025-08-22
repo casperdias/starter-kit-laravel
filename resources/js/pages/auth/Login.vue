@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -15,18 +15,6 @@ defineProps<{
     canResetPassword: boolean;
     errors: Record<string, string>;
 }>();
-
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
-
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
-};
 </script>
 
 <template>
@@ -37,62 +25,66 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <div>
-            <form @submit.prevent="submit" class="flex flex-col gap-6">
-                <div class="grid gap-6">
-                    <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            required
-                            autofocus
-                            :tabindex="1"
-                            autocomplete="email"
-                            v-model="form.email"
-                            placeholder="email@example.com"
-                        />
-                        <InputError :message="form.errors.email" />
-                        <InputError v-if="errors.email" :message="errors.email" />
-                    </div>
+        <Form
+            class="flex flex-col gap-6"
+            method="post"
+            :action="route('login')"
+            #default="{ errors, processing }"
+            reset-on-success
+            :reset-on-error="['password']"
+        >
+            <div class="grid gap-6">
+                <div class="grid gap-2">
+                    <Label for="email">Email address</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        required
+                        autofocus
+                        :tabindex="1"
+                        autocomplete="email"
+                        placeholder="email@example.com"
+                        name="email"
+                    />
+                    <InputError :message="errors.email" />
+                </div>
 
-                    <div class="grid gap-2">
-                        <div class="flex items-center justify-between">
-                            <Label for="password">Password</Label>
-                            <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm" :tabindex="5">
-                                Forgot password?
-                            </TextLink>
-                        </div>
-                        <Input
-                            id="password"
-                            type="password"
-                            required
-                            :tabindex="2"
-                            autocomplete="current-password"
-                            v-model="form.password"
-                            placeholder="Password"
-                        />
-                        <InputError :message="form.errors.password" />
-                    </div>
-
+                <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="remember" class="flex items-center space-x-3">
-                            <Checkbox id="remember" v-model="form.remember" :tabindex="3" />
-                            <span>Remember me</span>
-                        </Label>
+                        <Label for="password">Password</Label>
+                        <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm" :tabindex="5">
+                            Forgot password?
+                        </TextLink>
                     </div>
-
-                    <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="form.processing">
-                        <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                        Log in
-                    </Button>
+                    <Input
+                        id="password"
+                        type="password"
+                        required
+                        :tabindex="2"
+                        placeholder="Password"
+                        name="password"
+                    />
+                    <InputError :message="errors.password" />
                 </div>
 
-                <div class="text-center text-sm text-muted-foreground">
-                    Don't have an account?
-                    <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
+                <div class="flex items-center justify-between">
+                    <Label for="remember" class="flex items-center space-x-3">
+                        <Checkbox id="remember" :tabindex="3" name="remember" value="1" />
+                        <span>Remember me</span>
+                    </Label>
                 </div>
-            </form>
+
+                <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="processing">
+                    <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
+                    Log in
+                </Button>
+            </div>
+
+            <div class="text-center text-sm text-muted-foreground">
+                Don't have an account?
+                <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
+            </div>
+        </Form>
             <div class="my-6 flex items-center justify-center">
                 <Separator class="!w-1/3 bg-black dark:bg-white" />
                 <span class="mx-4 text-sm text-muted-foreground"><i>or</i></span>
