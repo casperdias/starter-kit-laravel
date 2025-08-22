@@ -88,10 +88,10 @@ const submit = () => {
                     </Button>
                 </div>
 
-                <!-- <div class="text-center text-sm text-muted-foreground">
+                <div class="text-center text-sm text-muted-foreground">
                     Don't have an account?
                     <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
-                </div> -->
+                </div>
             </form>
             <div class="my-6 flex items-center justify-center">
                 <Separator class="!w-1/3 bg-black dark:bg-white" />
