@@ -6,25 +6,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
     canResetPassword: boolean;
 }>();
-
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
-
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
-};
 </script>
 
 <template>
@@ -35,7 +23,14 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit" class="flex flex-col gap-6">
+        <Form
+            class="flex flex-col gap-6"
+            method="post"
+            :action="route('login')"
+            #default="{ errors, processing }"
+            reset-on-success
+            :reset-on-error="['password']"
+        >
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
@@ -46,10 +41,10 @@ const submit = () => {
                         autofocus
                         :tabindex="1"
                         autocomplete="email"
-                        v-model="form.email"
                         placeholder="email@example.com"
+                        name="email"
                     />
-                    <InputError :message="form.errors.email" />
+                    <InputError :message="errors.email" />
                 </div>
 
                 <div class="grid gap-2">
@@ -64,22 +59,21 @@ const submit = () => {
                         type="password"
                         required
                         :tabindex="2"
-                        autocomplete="current-password"
-                        v-model="form.password"
                         placeholder="Password"
+                        name="password"
                     />
-                    <InputError :message="form.errors.password" />
+                    <InputError :message="errors.password" />
                 </div>
 
                 <div class="flex items-center justify-between">
                     <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox id="remember" v-model="form.remember" :tabindex="3" />
+                        <Checkbox id="remember" :tabindex="3" name="remember" value="1" />
                         <span>Remember me</span>
                     </Label>
                 </div>
 
-                <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="processing">
+                    <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
                     Log in
                 </Button>
             </div>
@@ -88,6 +82,6 @@ const submit = () => {
                 Don't have an account?
                 <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
             </div>
-        </form>
+        </Form>
     </AuthBase>
 </template>
