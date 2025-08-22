@@ -54,14 +54,7 @@ defineProps<{
                             Forgot password?
                         </TextLink>
                     </div>
-                    <Input
-                        id="password"
-                        type="password"
-                        required
-                        :tabindex="2"
-                        placeholder="Password"
-                        name="password"
-                    />
+                    <Input id="password" type="password" required :tabindex="2" placeholder="Password" name="password" />
                     <InputError :message="errors.password" />
                 </div>
 
