@@ -56,14 +56,7 @@ defineProps<{
                             Forgot password?
                         </TextLink>
                     </div>
-                    <Input
-                        id="password"
-                        type="password"
-                        required
-                        :tabindex="2"
-                        placeholder="Password"
-                        name="password"
-                    />
+                    <Input id="password" type="password" required :tabindex="2" placeholder="Password" name="password" />
                     <InputError :message="errors.password" />
                 </div>
 
@@ -85,19 +78,18 @@ defineProps<{
                 <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
             </div>
         </Form>
-            <div class="my-6 flex items-center justify-center">
-                <Separator class="!w-1/3 bg-black dark:bg-white" />
-                <span class="mx-4 text-sm text-muted-foreground"><i>or</i></span>
-                <Separator class="!w-1/3 bg-black dark:bg-white" />
-            </div>
-            <!-- Or Oauth Login -->
-            <div class="text-center">
-                <a :href="route('oauth.login')">
-                    <Button type="button" class="w-full">
-                        <span>Log in with Oauth</span>
-                    </Button>
-                </a>
-            </div>
+        <div class="my-6 flex items-center justify-center">
+            <Separator class="!w-1/3 bg-black dark:bg-white" />
+            <span class="mx-4 text-sm text-muted-foreground"><i>or</i></span>
+            <Separator class="!w-1/3 bg-black dark:bg-white" />
+        </div>
+        <!-- Or Oauth Login -->
+        <div class="text-center">
+            <a :href="route('oauth.login')">
+                <Button type="button" class="w-full">
+                    <span>Log in with Oauth</span>
+                </Button>
+            </a>
         </div>
     </AuthBase>
 </template>
