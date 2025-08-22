@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Pagination, User } from '@/types';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { ArchiveX, Mail, Search, Trash2, UserCog, User as UserIcon } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
@@ -51,8 +51,7 @@ const deleteUser = (userId: number) => {
 };
 
 const sendVerificationEmail = (userId: number) => {
-    const form = useForm({});
-    form.post(route('admin.verification.send.id', userId), {
+    router.post(route('admin.verification.send.id', userId), undefined, {
         onSuccess: () => {
             toast.success('Verification email sent successfully', {
                 description: 'A verification email has been sent to the user.',

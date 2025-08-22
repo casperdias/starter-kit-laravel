@@ -2,18 +2,15 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { AppPageProps, BreadcrumbItemType } from '@/types';
-import { useForm, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { router, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 const page = usePage<AppPageProps>();
 const roles = computed(() => page.props.auth.user.roles || []);
-
-const form = useForm({
-    role: page.props.auth.user.role?.id || null,
-});
+const role = ref(page.props.auth.user.role?.id || null);
 
 withDefaults(
     defineProps<{
@@ -25,21 +22,25 @@ withDefaults(
 );
 
 const changeRole = () => {
-    form.put(route('change-role'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            toast.success('Role changed successfully.', {
-                description: 'Your role has been updated.',
-                closeButton: true,
-            });
+    router.put(
+        route('change-role'),
+        { role: role.value },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Role changed successfully.', {
+                    description: 'Your role has been updated.',
+                    closeButton: true,
+                });
+            },
+            onError: (errors) => {
+                toast.error('Failed to change role.', {
+                    description: errors ?? 'An error occurred while changing your role.',
+                    closeButton: true,
+                });
+            },
         },
-        onError: (errors) => {
-            toast.error('Failed to change role.', {
-                description: errors ?? 'An error occurred while changing your role.',
-                closeButton: true,
-            });
-        },
-    });
+    );
 };
 </script>
 
@@ -56,14 +57,14 @@ const changeRole = () => {
         <Badge v-if="roles.length <= 1">
             {{ roles.length === 1 ? roles[0].display_name : 'Tidak Ada Role' }}
         </Badge>
-        <Select v-else v-model="form.role" @update:model-value="changeRole">
+        <Select v-else v-model="role" @update:model-value="changeRole">
             <SelectTrigger>
                 <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectItem v-for="role in roles" :key="role.id" :value="role.id">
-                        {{ role.display_name }}
+                    <SelectItem v-for="roleItem in roles" :key="roleItem.id" :value="roleItem.id">
+                        {{ roleItem.display_name }}
                     </SelectItem>
                 </SelectGroup>
             </SelectContent>
