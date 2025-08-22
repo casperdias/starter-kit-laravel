@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 interface Props {
@@ -12,34 +12,32 @@ interface Props {
     email: string;
 }
 
-const props = defineProps<Props>();
-
-const form = useForm({
-    token: props.token,
-    email: props.email,
-    password: '',
-    password_confirmation: '',
-});
-
-const submit = () => {
-    form.post(route('password.store'), {
-        onFinish: () => {
-            form.reset('password', 'password_confirmation');
-        },
-    });
-};
+defineProps<Props>();
 </script>
 
 <template>
     <AuthLayout title="Reset password" description="Please enter your new password below">
         <Head title="Reset password" />
 
-        <form @submit.prevent="submit">
+        <Form
+            method="post"
+            :action="route('password.store')"
+            #default="{ errors, processing }"
+            :transform="
+                (data) => ({
+                    ...data,
+                    token: token,
+                    email: email,
+                })
+            "
+            reset-on-success
+            :reset-on-error="['password', 'password_confirmation']"
+        >
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email</Label>
-                    <Input id="email" type="email" name="email" autocomplete="email" v-model="form.email" class="mt-1 block w-full" readonly />
-                    <InputError :message="form.errors.email" class="mt-2" />
+                    <Input id="email" type="email" name="email" autocomplete="email" class="mt-1 block w-full" :value="email" readonly />
+                    <InputError :message="errors.email" class="mt-2" />
                 </div>
 
                 <div class="grid gap-2">
@@ -49,12 +47,11 @@ const submit = () => {
                         type="password"
                         name="password"
                         autocomplete="new-password"
-                        v-model="form.password"
                         class="mt-1 block w-full"
                         autofocus
                         placeholder="Password"
                     />
-                    <InputError :message="form.errors.password" />
+                    <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
@@ -64,18 +61,17 @@ const submit = () => {
                         type="password"
                         name="password_confirmation"
                         autocomplete="new-password"
-                        v-model="form.password_confirmation"
                         class="mt-1 block w-full"
                         placeholder="Confirm password"
                     />
-                    <InputError :message="form.errors.password_confirmation" />
+                    <InputError :message="errors.password_confirmation" />
                 </div>
 
-                <Button type="submit" class="mt-4 w-full" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                <Button type="submit" class="mt-4 w-full" :disabled="processing">
+                    <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
                     Reset password
                 </Button>
             </div>
-        </form>
+        </Form>
     </AuthLayout>
 </template>
