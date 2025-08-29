@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { useRoute } from '@/composables/useRoute';
 import { Head, Link } from '@inertiajs/vue3';
 import { CopySlash, ServerCrash, ShieldOff } from 'lucide-vue-next';
 import { computed } from 'vue';
+const route = useRoute();
 
 const props = defineProps({ status: Number });
 
