@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { useRoute } from '@/composables/useRoute';
 import { Head, Link } from '@inertiajs/vue3';
+const route = useRoute();
 </script>
 
 <template>
