@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { useRoute } from '@/composables/useRoute';
 import type { AppPageProps, BreadcrumbItemType } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { route } from '@/composables/useRoute';
+const route = useRoute();
 
 const page = usePage<AppPageProps>();
 const roles = computed(() => page.props.auth.user.roles || []);

@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { route } from '@/composables/useRoute';
+import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Pagination, Permission } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { ArchiveX, Search, ShieldPlus, Trash2 } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
+const route = useRoute();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

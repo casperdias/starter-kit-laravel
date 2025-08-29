@@ -9,8 +9,9 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useRoute } from '@/composables/useRoute';
 import { type BreadcrumbItem } from '@/types';
-import { route } from '@/composables/useRoute';
+const route = useRoute();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {

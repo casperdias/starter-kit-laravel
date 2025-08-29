@@ -4,13 +4,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { route } from '@/composables/useRoute';
+import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Pagination, Permission, Role } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { ArchiveX, Search, UserCheck } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
+
+const route = useRoute();
 
 const props = defineProps<Props>();
 interface Props {

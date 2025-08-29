@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { route } from '@/composables/useRoute';
+import { useRoute } from '@/composables/useRoute';
+const route = useRoute();
 
 const passwordInput = ref<HTMLInputElement | null>(null);
 
