@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { route } from '@/composables/useRoute';
 import { Head, Link } from '@inertiajs/vue3';
 import { CopySlash, ServerCrash, ShieldOff } from 'lucide-vue-next';
 import { computed } from 'vue';

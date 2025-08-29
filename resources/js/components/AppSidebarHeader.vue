@@ -7,6 +7,7 @@ import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { route } from '@/composables/useRoute';
 
 const page = usePage<AppPageProps>();
 const roles = computed(() => page.props.auth.user.roles || []);

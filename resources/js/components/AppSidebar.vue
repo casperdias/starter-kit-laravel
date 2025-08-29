@@ -8,6 +8,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
+import { route } from '@/composables/useRoute';
 
 const page = usePage<AppPageProps>();
 const permissions = computed(() => page.props.auth.user.permissions);

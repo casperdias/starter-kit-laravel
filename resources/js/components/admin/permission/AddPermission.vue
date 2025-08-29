@@ -6,6 +6,7 @@ import { Plus } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { toast } from 'vue-sonner';
 import { PermissionForm } from '.';
+import { route } from '@/composables/useRoute';
 
 const page = usePage();
 

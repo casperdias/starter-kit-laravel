@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import { route } from '@/composables/useRoute';
 import { Link, usePage } from '@inertiajs/vue3';
 
 const page = usePage();

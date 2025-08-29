@@ -7,6 +7,7 @@ import { Wrench } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 import { PermissionForm } from '.';
+import { route } from '@/composables/useRoute';
 
 const page = usePage();
 

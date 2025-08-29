@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { route } from '@/composables/useRoute';
 import { Link } from '@inertiajs/vue3';
 
 defineProps<{
