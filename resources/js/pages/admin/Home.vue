@@ -3,10 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { AppPageProps, type BreadcrumbItem } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { Eye, ShieldPlus, User, UserCog } from 'lucide-vue-next';
+import { computed } from 'vue';
 const route = useRoute();
+
+const page = usePage<AppPageProps>();
+const permissions = computed(() => page.props.auth.user.permissions);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -22,6 +26,7 @@ const cards = [
         icon: User,
         url: route('admin.users.index'),
         list: ['CRUD User', 'Pengaturan Role User'],
+        permissions: ['user'],
     },
     {
         title: 'Role',
@@ -29,6 +34,7 @@ const cards = [
         icon: UserCog,
         url: route('admin.roles.index'),
         list: ['CRUD Role', 'Pengaturan Permission Role'],
+        permissions: ['role'],
     },
     {
         title: 'Permission',
@@ -36,8 +42,18 @@ const cards = [
         icon: ShieldPlus,
         url: route('admin.permissions.index'),
         list: ['CRUD Permission'],
+        permissions: ['permission'],
     },
 ];
+
+const filteredCards = computed(() => {
+    return cards.filter((card) => {
+        if (!card.permissions || card.permissions.length === 0) {
+            return true;
+        }
+        return card.permissions.some((perm) => permissions.value.includes(perm));
+    });
+});
 </script>
 
 <template>
@@ -47,7 +63,7 @@ const cards = [
         <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
             <div class="grid w-full auto-rows-min gap-4">
                 <Card
-                    v-for="(card, index) in cards"
+                    v-for="(card, index) in filteredCards"
                     :key="index"
                     class="relative h-fit overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                 >

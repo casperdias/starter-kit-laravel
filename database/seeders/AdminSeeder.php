@@ -31,15 +31,16 @@ class AdminSeeder extends Seeder
             'description' => 'User with full access to the system',
         ]);
 
-        // Make Permissions
-        $permissions = Permission::create([
-            'name' => 'admin',
-            'display_name' => 'admin',
-            'description' => 'Permission to manage all aspects of the application',
-        ]);
+        $permissions = [
+            ['name' => 'user', 'display_name' => 'User', 'description' => 'Permission to manage users'],
+            ['name' => 'role', 'display_name' => 'Role', 'description' => 'Permission to manage roles'],
+            ['name' => 'permission', 'display_name' => 'Permission', 'description' => 'Permission to manage permissions'],
+        ];
 
-        // Assign permissions to role
-        $adminRole->assignPermission($permissions);
+        foreach ($permissions as $perm) {
+            $permission = Permission::create($perm);
+            $adminRole->assignPermission($permission);
+        }
 
         // Assign role to user
         $admin->assignRole($adminRole);

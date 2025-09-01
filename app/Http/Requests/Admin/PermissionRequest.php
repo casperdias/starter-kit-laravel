@@ -12,7 +12,7 @@ class PermissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('admin');
+        return auth()->user()->can('permission');
     }
 
     /**

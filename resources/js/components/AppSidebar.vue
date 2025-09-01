@@ -27,7 +27,7 @@ const navItems: { [key: string]: NavItem[] } = {
             title: 'Master',
             href: '/admin',
             icon: LayoutGrid,
-            permission: 'admin',
+            permissions: ['user', 'role', 'permission'],
         },
     ],
 };
@@ -37,7 +37,7 @@ const footerNavItems: NavItem[] = [
         title: 'Github Repo',
         href: 'https://github.com/laravel/vue-starter-kit',
         icon: Folder,
-        permission: 'admin',
+        permissions: ['view-repo'],
     },
     {
         title: 'Documentation',
@@ -47,7 +47,12 @@ const footerNavItems: NavItem[] = [
 ];
 
 function filterNavItems(items: NavItem[]): NavItem[] {
-    return items.filter((item) => !item.permission || permissions.value.includes(item.permission));
+    return items.filter((item) => {
+        if (!item.permissions || item.permissions.length === 0) {
+            return true;
+        }
+        return item.permissions.some((perm) => permissions.value.includes(perm));
+    });
 }
 
 // Apply filtering to navigation items

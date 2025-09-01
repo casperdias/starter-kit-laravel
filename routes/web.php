@@ -15,26 +15,28 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class])->group(function () {
     Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-    Route::prefix('admin')->name('admin.')->middleware('permission:admin')->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('', AdminHomeController::class)->name('home');
 
-        Route::resources([
-            'users' => UserController::class,
-            'roles' => RoleController::class,
-            'permissions' => PermissionController::class,
-        ]);
-
-        Route::prefix('users/{user}/role')->name('users.roles.')->group(function () {
-            Route::put('{role}', [UserController::class, 'updateRole'])->name('update');
+        // User management
+        Route::middleware('permission:user')->group(function () {
+            Route::resource('users', UserController::class);
+            Route::put('users/{user}/role/{role}', [UserController::class, 'updateRole'])->name('users.roles.update');
+            Route::post('email/verification-notification/{user}', [EmailVerificationNotificationController::class, 'storeCustom'])
+                ->middleware('throttle:6,1')
+                ->name('verification.send.id');
         });
 
-        Route::prefix('roles/{role}/permission')->name('roles.permissions.')->group(function () {
-            Route::put('{permission}', [RoleController::class, 'updatePermission'])->name('update');
+        // Role management
+        Route::middleware('permission:role')->group(function () {
+            Route::resource('roles', RoleController::class);
+            Route::put('roles/{role}/permission/{permission}', [RoleController::class, 'updatePermission'])->name('roles.permissions.update');
         });
 
-        Route::post('email/verification-notification/{user}', [EmailVerificationNotificationController::class, 'storeCustom'])
-            ->middleware('throttle:6,1')
-            ->name('verification.send.id');
+        // Permission management
+        Route::middleware('permission:permission')->group(function () {
+            Route::resource('permissions', PermissionController::class);
+        });
     });
 });
 

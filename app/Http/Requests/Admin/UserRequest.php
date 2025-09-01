@@ -12,7 +12,7 @@ class UserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('admin');
+        return auth()->user()->can('user');
     }
 
     /**
