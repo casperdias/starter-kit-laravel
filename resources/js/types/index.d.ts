@@ -32,6 +32,17 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     };
 };
 
+export interface Notification {
+    id: string;
+    type: string;
+    data: {
+        message: string;
+        link?: string;
+        [key: string]: unknown;
+    };
+    read_at: string | null;
+}
+
 export interface User {
     id: number;
     name: string;
