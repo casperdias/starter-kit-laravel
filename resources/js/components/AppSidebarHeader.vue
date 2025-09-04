@@ -6,6 +6,7 @@ import type { AppPageProps, BreadcrumbItemType } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
+import Notification from './Notification.vue';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 const route = useRoute();
@@ -56,20 +57,23 @@ const changeRole = () => {
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template>
         </div>
-        <Badge v-if="roles.length <= 1">
-            {{ roles.length === 1 ? roles[0].display_name : 'Tidak Ada Role' }}
-        </Badge>
-        <Select v-else v-model="role" @update:model-value="changeRole">
-            <SelectTrigger>
-                <SelectValue placeholder="Select role" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    <SelectItem v-for="roleItem in roles" :key="roleItem.id" :value="roleItem.id">
-                        {{ roleItem.display_name }}
-                    </SelectItem>
-                </SelectGroup>
-            </SelectContent>
-        </Select>
+        <div class="flex items-center gap-2">
+            <Notification />
+            <Badge v-if="roles.length <= 1">
+                {{ roles.length === 1 ? roles[0].display_name : 'Tidak Ada Role' }}
+            </Badge>
+            <Select v-else v-model="role" @update:model-value="changeRole">
+                <SelectTrigger>
+                    <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        <SelectItem v-for="roleItem in roles" :key="roleItem.id" :value="roleItem.id">
+                            {{ roleItem.display_name }}
+                        </SelectItem>
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+        </div>
     </header>
 </template>
