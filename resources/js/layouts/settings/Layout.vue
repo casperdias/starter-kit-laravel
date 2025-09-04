@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { KeyRound, SunMoon, UserPen } from 'lucide-vue-next';
+import { Bell, KeyRound, SunMoon, UserPen } from 'lucide-vue-next';
 
 const sidebarNavItems: NavItem[] = [
     {
@@ -21,6 +21,11 @@ const sidebarNavItems: NavItem[] = [
         title: 'Appearance',
         href: '/settings/appearance',
         icon: SunMoon,
+    },
+    {
+        title: 'Notifications',
+        href: '/settings/notifications',
+        icon: Bell,
     },
 ];
 

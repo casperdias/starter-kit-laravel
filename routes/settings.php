@@ -1,24 +1,43 @@
 <?php
 
 use App\Http\Controllers\Settings\ChangeRoleController;
+use App\Http\Controllers\Settings\NotificationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
-    Route::redirect('settings', '/settings/profile');
+    Route::prefix('settings')->group(function () {
+        // Redirect
+        Route::redirect('', '/settings/profile');
 
-    Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // Profile
+        Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+            Route::get('', 'edit')->name('edit');
+            Route::patch('', 'update')->name('update');
+            Route::delete('', 'destroy')->name('destroy');
+        });
 
-    Route::get('settings/password', [PasswordController::class, 'edit'])->name('password.edit');
-    Route::put('settings/password', [PasswordController::class, 'update'])->name('password.update');
+        // Password
+        Route::controller(PasswordController::class)->prefix('password')->name('password.')->group(function () {
+            Route::get('', 'edit')->name('edit');
+            Route::put('', 'update')->name('update');
+        });
 
-    Route::put('settings/change-role', ChangeRoleController::class)->name('change-role');
+        // Role
+        Route::put('change-role', ChangeRoleController::class)->name('change-role');
 
-    Route::get('settings/appearance', function () {
-        return Inertia::render('settings/Appearance');
-    })->name('appearance');
+        // Notifications
+        Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::post('mark-all-as-read', 'markAllAsRead')->name('markAllAsRead');
+            Route::post('{notificationId}/mark-as-read', 'markAsRead')->name('markAsRead');
+        });
+
+        // Appearance
+        Route::get('appearance', function () {
+            return Inertia::render('settings/Appearance');
+        })->name('appearance');
+    });
 });

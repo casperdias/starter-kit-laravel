@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Http\Controllers\Settings;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Setting\NotificationResource;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class NotificationController extends Controller
+{
+    public function index()
+    {
+        $search = request('search', '');
+        $page = request('page', 1);
+        $per_page = request('per_page', 5);
+
+        $user = request()->user();
+
+        $notifications = $user->notifications()
+            ->when($search, function ($query, $search) {
+                return $query->where('data->type', 'like', "%{$search}%");
+            })
+            ->paginate($per_page, ['*'], 'page', $page);
+
+        return Inertia::render('settings/Notification', [
+            'notifications' => NotificationResource::collection($notifications),
+        ]);
+    }
+
+    public function markAllAsRead(Request $request)
+    {
+        $user = $request->user();
+        $user->unreadNotifications->markAsRead();
+
+        return to_route('notifications.index')->with('success', 'All notifications marked as read.');
+    }
+
+    public function markAsRead(Request $request, string $notificationId)
+    {
+        $user = $request->user();
+
+        $notification = $user->unreadNotifications()->find($notificationId);
+
+        if ($notification) {
+            $notification->markAsRead();
+
+            return to_route('notifications.index')->with('success', 'Notification marked as read.');
+        }
+
+        return to_route('notifications.index')->with('error', 'Notification not found.');
+    }
+}
