@@ -57,7 +57,6 @@ const user = page.props.auth.user as User;
                             required
                             autocomplete="name"
                             placeholder="Full name"
-                            :value="user.name"
                         />
                         <InputError class="mt-2" :message="errors.name" />
                     </div>
@@ -69,10 +68,8 @@ const user = page.props.auth.user as User;
                             type="email"
                             class="mt-1 block w-full"
                             name="email"
-                            required
                             autocomplete="username"
                             placeholder="Email address"
-                            :value="user.email"
                         />
                         <InputError class="mt-2" :message="errors.email" />
                     </div>

@@ -33,7 +33,7 @@ class NotificationController extends Controller
         $user = $request->user();
         $user->unreadNotifications->markAsRead();
 
-        return to_route('notifications.index')->with('success', 'All notifications marked as read.');
+        return back()->with('success', 'All notifications marked as read.');
     }
 
     public function markAsRead(Request $request, string $notificationId)
@@ -45,9 +45,9 @@ class NotificationController extends Controller
         if ($notification) {
             $notification->markAsRead();
 
-            return to_route('notifications.index')->with('success', 'Notification marked as read.');
+            return back()->with('success', 'Notification marked as read.');
         }
 
-        return to_route('notifications.index')->with('error', 'Notification not found.');
+        return back()->withErrors(['message' => 'Notification not found.']);
     }
 }

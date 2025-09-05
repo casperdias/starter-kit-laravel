@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { truncateMessage } from '@/composables/textHelper';
 import { Notification } from '@/types';
+import { Link } from '@inertiajs/vue3';
 import { ArchiveX, Bell, Eye, X } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 const notifications: Notification[] = [];
@@ -32,7 +33,7 @@ const notificationType = (type: string) => {
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-            <DropdownMenuLabel class="flex items-center justify-between">
+            <DropdownMenuLabel class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <Bell class="h-5 w-5" />
                     <h5 class="text-lg font-bold">Notification</h5>
@@ -58,10 +59,12 @@ const notificationType = (type: string) => {
             </template>
             <DropdownMenuSeparator />
             <DropdownMenuLabel>
-                <Button variant="ghost" class="w-full border border-primary">
-                    <Eye />
-                    View All
-                </Button>
+                <Link :href="route('notifications.index')">
+                    <Button variant="ghost" class="w-full border border-primary">
+                        <Eye />
+                        View All
+                    </Button>
+                </Link>
             </DropdownMenuLabel>
         </DropdownMenuContent>
     </DropdownMenu>
