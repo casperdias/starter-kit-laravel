@@ -7,8 +7,8 @@ use App\Http\Requests\Admin\UserRequest;
 use App\Http\Requests\Admin\UserRoleRequest;
 use App\Http\Resources\Admin\RoleResource;
 use App\Http\Resources\Admin\UserResource;
-use App\Models\User\Role;
-use App\Models\User\User;
+use App\Models\Auth\Role;
+use App\Models\Auth\User;
 use Inertia\Inertia;
 
 class UserController extends Controller

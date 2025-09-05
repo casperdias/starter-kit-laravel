@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\User\Permission;
+use App\Models\Auth\Permission;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;

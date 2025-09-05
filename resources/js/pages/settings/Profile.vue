@@ -50,27 +50,13 @@ const user = page.props.auth.user as User;
                 >
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
-                        <Input
-                            id="name"
-                            class="mt-1 block w-full"
-                            name="name"
-                            required
-                            autocomplete="name"
-                            placeholder="Full name"
-                        />
+                        <Input id="name" class="mt-1 block w-full" name="name" required autocomplete="name" placeholder="Full name" />
                         <InputError class="mt-2" :message="errors.name" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            class="mt-1 block w-full"
-                            name="email"
-                            autocomplete="username"
-                            placeholder="Email address"
-                        />
+                        <Input id="email" type="email" class="mt-1 block w-full" name="email" autocomplete="username" placeholder="Email address" />
                         <InputError class="mt-2" :message="errors.email" />
                     </div>
 

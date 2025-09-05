@@ -7,8 +7,8 @@ use App\Http\Requests\Admin\RolePermissionRequest;
 use App\Http\Requests\Admin\RoleRequest;
 use App\Http\Resources\Admin\PermissionResource;
 use App\Http\Resources\Admin\RoleResource;
-use App\Models\User\Permission;
-use App\Models\User\Role;
+use App\Models\Auth\Permission;
+use App\Models\Auth\Role;
 use Inertia\Inertia;
 
 class RoleController extends Controller

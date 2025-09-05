@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\User\Role;
+use App\Models\Auth\Role;
 use Illuminate\Http\Request;
 
 class ChangeRoleController extends Controller

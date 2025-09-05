@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User\Permission;
-use App\Models\User\Role;
-use App\Models\User\User;
+use App\Models\Auth\Permission;
+use App\Models\Auth\Role;
+use App\Models\Auth\User;
 use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
@@ -35,6 +35,7 @@ class AdminSeeder extends Seeder
             ['name' => 'user', 'display_name' => 'User', 'description' => 'Permission to manage users'],
             ['name' => 'role', 'display_name' => 'Role', 'description' => 'Permission to manage roles'],
             ['name' => 'permission', 'display_name' => 'Permission', 'description' => 'Permission to manage permissions'],
+            ['name' => 'view-repo', 'display_name' => 'View Repository', 'description' => 'Permission to view the repository'],
         ];
 
         foreach ($permissions as $perm) {

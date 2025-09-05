@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PermissionRequest;
 use App\Http\Resources\Admin\PermissionResource;
-use App\Models\User\Permission;
+use App\Models\Auth\Permission;
 use Inertia\Inertia;
 
 class PermissionController extends Controller

@@ -36,6 +36,7 @@ export interface Notification {
     id: string;
     type: string;
     data: {
+        type: string;
         message: string;
         link?: string;
         [key: string]: unknown;
