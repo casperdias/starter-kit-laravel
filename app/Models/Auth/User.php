@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Models\Content\News;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -109,5 +110,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasRole($role)
     {
         return $this->roles()->where('name', $role)->exists();
+    }
+
+    public function news()
+    {
+        return $this->hasMany(News::class, 'user_id');
     }
 }

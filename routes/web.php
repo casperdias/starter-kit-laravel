@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\Content\NewsController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,9 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
             Route::resource('permissions', PermissionController::class);
         });
     });
+
+    // News management
+    Route::resource('news', NewsController::class);
 });
 
 require __DIR__.'/settings.php';

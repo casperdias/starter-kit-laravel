@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
             <Card>
-                <CardHeader class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-0">
+                <CardHeader class="grid grid-cols-1 gap-x-0 gap-y-4 md:grid-cols-2 md:gap-x-4 md:gap-y-0">
                     <div class="flex items-center space-x-5">
                         <ShieldPlus class="h-10 w-10" />
                         <div class="flex flex-col gap-2">

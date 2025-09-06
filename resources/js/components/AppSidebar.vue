@@ -6,7 +6,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Newspaper } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 const route = useRoute();
@@ -20,6 +20,13 @@ const navItems: { [key: string]: NavItem[] } = {
             title: 'Dashboard',
             href: '/dashboard',
             icon: LayoutGrid,
+        },
+    ],
+    content: [
+        {
+            title: 'News',
+            href: '/news',
+            icon: Newspaper,
         },
     ],
     admin: [
