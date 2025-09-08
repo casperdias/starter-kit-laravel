@@ -10,9 +10,10 @@ import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { QuillEditor } from '@vueup/vue-quill';
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { Newspaper, Plus, X } from 'lucide-vue-next';
+import Quill from 'quill';
+import { onMounted, ref } from 'vue';
+import { QuillyEditor } from 'vue-quilly';
 
 const route = useRoute();
 
@@ -31,6 +32,31 @@ const form = useForm({
     title: '',
     type: 'news',
     content: '',
+});
+
+const options = {
+    theme: 'snow',
+    modules: {
+        toolbar: [
+            [{ font: [] }, { size: [] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ color: [] }, { background: [] }],
+            [{ script: 'super' }, { script: 'sub' }],
+            [{ header: '1' }, { header: '2' }, 'blockquote', 'code-block'],
+            [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+            ['direction', { align: [] }],
+            ['clean'],
+        ],
+    },
+    placeholder: 'Start writing your news content here...',
+    readOnly: false,
+};
+const editor = ref<InstanceType<typeof QuillyEditor>>();
+onMounted(() => {
+    const instance = editor.value?.initialize(Quill);
+    if (!instance) {
+        console.warn('Quill editor failed to initialize.');
+    }
 });
 </script>
 
@@ -90,7 +116,7 @@ const form = useForm({
                     </div>
                     <div class="space-y-1">
                         <Label for="content" class="mt-4 mb-2 font-semibold">Content</Label>
-                        <QuillEditor id="content" v-model:content="form.content" toolbar="minimal" />
+                        <QuillyEditor ref="editor" v-model="form.content" :options="options" :is-semantic-html-model="true" />
                     </div>
                 </CardContent>
             </Card>
