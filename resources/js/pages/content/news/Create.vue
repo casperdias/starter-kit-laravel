@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Confirmation from '@/components/Confirmation.vue';
 import Preview from '@/components/content/news/Preview.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -58,6 +59,16 @@ onMounted(async () => {
     const Quill = (await import('quill')).default;
     editor.value?.initialize(Quill);
 });
+
+const publishNews = () => {
+    form.post(route('news.store'), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            form.reset();
+        },
+    });
+};
 </script>
 
 <template>
@@ -108,10 +119,23 @@ onMounted(async () => {
                         </div>
                         <div class="col-span-1 flex items-center justify-end gap-1">
                             <Preview :form="form" />
-                            <Button class="w-1/2 lg:w-auto">
-                                <Plus />
-                                Publish
-                            </Button>
+                            <Confirmation
+                                title="Publish News"
+                                description="Are you sure you want to publish this news article?"
+                                :onConfirm="publishNews"
+                            >
+                                <template #trigger>
+                                    <Button class="w-1/2 lg:w-auto">
+                                        <Plus />
+                                        Publish
+                                    </Button>
+                                </template>
+                                <template #content>
+                                    <div class="grid gap-2">
+                                        Are you sure you want to publish this news article? This action cannot be undone.
+                                    </div>
+                                </template>
+                            </Confirmation>
                         </div>
                     </div>
                     <div class="space-y-1">
