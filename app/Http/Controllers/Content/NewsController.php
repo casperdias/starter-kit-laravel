@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Content\NewsRequest;
 use App\Models\Content\News;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NewsController extends Controller
@@ -28,9 +28,15 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(NewsRequest $request)
     {
-        //
+        $news = News::create([
+            'title' => $request->title,
+            'type' => $request->type,
+            'content' => $request->content,
+        ]);
+
+        return back()->with('success', 'News item created successfully.');
     }
 
     /**
@@ -52,7 +58,7 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, News $news)
+    public function update(NewsRequest $request, News $news)
     {
         //
     }

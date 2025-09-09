@@ -43,6 +43,7 @@ const icon = computed(() => {
 });
 
 const options = {
+    theme: 'bubble',
     placeholder: 'Start writing your news content here...',
     readOnly: true,
 };
