@@ -11,9 +11,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Newspaper, Plus, X } from 'lucide-vue-next';
-import Quill from 'quill';
-import { onMounted, ref } from 'vue';
-import { QuillyEditor } from 'vue-quilly';
+import { onMounted, ref, shallowRef } from 'vue';
 
 const route = useRoute();
 
@@ -51,12 +49,14 @@ const options = {
     placeholder: 'Start writing your news content here...',
     readOnly: false,
 };
-const editor = ref<InstanceType<typeof QuillyEditor>>();
-onMounted(() => {
-    const instance = editor.value?.initialize(Quill);
-    if (!instance) {
-        console.warn('Quill editor failed to initialize.');
-    }
+const editor = ref();
+const QuillyEditor = shallowRef();
+
+onMounted(async () => {
+    const { QuillyEditor: QE } = await import('vue-quilly');
+    QuillyEditor.value = QE;
+    const Quill = (await import('quill')).default;
+    editor.value?.initialize(Quill);
 });
 </script>
 
@@ -116,7 +116,14 @@ onMounted(() => {
                     </div>
                     <div class="space-y-1">
                         <Label for="content" class="mt-4 mb-2 font-semibold">Content</Label>
-                        <QuillyEditor ref="editor" v-model="form.content" :options="options" :is-semantic-html-model="true" />
+                        <component
+                            :is="QuillyEditor"
+                            v-if="QuillyEditor"
+                            ref="editor"
+                            v-model="form.content"
+                            :options="options"
+                            :is-semantic-html-model="true"
+                        />
                     </div>
                 </CardContent>
             </Card>

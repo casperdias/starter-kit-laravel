@@ -6,9 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppPageProps } from '@/types';
 import { InertiaForm, usePage } from '@inertiajs/vue3';
 import { Fullscreen, Megaphone, Newspaper, ShieldPlus } from 'lucide-vue-next';
-import Quill from 'quill';
-import { computed, nextTick, ref, watch } from 'vue';
-import { QuillyEditor } from 'vue-quilly';
+import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue';
 
 const props = defineProps<{
     form: InertiaForm<{ title: string; type: string; content: string }>;
@@ -47,15 +45,19 @@ const options = {
     placeholder: 'Start writing your news content here...',
     readOnly: true,
 };
-const editor = ref<InstanceType<typeof QuillyEditor>>();
-watch(dialogOpen, async (open) => {
-    if (open) {
-        await nextTick();
-        const instance = editor.value?.initialize(Quill);
-        if (!instance) {
-            console.warn('Quill editor failed to initialize.');
+const editor = ref();
+const QuillyEditor = shallowRef();
+
+onMounted(async () => {
+    const { QuillyEditor: QE } = await import('vue-quilly');
+    QuillyEditor.value = QE;
+    const Quill = (await import('quill')).default;
+    watch(dialogOpen, async (open) => {
+        if (open) {
+            await nextTick();
+            editor.value?.initialize(Quill);
         }
-    }
+    });
 });
 </script>
 
@@ -69,11 +71,10 @@ watch(dialogOpen, async (open) => {
         </DialogTrigger>
         <DialogContent class="sm:max-w-3xl">
             <DialogHeader>
-                <DialogTitle>Preview {{ dialogOpen }}</DialogTitle>
+                <DialogTitle>Preview</DialogTitle>
                 <DialogDescription> View how your news article will look before publishing. </DialogDescription>
             </DialogHeader>
             <ScrollArea class="h-[70vh] w-full rounded-md border p-3">
-                <!-- Title -->
                 <div class="flex items-center gap-2 px-2">
                     <component :is="icon" class="size-10" />
                     <div class="space-y-1">
@@ -81,8 +82,7 @@ watch(dialogOpen, async (open) => {
                         <p class="text-sm text-muted-foreground">By {{ user.name }}</p>
                     </div>
                 </div>
-                <!-- Content -->
-                <QuillyEditor ref="editor" :options="options" v-model="localContent" />
+                <component :is="QuillyEditor" v-if="QuillyEditor" ref="editor" :options="options" v-model="localContent" />
             </ScrollArea>
         </DialogContent>
     </Dialog>
