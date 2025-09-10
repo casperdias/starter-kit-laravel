@@ -107,4 +107,15 @@ export interface Role {
     created_at: string;
 }
 
+export interface News {
+    id: string;
+    title: string;
+    type: string;
+    content: string;
+    author?: string;
+    created_at: string;
+    diff_created_at: string;
+    updated_at: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

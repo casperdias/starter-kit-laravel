@@ -10,7 +10,12 @@ class News extends Model
 {
     use HasUuids;
 
-    protected $fillable = ['title', 'content', 'user_id'];
+    protected $fillable = [
+        'title',
+        'type',
+        'content',
+        'user_id',
+    ];
 
     public function author()
     {

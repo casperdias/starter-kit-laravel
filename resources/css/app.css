@@ -168,4 +168,12 @@
     [data-sonner-toast][data-styled='true'] [data-description] {
         color: inherit !important;
     }
+
+    ol {
+        @apply list-decimal;
+    }
+
+    ul {
+        @apply list-disc;
+    }
 }

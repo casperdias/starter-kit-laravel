@@ -1,15 +1,22 @@
 <script lang="ts" setup>
+import DefaultPagination from '@/components/DefaultPagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
-import { Filter, Plus, Search } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { BreadcrumbItem, News, Pagination } from '@/types';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ArchiveX, Filter, Megaphone, Newspaper, Plus, Search, ShieldPlus } from 'lucide-vue-next';
+import { onBeforeUnmount, ref, watch } from 'vue';
 
 const route = useRoute();
+
+const props = defineProps<Props>();
+
+interface Props {
+    news: Pagination<News>;
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,7 +25,41 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const icon = (type: string) => {
+    switch (type) {
+        case 'announcement':
+            return Megaphone;
+        case 'update':
+            return ShieldPlus;
+        case 'news':
+        default:
+            return Newspaper;
+    }
+};
+
 const searchTerm = ref(route().params.search || '');
+let searchTimeout: ReturnType<typeof setTimeout>;
+
+watch(searchTerm, (newTerm) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        router.get(
+            props.news.meta.path,
+            {
+                search: newTerm,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            },
+        );
+    }, 500);
+});
+
+onBeforeUnmount(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+});
 </script>
 
 <template>
@@ -48,6 +89,31 @@ const searchTerm = ref(route().params.search || '');
                     </Link>
                 </CardContent>
             </Card>
+            <template v-if="news.data.length === 0">
+                <Card>
+                    <CardHeader class="text-center">
+                        <div class="flex flex-col items-center justify-center space-y-2">
+                            <ArchiveX class="size-10" />
+                            <p class="font-semibold">No news found.</p>
+                        </div>
+                    </CardHeader>
+                </Card>
+            </template>
+            <template v-else>
+                <Card v-for="item in news.data" :key="item.id">
+                    <CardHeader>
+                        <div class="flex items-center gap-2 px-2">
+                            <component :is="icon(item.type)" class="size-10" />
+                            <div class="space-y-1">
+                                <h2 class="text-xl font-bold">{{ item.title || 'Judul' }}</h2>
+                                <p class="text-sm text-muted-foreground">By {{ item.author || 'Unknown' }}</p>
+                                <p class="text-sm text-muted-foreground">Created at {{ item.created_at }} ({{ item.diff_created_at }})</p>
+                            </div>
+                        </div>
+                    </CardHeader>
+                </Card>
+            </template>
+            <DefaultPagination :pagination="news" />
         </div>
     </AppLayout>
 </template>
