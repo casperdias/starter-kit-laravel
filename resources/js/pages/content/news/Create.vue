@@ -13,6 +13,7 @@ import { BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Newspaper, Plus, X } from 'lucide-vue-next';
 import { onMounted, ref, shallowRef } from 'vue';
+import { toast } from 'vue-sonner';
 
 const route = useRoute();
 
@@ -66,6 +67,16 @@ const publishNews = () => {
         preserveState: true,
         onSuccess: () => {
             form.reset();
+            toast.success('News article published successfully', {
+                description: 'Your news article has been created and published.',
+                closeButton: true,
+            });
+        },
+        onError: (error) => {
+            toast.error('Failed to publish news article', {
+                description: error.message || 'An error occurred while publishing the news article.',
+                closeButton: true,
+            });
         },
     });
 };
@@ -119,22 +130,17 @@ const publishNews = () => {
                         </div>
                         <div class="col-span-1 flex items-center justify-end gap-1">
                             <Preview :form="form" />
-                            <Confirmation
-                                title="Publish News"
-                                description="Are you sure you want to publish this news article?"
-                                :onConfirm="publishNews"
-                            >
+                            <Confirmation title="Publish News" description="Confirm Publication" :onConfirm="publishNews">
                                 <template #trigger>
                                     <Button class="w-1/2 lg:w-auto">
                                         <Plus />
                                         Publish
                                     </Button>
                                 </template>
-                                <template #content>
-                                    <div class="grid gap-2">
-                                        Are you sure you want to publish this news article? This action cannot be undone.
-                                    </div>
-                                </template>
+                                <div class="grid gap-2">
+                                    <p class="text-lg font-semibold">Are you sure you want to publish this news article?</p>
+                                    <p class="text-sm text-red-600">Once published, the news article will be visible to all users.</p>
+                                </div>
                             </Confirmation>
                         </div>
                     </div>

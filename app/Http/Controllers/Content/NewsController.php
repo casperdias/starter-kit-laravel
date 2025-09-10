@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\NewsRequest;
+use App\Http\Resources\Content\NewsResource;
 use App\Models\Content\News;
 use Inertia\Inertia;
 
@@ -14,7 +15,19 @@ class NewsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('content/news/Index');
+        $search = request('search', '');
+        $page = request('page', 1);
+        $per_page = request('per_page', 5);
+
+        $news = News::query()
+            ->with('author')
+            ->when($search, fn ($query) => $query->where('title', 'like', "%{$search}%"))
+            ->paginate($per_page);
+
+        return Inertia::render('content/news/Index', [
+            'news' => NewsResource::collection($news),
+            'search' => $search,
+        ]);
     }
 
     /**
@@ -30,7 +43,7 @@ class NewsController extends Controller
      */
     public function store(NewsRequest $request)
     {
-        $news = News::create([
+        $request->user()->news()->create([
             'title' => $request->title,
             'type' => $request->type,
             'content' => $request->content,
