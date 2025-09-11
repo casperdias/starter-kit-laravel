@@ -22,6 +22,7 @@ class NewsController extends Controller
         $news = News::query()
             ->with('author')
             ->when($search, fn ($query) => $query->where('title', 'like', "%{$search}%"))
+            ->orderBy('created_at', 'desc')
             ->paginate($per_page);
 
         return Inertia::render('content/news/Index', [

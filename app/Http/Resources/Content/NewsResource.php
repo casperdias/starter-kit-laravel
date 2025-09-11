@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Content;
 
-use App\Actions\RelativeTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +21,7 @@ class NewsResource extends JsonResource
             'content' => $this->content,
             'author' => $this->whenLoaded('author', fn () => $this->author->name),
             'created_at' => $this->created_at->format('d F Y H:i:s T'),
-            'diff_created_at' => RelativeTime::forDate($this->created_at),
+            'diff_created_at' => $this->created_at->diffForHumans(),
             'updated_at' => $this->updated_at->format('d F Y H:i:s T'),
         ];
     }
