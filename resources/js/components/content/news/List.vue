@@ -66,9 +66,9 @@ onBeforeUnmount(() => {
                         <Search class="size-6 text-muted-foreground" />
                     </span>
                 </div>
-                <Button variant="secondary" class="col-span-1 md:col-span-1">
+                <Button variant="secondary" class="@container col-span-1 md:col-span-1">
                     <Filter />
-                    Filter
+                    <span class="@max-[80px]:hidden"> Filter </span>
                 </Button>
             </CardHeader>
             <CardContent>
@@ -83,28 +83,26 @@ onBeforeUnmount(() => {
         <ScrollArea class="h-[600px] w-full">
             <div class="space-y-4">
                 <template v-if="news.data.length === 0">
-                    <Card>
-                        <CardHeader class="text-center">
-                            <div class="flex flex-col items-center justify-center space-y-2">
-                                <ArchiveX class="size-10" />
-                                <p class="font-semibold">No news found.</p>
-                            </div>
-                        </CardHeader>
-                    </Card>
+                    <Button variant="ghost" class="h-fit w-full border p-2">
+                        <div class="flex flex-col items-center justify-center space-y-2">
+                            <ArchiveX class="size-10" />
+                            <p class="font-semibold">No news found.</p>
+                        </div>
+                    </Button>
                 </template>
                 <template v-else>
-                    <Card v-for="item in news.data" :key="item.id">
-                        <CardHeader>
+                    <Button v-for="item in news.data" :key="item.id" variant="ghost" class="h-fit w-full border p-2">
+                        <div class="flex w-full flex-col gap-2">
                             <div class="flex items-center gap-2 px-2">
                                 <component :is="icon(item.type)" class="size-10" />
                                 <h2 class="text-xl font-bold">{{ item.title || 'Judul' }}</h2>
                             </div>
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between pl-4">
                                 <p class="text-sm font-semibold text-muted-foreground">By {{ item.author || 'Unknown' }}</p>
                                 <p class="text-sm text-muted-foreground">{{ item.diff_created_at }}</p>
                             </div>
-                        </CardHeader>
-                    </Card>
+                        </div>
+                    </Button>
                 </template>
             </div>
         </ScrollArea>
