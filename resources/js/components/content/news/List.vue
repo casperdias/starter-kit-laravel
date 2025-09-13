@@ -5,13 +5,16 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRoute } from '@/composables/useRoute';
-import { News, Pagination } from '@/types';
+import { AppPageProps, News, Pagination } from '@/types';
 
-import { Link, router } from '@inertiajs/vue3';
-import { ArchiveX, Filter, Megaphone, Newspaper, Plus, Search, ShieldPlus } from 'lucide-vue-next';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { ArchiveX, Megaphone, Newspaper, Plus, Search, ShieldPlus } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
+import Filter from './Filter.vue';
 
 const route = useRoute();
+const page = usePage<AppPageProps>();
+const permissions = page.props.auth.user.permissions;
 
 const props = defineProps<Props>();
 
@@ -66,12 +69,9 @@ onBeforeUnmount(() => {
                         <Search class="size-6 text-muted-foreground" />
                     </span>
                 </div>
-                <Button variant="secondary" class="@container col-span-1 md:col-span-1">
-                    <Filter />
-                    <span class="@max-[80px]:hidden"> Filter </span>
-                </Button>
+                <Filter />
             </CardHeader>
-            <CardContent>
+            <CardContent v-if="permissions.includes('create-news')">
                 <Link :href="route('news.create')">
                     <Button class="w-full">
                         <Plus class="size-4" />

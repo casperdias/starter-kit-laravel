@@ -36,6 +36,7 @@ class AdminSeeder extends Seeder
             ['name' => 'role', 'display_name' => 'Role', 'description' => 'Permission to manage roles'],
             ['name' => 'permission', 'display_name' => 'Permission', 'description' => 'Permission to manage permissions'],
             ['name' => 'view-repo', 'display_name' => 'View Repository', 'description' => 'Permission to view the repository'],
+            ['name' => 'create-news', 'display_name' => 'Create News', 'description' => 'Permission to create news articles'],
         ];
 
         foreach ($permissions as $perm) {
