@@ -36,7 +36,7 @@ const selectedNews = ref<News | null>(null);
             </ResizablePanel>
             <ResizableHandle with-handle />
             <ResizablePanel :default-size="70">
-                <Display v-if="selectedNews" :news="selectedNews" />
+                <Display :news="selectedNews" />
             </ResizablePanel>
         </ResizablePanelGroup>
     </AppLayout>
