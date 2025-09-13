@@ -1,10 +1,12 @@
 <script lang="ts" setup>
+import Display from '@/components/content/news/Display.vue';
 import List from '@/components/content/news/List.vue';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, News, Pagination } from '@/types';
 import { Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const route = useRoute();
 
@@ -20,6 +22,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('news.index'),
     },
 ];
+
+const selectedNews = ref<News | null>(null);
 </script>
 
 <template>
@@ -28,10 +32,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <ResizablePanelGroup direction="horizontal">
             <ResizablePanel :default-size="30" :min-size="30" :max-size="50">
-                <List :news="news" />
+                <List :news="news" @select-news="selectedNews = $event" />
             </ResizablePanel>
             <ResizableHandle with-handle />
-            <ResizablePanel :default-size="70"> </ResizablePanel>
+            <ResizablePanel :default-size="70">
+                <Display v-if="selectedNews" :news="selectedNews" />
+            </ResizablePanel>
         </ResizablePanelGroup>
     </AppLayout>
 </template>

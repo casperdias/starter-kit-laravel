@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
                 </Link>
             </CardContent>
         </Card>
-        <ScrollArea class="h-[550px] w-full">
+        <ScrollArea class="h-[60vh] w-full">
             <div class="space-y-4">
                 <template v-if="news.data.length === 0">
                     <Button variant="ghost" class="h-fit w-full border p-2">
@@ -91,7 +91,13 @@ onBeforeUnmount(() => {
                     </Button>
                 </template>
                 <template v-else>
-                    <Button v-for="item in news.data" :key="item.id" variant="ghost" class="h-fit w-full border p-2">
+                    <Button
+                        v-for="item in news.data"
+                        :key="item.id"
+                        variant="ghost"
+                        class="h-fit w-full border p-2"
+                        @click="$emit('select-news', item)"
+                    >
                         <div class="flex w-full flex-col gap-2">
                             <div class="flex items-center gap-2 px-2">
                                 <component :is="icon(item.type)" class="size-10" />
