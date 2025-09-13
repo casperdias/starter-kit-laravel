@@ -27,7 +27,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
+            <ResizablePanel :default-size="30" :min-size="30" :max-size="50">
                 <List :news="news" />
             </ResizablePanel>
             <ResizableHandle with-handle />

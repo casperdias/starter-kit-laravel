@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
                 </Link>
             </CardContent>
         </Card>
-        <ScrollArea class="h-[600px] w-full">
+        <ScrollArea class="h-[550px] w-full">
             <div class="space-y-4">
                 <template v-if="news.data.length === 0">
                     <Button variant="ghost" class="h-fit w-full border p-2">
