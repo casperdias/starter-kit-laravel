@@ -9,6 +9,7 @@ use App\Http\Resources\Admin\PermissionResource;
 use App\Http\Resources\Admin\RoleResource;
 use App\Models\Auth\Permission;
 use App\Models\Auth\Role;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class RoleController extends Controller
@@ -18,6 +19,8 @@ class RoleController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Role::class);
+
         $search = request('search', '');
         $page = request('page', 1);
         $per_page = request('per_page', 5);
@@ -49,6 +52,8 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        Gate::authorize('create', Role::class);
+
         $role = Role::create($request->validated());
 
         return back()
@@ -60,6 +65,8 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
+        Gate::authorize('view', $role);
+
         $role->load('permissions');
 
         $search = request('search', '');
@@ -86,6 +93,8 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        Gate::authorize('update', $role);
+
         return response()->json(new RoleResource($role));
     }
 
@@ -94,6 +103,8 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, Role $role)
     {
+        Gate::authorize('update', $role);
+
         $role->update($request->validated());
 
         return back()
@@ -102,6 +113,8 @@ class RoleController extends Controller
 
     public function updatePermission(RolePermissionRequest $request, Role $role, Permission $permission)
     {
+        Gate::authorize('update', $role);
+
         if ($request->status) {
             $role->assignPermission($permission);
         } else {
@@ -117,6 +130,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        Gate::authorize('delete', $role);
+
         if ($role->id === 1) {
             return back()->withErrors(['message' => 'This role cannot be deleted.']);
         }

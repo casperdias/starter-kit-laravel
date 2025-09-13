@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PermissionRequest;
 use App\Http\Resources\Admin\PermissionResource;
 use App\Models\Auth\Permission;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class PermissionController extends Controller
@@ -15,6 +16,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Permission::class);
+
         $search = request('search', '');
         $page = request('page', 1);
         $per_page = request('per_page', 5);
@@ -46,6 +49,8 @@ class PermissionController extends Controller
      */
     public function store(PermissionRequest $request)
     {
+        Gate::authorize('create', Permission::class);
+
         $permission = Permission::create($request->validated());
 
         return back()
@@ -57,6 +62,8 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
+        Gate::authorize('view', $permission);
+
         return response()->json(new PermissionResource($permission));
     }
 
@@ -65,6 +72,8 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
+        Gate::authorize('update', $permission);
+
         return response()->json(new PermissionResource($permission));
     }
 
@@ -73,6 +82,8 @@ class PermissionController extends Controller
      */
     public function update(PermissionRequest $request, Permission $permission)
     {
+        Gate::authorize('update', $permission);
+
         $permission->update($request->validated());
 
         return back()
@@ -84,6 +95,8 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
+        Gate::authorize('delete', $permission);
+
         if ($permission->id === 1) {
             return back()->withErrors(['message' => 'This permission cannot be deleted.']);
         }

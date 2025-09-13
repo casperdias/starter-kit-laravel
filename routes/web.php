@@ -20,24 +20,18 @@ Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class]
         Route::get('', AdminHomeController::class)->name('home');
 
         // User management
-        Route::middleware('permission:user')->group(function () {
-            Route::resource('users', UserController::class);
-            Route::put('users/{user}/role/{role}', [UserController::class, 'updateRole'])->name('users.roles.update');
-            Route::post('email/verification-notification/{user}', [EmailVerificationNotificationController::class, 'storeCustom'])
-                ->middleware('throttle:6,1')
-                ->name('verification.send.id');
-        });
+        Route::resource('users', UserController::class);
+        Route::put('users/{user}/role/{role}', [UserController::class, 'updateRole'])->name('users.roles.update');
+        Route::post('email/verification-notification/{user}', [EmailVerificationNotificationController::class, 'storeCustom'])
+            ->middleware('throttle:6,1')
+            ->name('verification.send.id');
 
         // Role management
-        Route::middleware('permission:role')->group(function () {
-            Route::resource('roles', RoleController::class);
-            Route::put('roles/{role}/permission/{permission}', [RoleController::class, 'updatePermission'])->name('roles.permissions.update');
-        });
+        Route::resource('roles', RoleController::class);
+        Route::put('roles/{role}/permission/{permission}', [RoleController::class, 'updatePermission'])->name('roles.permissions.update');
 
         // Permission management
-        Route::middleware('permission:permission')->group(function () {
-            Route::resource('permissions', PermissionController::class);
-        });
+        Route::resource('permissions', PermissionController::class);
     });
 
     // News management

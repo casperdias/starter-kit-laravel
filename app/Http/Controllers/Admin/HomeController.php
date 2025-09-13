@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -12,6 +13,10 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
-        return Inertia::render('admin/Home');
+        if (Gate::any(['user', 'role', 'permission'])) {
+            return Inertia::render('admin/Home');
+        }
+
+        abort(403);
     }
 }

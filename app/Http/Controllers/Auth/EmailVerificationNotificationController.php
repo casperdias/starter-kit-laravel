@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class EmailVerificationNotificationController extends Controller
 {
@@ -14,6 +15,8 @@ class EmailVerificationNotificationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('email-verification', $request->user());
+
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(route('dashboard', absolute: false));
         }
@@ -25,6 +28,8 @@ class EmailVerificationNotificationController extends Controller
 
     public function storeCustom(Request $request, User $user)
     {
+        Gate::authorize('email-verification', $user);
+
         if ($user->hasVerifiedEmail()) {
             return back()->with('message', 'Email already verified.');
         }

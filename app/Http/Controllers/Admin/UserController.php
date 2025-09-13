@@ -9,6 +9,7 @@ use App\Http\Resources\Admin\RoleResource;
 use App\Http\Resources\Admin\UserResource;
 use App\Models\Auth\Role;
 use App\Models\Auth\User;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -18,6 +19,8 @@ class UserController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', User::class);
+
         $search = request('search', '');
         $page = request('page', 1);
         $per_page = request('per_page', 5);
@@ -49,6 +52,8 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        Gate::authorize('create', User::class);
+
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -64,6 +69,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        Gate::authorize('view', $user);
+
         $user->load('roles');
 
         $search = request('search', '');
@@ -90,6 +97,8 @@ class UserController extends Controller
      */
     public function updateRole(UserRoleRequest $request, User $user, Role $role)
     {
+        Gate::authorize('update', $user);
+
         if ($request->status) {
             $user->assignRole($role);
         } else {
@@ -105,6 +114,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        Gate::authorize('update', $user);
+
         return response()->json(new UserResource($user));
     }
 
@@ -113,6 +124,8 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        Gate::authorize('update', $user);
+
         $user->update($request->validated());
 
         return back()
@@ -124,6 +137,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        Gate::authorize('delete', $user);
+
         if ($user->id === auth()->id()) {
             return back()->withErrors(['message' => 'You cannot delete your own account.']);
         }
