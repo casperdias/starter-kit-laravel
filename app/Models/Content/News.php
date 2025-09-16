@@ -2,6 +2,7 @@
 
 namespace App\Models\Content;
 
+use App\Events\Content\News\NewsCreated;
 use App\Models\Auth\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,10 @@ class News extends Model
         'type',
         'content',
         'user_id',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => NewsCreated::class,
     ];
 
     public function author()
