@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRoute } from '@/composables/useRoute';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { regenerateRecoveryCodes } from '@/routes/two-factor';
 import { Form } from '@inertiajs/vue3';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
 
-const { recoveryCodesList, fetchRecoveryCodes } = useTwoFactorAuth();
+const route = useRoute();
+const { recoveryCodesList, fetchRecoveryCodes } = useTwoFactorAuth(
+    route('two-factor.qr-code'),
+    route('two-factor.secret-key'),
+    route('two-factor.recovery-codes'),
+);
 const isRecoveryCodesVisible = ref<boolean>(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 
@@ -48,7 +53,7 @@ onMounted(async () => {
 
                 <Form
                     v-if="isRecoveryCodesVisible"
-                    v-bind="regenerateRecoveryCodes.form()"
+                    :action="route('two-factor.regenerate-recovery-codes')"
                     method="post"
                     :options="{ preserveScroll: true }"
                     @success="fetchRecoveryCodes"

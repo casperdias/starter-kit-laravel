@@ -4,14 +4,16 @@ import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useRoute } from '@/composables/useRoute';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { disable, enable, show } from '@/routes/two-factor';
 import { BreadcrumbItem } from '@/types';
 import { Form, Head } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
+
+const route = useRoute();
 
 interface Props {
     requiresConfirmation?: boolean;
@@ -26,7 +28,7 @@ withDefaults(defineProps<Props>(), {
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Two-Factor Authentication',
-        href: show.url(),
+        href: route('two-factor.show'),
     },
 ];
 
@@ -55,7 +57,7 @@ onUnmounted(() => {
 
                     <div>
                         <Button v-if="hasSetupData" @click="showSetupModal = true"> <ShieldCheck />Continue Setup </Button>
-                        <Form v-else v-bind="enable.form()" @success="showSetupModal = true" #default="{ processing }">
+                        <Form v-else :action="route('two-factor.enable')" method="post" @success="showSetupModal = true" #default="{ processing }">
                             <Button type="submit" :disabled="processing"> <ShieldCheck />Enable 2FA</Button></Form
                         >
                     </div>
@@ -72,7 +74,7 @@ onUnmounted(() => {
                     <TwoFactorRecoveryCodes />
 
                     <div class="relative inline">
-                        <Form v-bind="disable.form()" #default="{ processing }">
+                        <Form :action="route('two-factor.disable')" method="delete" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 <ShieldBan />
                                 Disable 2FA

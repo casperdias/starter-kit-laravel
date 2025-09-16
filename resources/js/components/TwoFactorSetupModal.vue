@@ -3,12 +3,14 @@ import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
+import { useRoute } from '@/composables/useRoute';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { confirm } from '@/routes/two-factor';
 import { Form } from '@inertiajs/vue3';
 import { useClipboard } from '@vueuse/core';
 import { Check, Copy, Loader2, ScanLine } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
+
+const route = useRoute();
 
 interface Props {
     requiresConfirmation: boolean;
@@ -19,7 +21,11 @@ const props = defineProps<Props>();
 const isOpen = defineModel<boolean>('isOpen');
 
 const { copy, copied } = useClipboard();
-const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData } = useTwoFactorAuth();
+const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData } = useTwoFactorAuth(
+    route('two-factor.qr-code'),
+    route('two-factor.secret-key'),
+    route('two-factor.recovery-codes'),
+);
 
 const showVerificationStep = ref(false);
 const code = ref<number[]>([]);
@@ -155,7 +161,14 @@ watch(
                 </template>
 
                 <template v-else>
-                    <Form v-bind="confirm.form()" reset-on-error @finish="code = []" @success="isOpen = false" v-slot="{ errors, processing }">
+                    <Form
+                        method="post"
+                        :action="route('two-factor.confirm')"
+                        reset-on-error
+                        @finish="code = []"
+                        @success="isOpen = false"
+                        v-slot="{ errors, processing }"
+                    >
                         <input type="hidden" name="code" :value="codeValue" />
                         <div ref="pinInputContainerRef" class="relative w-full space-y-3">
                             <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
