@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { Bell, KeyRound, SunMoon, UserPen } from 'lucide-vue-next';
+import { Bell, Fingerprint, KeyRound, SunMoon, UserPen } from 'lucide-vue-next';
 
 const sidebarNavItems: NavItem[] = [
     {
@@ -26,6 +26,11 @@ const sidebarNavItems: NavItem[] = [
         title: 'Notifications',
         href: '/settings/notifications',
         icon: Bell,
+    },
+    {
+        title: 'Two-Factor Auth',
+        href: '/settings/two-factor',
+        icon: Fingerprint,
     },
 ];
 
