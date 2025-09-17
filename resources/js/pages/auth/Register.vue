@@ -38,7 +38,7 @@ const route = useRoute();
 
                 <div class="grid gap-2">
                     <Label for="password">Password</Label>
-                    <Input id="password" type="password" required :tabindex="3" autocomplete="new-password" name="password" placeholder="Password" />
+                    <Input id="password" type="password" required :tabindex="3" autocomplete="password" name="password" placeholder="Password" />
                     <InputError :message="errors.password" />
                 </div>
 
@@ -49,7 +49,7 @@ const route = useRoute();
                         type="password"
                         required
                         :tabindex="4"
-                        autocomplete="new-password"
+                        autocomplete="password"
                         name="password_confirmation"
                         placeholder="Confirm password"
                     />

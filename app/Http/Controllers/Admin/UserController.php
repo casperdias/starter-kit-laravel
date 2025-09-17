@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Http\Requests\Admin\UserRoleRequest;
@@ -50,15 +51,11 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(UserRequest $request, CreateNewUser $creator)
     {
         Gate::authorize('create', User::class);
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt('password'),
-        ]);
+        $user = $creator->create($request->all());
 
         return back()
             ->with('success', 'User created successfully.');

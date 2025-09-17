@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
@@ -32,5 +33,17 @@ class UserRequest extends FormRequest
                 Rule::unique('users')->ignore($this->route('user')),
             ],
         ];
+    }
+
+    /**
+     * Handle passed validation.
+     */
+    protected function passedValidation(): void
+    {
+        $password = Str::random(8);
+        $this->merge([
+            'password' => $password,
+            'password_confirmation' => $password,
+        ]);
     }
 }
