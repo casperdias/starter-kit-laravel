@@ -9,6 +9,7 @@ import type { DefineComponent } from 'vue';
 import { createSSRApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import { Ziggy } from './ziggy';
 
 configureEcho({
     broadcaster: 'reverb',
@@ -30,6 +31,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, {
                 ...props.initialPage.props.ziggy,
+                routes: Ziggy.routes as Record<string, { uri: string; methods: ("GET" | "POST" | "HEAD" | "DELETE" | "PUT" | "PATCH" | "OPTIONS")[] }>,
                 location: window.location,
             })
             .mount(el);

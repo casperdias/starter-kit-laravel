@@ -69,7 +69,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $userData,
             ],
             'ziggy' => [
-                ...(new Ziggy)->toArray(),
+                ...collect((new Ziggy)->toArray())->except('routes')->all(),
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
