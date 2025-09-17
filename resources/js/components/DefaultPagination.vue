@@ -2,7 +2,7 @@
 import { changePage } from '@/composables/indexHelper';
 import { cn } from '@/lib/utils';
 import { Pagination as PaginationType } from '@/types';
-import { HTMLAttributes } from 'vue';
+import { HTMLAttributes, ref, watch } from 'vue';
 import { Button } from './ui/button';
 import {
     Pagination,
@@ -17,35 +17,45 @@ import {
 
 const props = defineProps<{
     class?: HTMLAttributes['class'];
-    pagination: PaginationType<any>;
+    pagination: PaginationType<unknown>;
     pageParam?: string;
 }>();
+
+const currentPage = ref(props.pagination.meta.current_page);
+
+watch(
+    () => props.pagination.meta.current_page,
+    (newPage) => {
+        currentPage.value = newPage;
+    },
+);
 </script>
 
 <template>
     <Pagination
-        v-slot="{ page }"
         :items-per-page="pagination.meta.per_page"
         :total="pagination.meta.total"
-        :default-page="pagination.meta.current_page"
+        :default-page="currentPage"
+        @update:page="
+            (page: number) => {
+                currentPage = page;
+                changePage(pagination.meta.path, page, pageParam);
+            }
+        "
     >
         <PaginationList v-slot="{ items }" :class="cn('flex items-center justify-center gap-1', props.class)">
-            <PaginationFirst @click="changePage(pagination.meta.path, 1, props.pageParam)" />
-            <PaginationPrevious @click="changePage(pagination.meta.path, page - 1, props.pageParam)" />
+            <PaginationFirst :disabled="currentPage === 1" />
+            <PaginationPrevious :disabled="currentPage === 1" />
 
             <template v-for="(item, index) in items">
                 <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child>
-                    <Button
-                        :variant="item.value === page ? 'default' : 'outline'"
-                        @click="changePage(pagination.meta.path, item.value, props.pageParam)"
-                        >{{ item.value }}</Button
-                    >
+                    <Button :variant="item.value === currentPage ? 'default' : 'outline'">{{ item.value }}</Button>
                 </PaginationListItem>
                 <PaginationEllipsis v-else :key="item.type" :index="index" />
             </template>
 
-            <PaginationNext @click="changePage(pagination.meta.path, page + 1, props.pageParam)" />
-            <PaginationLast @click="changePage(pagination.meta.path, pagination.meta.last_page, props.pageParam)" />
+            <PaginationNext :disabled="currentPage === pagination.meta.last_page" />
+            <PaginationLast :disabled="currentPage === pagination.meta.last_page" />
         </PaginationList>
     </Pagination>
 </template>

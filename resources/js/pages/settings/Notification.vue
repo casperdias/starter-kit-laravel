@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Notification, Pagination, type BreadcrumbItem } from '@/types';
-
 import DefaultPagination from '@/components/DefaultPagination.vue';
-import { Table, TableBody, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { ArchiveX } from 'lucide-vue-next';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ref } from 'vue';
 
 defineProps<{
     notifications: Pagination<Notification>;
@@ -20,6 +20,8 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: '/settings/notifications',
     },
 ];
+
+const checkedNotifications = ref<string[]>([]);
 </script>
 
 <template>
@@ -29,7 +31,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall title="Notifications" description="List of all your notifications" />
-
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -42,12 +43,28 @@ const breadcrumbItems: BreadcrumbItem[] = [
                     </TableHeader>
                     <TableBody>
                         <template v-if="notifications.data.length > 0">
-                            <TableRow v-for="(notification, index) in notifications.data" :key="notification.id">
-                                <TableCell class="text-center">{{ notifications.meta.current_page * index }}</TableCell>
+                            <TableRow v-for="(notification) in notifications.data" :key="notification.id">
+                                <TableCell class="text-center">
+                                    <Checkbox
+                                        v-if="!notification.read_at"
+                                        @update:model-value="(val) => {
+                                            if (val) {
+                                                checkedNotifications.push(notification.id);
+                                            } else {
+                                                const index = checkedNotifications.indexOf(notification.id);
+                                                if (index > -1) {
+                                                    checkedNotifications.splice(index, 1);
+                                                }
+                                            }
+                                        }"
+                                        :model-value="checkedNotifications.includes(notification.id)"
+                                    />
+                                    <span v-else class="text-muted-foreground">-</span>
+                                </TableCell>
                                 <TableCell>{{ notification.data.type }}</TableCell>
                                 <TableCell>{{ notification.data.message }}</TableCell>
-                                <TableCell></TableCell>
-                                <TableCell> </TableCell>
+                                <TableCell>{{ notification.created_at }}</TableCell>
+                                <TableCell>{{ notification.read_at ? 'Read' : 'Unread' }}</TableCell>
                             </TableRow>
                         </template>
                         <template v-else>

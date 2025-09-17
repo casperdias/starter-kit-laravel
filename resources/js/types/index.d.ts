@@ -42,6 +42,7 @@ export interface Notification {
         [key: string]: unknown;
     };
     read_at: string | null;
+    created_at: string;
 }
 
 export interface User {
