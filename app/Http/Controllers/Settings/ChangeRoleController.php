@@ -22,6 +22,6 @@ class ChangeRoleController extends Controller
         $user->changeRole($role);
 
         return back()
-            ->with('success', 'Role changed successfully.');
+            ->with('success', __('Role changed successfully.'));
     }
 }

@@ -58,7 +58,7 @@ class NewsController extends Controller
             'content' => $request->content,
         ]);
 
-        return redirect()->route('news.index')->with('success', 'News article created successfully.');
+        return redirect()->route('news.index')->with('success', __('News article created successfully.'));
     }
 
     /**

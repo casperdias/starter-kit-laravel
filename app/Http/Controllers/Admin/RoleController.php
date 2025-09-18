@@ -57,7 +57,7 @@ class RoleController extends Controller
         $role = Role::create($request->validated());
 
         return back()
-            ->with('success', 'Role created successfully.');
+            ->with('success', __('Role created successfully.'));
     }
 
     /**
@@ -108,7 +108,7 @@ class RoleController extends Controller
         $role->update($request->validated());
 
         return back()
-            ->with('success', 'Role updated successfully.');
+            ->with('success', __('Role updated successfully.'));
     }
 
     public function updatePermission(RolePermissionRequest $request, Role $role, Permission $permission)
@@ -122,7 +122,7 @@ class RoleController extends Controller
         }
 
         return back()
-            ->with('success', 'Role permissions updated successfully.');
+            ->with('success', __('Role permissions updated successfully.'));
     }
 
     /**
@@ -133,17 +133,17 @@ class RoleController extends Controller
         Gate::authorize('delete', $role);
 
         if ($role->id === 1) {
-            return back()->withErrors(['message' => 'This role cannot be deleted.']);
+            return back()->withErrors(['message' => __('This role cannot be deleted.')]);
         }
 
         // If the role is associated with any users, do not allow deletion
         if ($role->users()->exists()) {
-            return back()->withErrors(['message' => 'This role cannot be deleted because it is associated with one or more users.']);
+            return back()->withErrors(['message' => __('This role cannot be deleted because it is associated with one or more users.')]);
         }
 
         $role->delete();
 
         return back()
-            ->with('success', 'Role deleted successfully.');
+            ->with('success', __('Role deleted successfully.'));
     }
 }

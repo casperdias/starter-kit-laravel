@@ -33,21 +33,21 @@ class NotificationController extends Controller
         $user = $request->user();
         $user->unreadNotifications->markAsRead();
 
-        return back()->with('success', 'All notifications marked as read.');
+        return back()->with('success', __('All notifications marked as read.'));
     }
 
-    public function markAsRead(Request $request, string $notificationId)
+    public function markAsRead(Request $request)
     {
         $user = $request->user();
 
-        $notification = $user->unreadNotifications()->find($notificationId);
+        $notification = $user->unreadNotifications()->whereIn('id', $request->ids)->get();
 
-        if ($notification) {
+        if ($notification->isNotEmpty()) {
             $notification->markAsRead();
 
-            return back()->with('success', 'Notification marked as read.');
+            return back()->with('success', __('Selected notifications marked as read.'));
         }
 
-        return back()->withErrors(['message' => 'Notification not found.']);
+        return back()->withErrors(['message' => __('Notification not found.')]);
     }
 }

@@ -54,7 +54,7 @@ class PermissionController extends Controller
         $permission = Permission::create($request->validated());
 
         return back()
-            ->with('success', 'Permission created successfully.');
+            ->with('success', __('Permission created successfully.'));
     }
 
     /**
@@ -87,7 +87,7 @@ class PermissionController extends Controller
         $permission->update($request->validated());
 
         return back()
-            ->with('success', 'Permission updated successfully.');
+            ->with('success', __('Permission updated successfully.'));
     }
 
     /**
@@ -98,11 +98,11 @@ class PermissionController extends Controller
         Gate::authorize('delete', $permission);
 
         if ($permission->id === 1) {
-            return back()->withErrors(['message' => 'This permission cannot be deleted.']);
+            return back()->withErrors(['message' => __('This permission cannot be deleted.')]);
         }
 
         $permission->delete();
 
-        return back()->with('success', 'Permission deleted successfully.');
+        return back()->with('success', __('Permission deleted successfully.'));
     }
 }

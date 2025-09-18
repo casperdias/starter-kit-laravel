@@ -23,7 +23,7 @@ class EmailVerificationNotificationController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('status', 'verification-link-sent');
+        return back()->with('status', __('Verification Link Sent'));
     }
 
     public function storeCustom(Request $request, User $user)
@@ -31,11 +31,11 @@ class EmailVerificationNotificationController extends Controller
         Gate::authorize('email-verification', $user);
 
         if ($user->hasVerifiedEmail()) {
-            return back()->with('message', 'Email already verified.');
+            return back()->with('message', __('Email already verified.'));
         }
 
         $user->sendEmailVerificationNotification();
 
-        return back()->with('success', 'Email Verifikasi Terkirim');
+        return back()->with('success', __('Email Verification Sent'));
     }
 }
