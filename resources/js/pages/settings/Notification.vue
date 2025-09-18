@@ -8,7 +8,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Notification, Pagination, type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import { ArchiveX, CircleCheckBig } from 'lucide-vue-next';
+import { ArchiveX, CircleCheckBig, User } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 defineProps<{
@@ -49,24 +49,41 @@ const updateCheckedNotifications = (id: string, checked: boolean) => {
                             <TableHead class="text-center">Type</TableHead>
                             <TableHead>Message</TableHead>
                             <TableHead>Created At</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>From</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         <template v-if="notifications.data.length > 0">
                             <TableRow v-for="notification in notifications.data" :key="notification.id">
-                                <TableCell class="flex items-center justify-center">
-                                    <Checkbox
-                                        v-if="!notification.read_at"
-                                        @update:model-value="(val) => updateCheckedNotifications(notification.id, Boolean(val))"
-                                        :model-value="checkedNotifications.includes(notification.id)"
-                                    />
-                                    <CircleCheckBig v-else class="text-green-500" />
+                                <TableCell class="text-center">
+                                    <div class="flex items-center justify-center">
+                                        <Checkbox
+                                            v-if="!notification.read_at"
+                                            @update:model-value="(val) => updateCheckedNotifications(notification.id, Boolean(val))"
+                                            :model-value="checkedNotifications.includes(notification.id)"
+                                        />
+                                        <CircleCheckBig v-else class="text-green-500" />
+                                    </div>
                                 </TableCell>
-                                <TableCell>{{ notification.data.type }}</TableCell>
-                                <TableCell>{{ notification.data.message }}</TableCell>
-                                <TableCell>{{ notification.created_at }}</TableCell>
-                                <TableCell>{{ notification.read_at ? 'Read' : 'Unread' }}</TableCell>
+                                <TableCell>
+                                    <div class="mx-auto w-max rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                                        {{ notification.data.type.toUpperCase() }}
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <p>{{ notification.data.message }}</p>
+                                    <p v-if="notification.data.title" class="font-semibold italic">"{{ notification.data.title }}"</p>
+                                </TableCell>
+                                <TableCell>
+                                    <p>{{ notification.created_at }}</p>
+                                    <p class="text-xs text-muted-foreground">({{ notification.diff_created_at }})</p>
+                                </TableCell>
+                                <TableCell>
+                                    <div class="flex items-center gap-2">
+                                        <User />
+                                        <span class="font-semibold">{{ notification.data.from || 'System' }}</span>
+                                    </div>
+                                </TableCell>
                             </TableRow>
                         </template>
                         <template v-else>

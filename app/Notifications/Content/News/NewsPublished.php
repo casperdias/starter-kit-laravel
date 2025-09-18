@@ -16,7 +16,7 @@ class NewsPublished extends Notification
     public function __construct(
         public News $news
     ) {
-        //
+        $news->load('author');
     }
 
     /**
@@ -38,9 +38,9 @@ class NewsPublished extends Notification
     {
         return [
             'message' => __('A new news article has been published.'),
-            'action_url' => route('news.show', $this->news->id),
             'title' => $this->news->title,
             'type' => 'news',
+            'from' => $this->news->author->name,
         ];
     }
 }

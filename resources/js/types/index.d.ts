@@ -38,11 +38,12 @@ export interface Notification {
     data: {
         type: string;
         message: string;
-        link?: string;
-        [key: string]: unknown;
+        action_url?: string;
+        [key: string]: string | number | boolean;
     };
     read_at: string | null;
     created_at: string;
+    diff_created_at: string;
 }
 
 export interface User {
