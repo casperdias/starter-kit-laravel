@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Confirmation from '@/components/Confirmation.vue';
-import Preview from '@/components/content/news/Preview.vue';
+import { Preview } from '@/components/content/news';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

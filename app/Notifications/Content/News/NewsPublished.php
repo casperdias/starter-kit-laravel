@@ -37,7 +37,7 @@ class NewsPublished extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A news article has been published.',
+            'message' => $this->news->author->name.' just published a news: '.$this->news->title,
             'action_url' => route('news.index'),
             'title' => $this->news->title,
             'type' => 'news',

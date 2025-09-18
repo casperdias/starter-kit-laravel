@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import Display from '@/components/content/news/Display.vue';
-import List from '@/components/content/news/List.vue';
+import { Display, List } from '@/components/content/news';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';

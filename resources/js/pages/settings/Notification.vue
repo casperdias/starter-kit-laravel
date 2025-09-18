@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import { Notification, Pagination, type BreadcrumbItem } from '@/types';
 import DefaultPagination from '@/components/DefaultPagination.vue';
+import HeadingSmall from '@/components/HeadingSmall.vue';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { Notification, Pagination, type BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/vue3';
 import { ArchiveX } from 'lucide-vue-next';
-import { Checkbox } from '@/components/ui/checkbox';
 import { ref } from 'vue';
 
 defineProps<{
@@ -43,20 +43,22 @@ const checkedNotifications = ref<string[]>([]);
                     </TableHeader>
                     <TableBody>
                         <template v-if="notifications.data.length > 0">
-                            <TableRow v-for="(notification) in notifications.data" :key="notification.id">
+                            <TableRow v-for="notification in notifications.data" :key="notification.id">
                                 <TableCell class="text-center">
                                     <Checkbox
                                         v-if="!notification.read_at"
-                                        @update:model-value="(val) => {
-                                            if (val) {
-                                                checkedNotifications.push(notification.id);
-                                            } else {
-                                                const index = checkedNotifications.indexOf(notification.id);
-                                                if (index > -1) {
-                                                    checkedNotifications.splice(index, 1);
+                                        @update:model-value="
+                                            (val) => {
+                                                if (val) {
+                                                    checkedNotifications.push(notification.id);
+                                                } else {
+                                                    const index = checkedNotifications.indexOf(notification.id);
+                                                    if (index > -1) {
+                                                        checkedNotifications.splice(index, 1);
+                                                    }
                                                 }
                                             }
-                                        }"
+                                        "
                                         :model-value="checkedNotifications.includes(notification.id)"
                                     />
                                     <span v-else class="text-muted-foreground">-</span>

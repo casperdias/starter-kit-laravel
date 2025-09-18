@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\NewsRequest;
 use App\Http\Resources\Content\NewsResource;
 use App\Models\Content\News;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class NewsController extends Controller
@@ -25,6 +26,9 @@ class NewsController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate($per_page);
 
+        // Add hide_content to the request for the resource
+        request()->merge(['hide_content' => true]);
+
         return Inertia::render('content/news/Index', [
             'news' => NewsResource::collection($news),
             'search' => $search,
@@ -36,6 +40,8 @@ class NewsController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', News::class);
+
         return Inertia::render('content/news/Create');
     }
 
@@ -44,6 +50,8 @@ class NewsController extends Controller
      */
     public function store(NewsRequest $request)
     {
+        Gate::authorize('create', News::class);
+
         $request->user()->news()->create([
             'title' => $request->title,
             'type' => $request->type,
@@ -58,7 +66,7 @@ class NewsController extends Controller
      */
     public function show(News $news)
     {
-        //
+        return response()->json(new NewsResource($news->load('author')));
     }
 
     /**
