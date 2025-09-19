@@ -6,7 +6,6 @@ import type { AppPageProps, BreadcrumbItemType } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
-import Notification from './Notification.vue';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 const route = useRoute();
@@ -58,7 +57,6 @@ const changeRole = () => {
             </template>
         </div>
         <div class="flex items-center gap-2">
-            <Notification />
             <Badge v-if="roles.length <= 1">
                 {{ roles.length === 1 ? roles[0].display_name : 'Tidak Ada Role' }}
             </Badge>

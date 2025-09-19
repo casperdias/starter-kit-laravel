@@ -4,7 +4,7 @@ namespace App\Events\Content\News;
 
 use App\Models\Content\News;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PublicChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -29,7 +29,7 @@ class NewsCreated
     public function broadcastOn(): array
     {
         return [
-            new PublicChannel('push-notifications'),
+            new PrivateChannel('push-notifications'),
         ];
     }
 }

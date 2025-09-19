@@ -13,14 +13,14 @@ import { truncateMessage } from '@/composables/textHelper';
 import { useRoute } from '@/composables/useRoute';
 import { Notification } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { useEchoModel } from '@laravel/echo-vue';
+import { useEchoNotification } from '@laravel/echo-vue';
 import { ArchiveX, Bell, Eye, X } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const route = useRoute();
 
 const page = usePage();
-const auth = computed(() => page.props.auth);
+const auth = page.props.auth
 
 const notifications: Notification[] = [];
 const dropdownOpen = ref(false);
@@ -33,11 +33,12 @@ onMounted(() => {
     });
 });
 
-const { channel } = useEchoModel('App.Models.User', auth.value.user.id);
-
-channel().notification((notification: Notification) => {
-    console.log(notification.type);
-});
+useEchoNotification(
+    `App.Models.User.${auth.user.id}`,
+    (notification: Notification) => {
+        console.log(notification.type);
+    },
+);
 </script>
 
 <template>
