@@ -67,12 +67,7 @@ export interface User {
 
 export interface Pagination<T> {
     data: T[];
-    links: {
-        first: string | null;
-        last: string | null;
-        prev: string | null;
-        next: string | null;
-    };
+    links: PaginationLinks;
     meta: {
         current_page: number;
         from: number;
@@ -87,6 +82,24 @@ export interface Pagination<T> {
         to: number;
         total: number;
     };
+}
+
+export interface CursorPagination<T> {
+    data: T[];
+    links: PaginationLinks;
+    meta: {
+        next_cursor: string | null;
+        path: string;
+        per_page: number;
+        prev_cursor: string | null;
+    };
+}
+
+export interface PaginationLinks {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
 }
 
 export interface Show<T> {

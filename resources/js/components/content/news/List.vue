@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
         <ScrollArea class="h-[60vh] w-full">
             <div class="space-y-4">
                 <template v-if="news.data.length === 0">
-                    <Button variant="ghost" class="h-fit w-full border p-2">
+                    <Button variant="ghost" class="h-fit w-full border px-2 py-4">
                         <div class="flex flex-col items-center justify-center space-y-2">
                             <ArchiveX class="size-10" />
                             <p class="font-semibold">No news found.</p>
@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
                         v-for="item in news.data"
                         :key="item.id"
                         variant="ghost"
-                        class="h-fit w-full border p-2"
+                        class="h-fit w-full border px-2 py-4"
                         @click="$emit('select-news', item)"
                     >
                         <div class="flex w-full flex-col gap-2">
@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
                                 <component :is="icon(item.type)" class="size-10" />
                                 <h2 class="text-xl font-bold">{{ item.title || 'Judul' }}</h2>
                             </div>
-                            <div class="flex items-center justify-between pl-4">
+                            <div class="flex items-center justify-between px-2">
                                 <p class="text-sm font-semibold text-muted-foreground">By {{ item.author || 'Unknown' }}</p>
                                 <p class="text-sm text-muted-foreground">{{ item.diff_created_at }}</p>
                             </div>

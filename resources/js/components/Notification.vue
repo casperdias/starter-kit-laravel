@@ -8,18 +8,36 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { fetchNotifications } from '@/composables/notificationHelper';
 import { truncateMessage } from '@/composables/textHelper';
+import { useRoute } from '@/composables/useRoute';
 import { Notification } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { useEchoModel } from '@laravel/echo-vue';
 import { ArchiveX, Bell, Eye, X } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+
+const route = useRoute();
+
+const page = usePage();
+const auth = computed(() => page.props.auth);
+
 const notifications: Notification[] = [];
 const dropdownOpen = ref(false);
-const unreadCount = computed(() => notifications.filter((n) => !n.read_at).length);
-const notificationType = (type: string) => {
-    const lastPart = type.split('/').pop() || '';
-    return lastPart.replace(/([A-Z])/g, ' $1').trim();
-};
+const unreadCount = ref(0);
+
+onMounted(() => {
+    fetchNotifications(1, 5, false).then((data) => {
+        notifications.push(...data.notifications);
+        unreadCount.value = data.unread;
+    });
+});
+
+const { channel } = useEchoModel('App.Models.User', auth.value.user.id);
+
+channel().notification((notification: Notification) => {
+    console.log(notification.type);
+});
 </script>
 
 <template>
@@ -52,7 +70,7 @@ const notificationType = (type: string) => {
             <template v-else>
                 <DropdownMenuItem v-for="notification in notifications" :key="notification.id">
                     <div class="flex flex-col">
-                        <span class="font-medium">{{ notificationType(notification.type) }}</span>
+                        <span class="font-medium">{{ notification.data.type }}</span>
                         <span class="text-sm text-muted-foreground">{{ truncateMessage(notification.data.message) }}</span>
                     </div>
                 </DropdownMenuItem>
