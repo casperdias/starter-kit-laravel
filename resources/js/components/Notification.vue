@@ -20,7 +20,7 @@ import { onMounted, ref } from 'vue';
 const route = useRoute();
 
 const page = usePage();
-const auth = page.props.auth
+const auth = page.props.auth;
 
 const notifications: Notification[] = [];
 const dropdownOpen = ref(false);
@@ -33,12 +33,9 @@ onMounted(() => {
     });
 });
 
-useEchoNotification(
-    `App.Models.User.${auth.user.id}`,
-    (notification: Notification) => {
-        console.log(notification.type);
-    },
-);
+useEchoNotification(`App.Models.User.${auth.user.id}`, (notification: Notification) => {
+    console.log(notification.type);
+});
 </script>
 
 <template>

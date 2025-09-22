@@ -35,15 +35,17 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
 export interface Notification {
     id: string;
     type: string;
-    data: {
-        type: string;
-        message: string;
-        action_url?: string;
-        [key: string]: string | number | boolean;
-    };
+    data: NotificationData;
     read_at: string | null;
     created_at: string;
     diff_created_at: string;
+}
+
+export interface NotificationData {
+    type: string;
+    message: string;
+    action_url?: string;
+    [key: string]: string | number | boolean;
 }
 
 export interface User {
