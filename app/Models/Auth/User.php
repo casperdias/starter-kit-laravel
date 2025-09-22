@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Models\Content\Chat;
 use App\Models\Content\News;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -116,5 +117,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function news()
     {
         return $this->hasMany(News::class, 'user_id');
+    }
+
+    public function chatsAsSender()
+    {
+        return $this->hasMany(Chat::class, 'from_id');
+    }
+
+    public function chatsAsReceiver()
+    {
+        return $this->hasMany(Chat::class, 'to_id');
+    }
+
+    public function lastChat()
+    {
+        return $this->hasOne(Chat::class)
+            ->where(function ($query) {
+                $query->where('from_id', $this->id)
+                    ->orWhere('to_id', $this->id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->latest();
     }
 }
