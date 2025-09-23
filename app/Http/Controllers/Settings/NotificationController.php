@@ -22,7 +22,7 @@ class NotificationController extends Controller
             ->when($showUnread, function ($query) {
                 return $query->whereNull('read_at');
             })
-            ->paginate($perPage, ['*'], 'page', $page);;
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return Inertia::render('settings/Notification', [
             'notifications' => NotificationResource::collection($notifications),
