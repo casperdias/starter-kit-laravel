@@ -13,6 +13,7 @@ import { ref } from 'vue';
 
 defineProps<{
     notifications: Pagination<Notification>;
+    results: any;
 }>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -39,6 +40,7 @@ const updateCheckedNotifications = (id: string, checked: boolean) => {
         <Head title="Notifications" />
 
         <SettingsLayout>
+            <p>{{ results.data }}</p>
             <div class="space-y-6">
                 <HeadingSmall title="Notifications" description="List of all your notifications" />
                 <MarkNotificationAsRead :notification-ids="checkedNotifications" @cleared="() => (checkedNotifications = [])" />
@@ -96,7 +98,7 @@ const updateCheckedNotifications = (id: string, checked: boolean) => {
                         </template>
                     </TableBody>
                 </Table>
-                <DefaultPagination :pagination="notifications" />
+                <DefaultPagination :pagination="notifications" :only="['notifications', 'results']" />
             </div>
         </SettingsLayout>
     </AppLayout>

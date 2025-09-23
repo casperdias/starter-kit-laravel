@@ -19,6 +19,7 @@ const props = defineProps<{
     class?: HTMLAttributes['class'];
     pagination: PaginationType<unknown>;
     pageParam?: string;
+    only: string[];
 }>();
 
 const currentPage = ref(props.pagination.meta.current_page);
@@ -39,7 +40,7 @@ watch(
         @update:page="
             (page: number) => {
                 currentPage = page;
-                changePage(pagination.meta.path, page, pageParam);
+                changePage(pagination.meta.path, page, pageParam, only);
             }
         "
     >

@@ -150,7 +150,7 @@ onBeforeUnmount(() => {
                             </template>
                         </TableBody>
                     </Table>
-                    <DefaultPagination :pagination="permissions" />
+                    <DefaultPagination :pagination="permissions" :only="['permissions']" />
                 </CardContent>
             </Card>
         </div>

@@ -176,7 +176,7 @@ onBeforeUnmount(() => {
                             </template>
                         </TableBody>
                     </Table>
-                    <DefaultPagination :pagination="users" />
+                    <DefaultPagination :pagination="users" :only="['users']" />
                 </CardContent>
             </Card>
         </div>

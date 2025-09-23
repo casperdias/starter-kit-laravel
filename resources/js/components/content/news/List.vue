@@ -112,6 +112,6 @@ onBeforeUnmount(() => {
                 </template>
             </div>
         </ScrollArea>
-        <DefaultPagination :pagination="news" />
+        <DefaultPagination :pagination="news" :only="['news']" />
     </div>
 </template>
