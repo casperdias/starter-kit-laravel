@@ -10,44 +10,22 @@ use Inertia\Inertia;
 
 class NotificationController extends Controller
 {
-    protected function getPaginatedNotifications(Authenticatable $user, int $page, int $perPage, bool $showUnread = false): \Illuminate\Contracts\Pagination\LengthAwarePaginator
-    {
-        return $user->notifications()
-            ->when($showUnread, function ($query) {
-                return $query->whereNull('read_at');
-            })
-            ->paginate($perPage, ['*'], 'page', $page);
-    }
-
     public function index(Request $request)
     {
         $page = $request->input('page', 1);
         $per_page = $request->input('per_page', 5);
+        $showUnread = $request->input('show_unread', false);
 
         $user = $request->user();
 
-        $notifications = $this->getPaginatedNotifications($user, $page, $per_page);
+        $notifications = $user->notifications()
+            ->when($showUnread, function ($query) {
+                return $query->whereNull('read_at');
+            })
+            ->paginate($perPage, ['*'], 'page', $page);;
 
         return Inertia::render('settings/Notification', [
             'notifications' => NotificationResource::collection($notifications),
-        ]);
-    }
-
-    public function dropdown(Request $request)
-    {
-        $page = $request->input('page', 1);
-        $per_page = $request->input('per_page', 5);
-        $show_unread = $request->boolean('show_unread', false);
-
-        $user = $request->user();
-        $unread = $user->unreadNotifications()->count();
-
-        $notifications = $this->getPaginatedNotifications($user, $page, $per_page, $show_unread);
-
-        return response()->json([
-            'notifications' => NotificationResource::collection($notifications),
-            'unread' => $unread,
-            'more' => $notifications->hasMorePages(),
         ]);
     }
 
