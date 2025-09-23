@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Setting\NotificationResource;
-use App\Models\Content\News;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,7 +12,7 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         $page = $request->input('page', 1);
-        $per_page = $request->input('per_page', 1);
+        $per_page = $request->input('per_page', 5);
         $showUnread = $request->input('show_unread', false);
 
         $user = $request->user();
@@ -27,7 +25,6 @@ class NotificationController extends Controller
 
         return Inertia::render('settings/Notification', [
             'notifications' => NotificationResource::collection($notifications),
-            'results' => Inertia::deepMerge(News::paginate(1, page: $page)),
         ]);
     }
 
