@@ -24,7 +24,7 @@ class UserController extends Controller
 
         $search = request('search', '');
         $page = request('page', 1);
-        $per_page = request('per_page', 5);
+        $perPage = request('per_page', 5);
 
         $users = User::query()
             ->when($search, function ($query, $search) {
@@ -32,7 +32,7 @@ class UserController extends Controller
                     ->orWhere('email', 'like', "%{$search}%");
             })
             ->orderBy('id', 'desc')
-            ->paginate($per_page, ['*'], 'page', $page);
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return Inertia::render('admin/user/Index', [
             'users' => UserResource::collection($users),
@@ -72,7 +72,7 @@ class UserController extends Controller
 
         $search = request('search', '');
         $page = request('page', 1);
-        $per_page = request('per_page', 5);
+        $perPage = request('per_page', 5);
 
         $roles = Role::query()
             ->when($search, function ($query) use ($search) {
@@ -80,7 +80,7 @@ class UserController extends Controller
                     ->orWhere('display_name', 'like', "%{$search}%");
             })
             ->orderBy('id', 'desc')
-            ->paginate($per_page, ['*'], 'page', $page);
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return Inertia::render('admin/user/Show', [
             'user' => new UserResource($user),

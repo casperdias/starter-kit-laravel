@@ -12,7 +12,7 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         $page = $request->input('page', 1);
-        $per_page = $request->input('per_page', 5);
+        $perPage = $request->input('per_page', 5);
         $showUnread = $request->input('show_unread', false);
 
         $user = $request->user();
@@ -21,7 +21,7 @@ class NotificationController extends Controller
             ->when($showUnread, function ($query) {
                 return $query->whereNull('read_at');
             })
-            ->paginate($per_page, ['*'], 'page', $page);
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return Inertia::render('settings/Notification', [
             'notifications' => NotificationResource::collection($notifications),

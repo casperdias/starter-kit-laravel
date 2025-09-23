@@ -23,7 +23,7 @@ class RoleController extends Controller
 
         $search = request('search', '');
         $page = request('page', 1);
-        $per_page = request('per_page', 5);
+        $perPage = request('per_page', 5);
 
         $roles = Role::query()
             ->when($search, function ($query) use ($search) {
@@ -31,7 +31,7 @@ class RoleController extends Controller
                     ->orWhere('display_name', 'like', "%{$search}%");
             })
             ->orderBy('id', 'desc')
-            ->paginate($per_page, ['*'], 'page', $page);
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return Inertia::render('admin/role/Index', [
             'roles' => RoleResource::collection($roles),
@@ -71,7 +71,7 @@ class RoleController extends Controller
 
         $search = request('search', '');
         $page = request('page', 1);
-        $per_page = request('per_page', 5);
+        $perPage = request('per_page', 5);
 
         $permissions = Permission::query()
             ->when($search, function ($query) use ($search) {
@@ -79,7 +79,7 @@ class RoleController extends Controller
                     ->orWhere('display_name', 'like', "%{$search}%");
             })
             ->orderBy('id', 'desc')
-            ->paginate($per_page, ['*'], 'page', $page);
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return Inertia::render('admin/role/Show', [
             'role' => new RoleResource($role),

@@ -18,13 +18,13 @@ class NewsController extends Controller
     {
         $search = request('search', '');
         $page = request('page', 1);
-        $per_page = request('per_page', 5);
+        $perPage = request('per_page', 5);
 
         $news = News::query()
             ->with('author')
             ->when($search, fn ($query) => $query->where('title', 'like', "%{$search}%"))
             ->orderBy('created_at', 'desc')
-            ->paginate($per_page);
+            ->paginate($perPage);
 
         // Add hide_content to the request for the resource
         request()->merge(['hide_content' => true]);
