@@ -85,7 +85,7 @@ function loadMore() {
                 </Link>
             </CardContent>
         </Card>
-        <ScrollArea class="h-[60vh] w-full">
+        <ScrollArea class="max-h-[60vh] w-full">
             <div class="space-y-4">
                 <template v-if="news.data.length === 0">
                     <Button variant="ghost" class="h-fit w-full border px-2 py-4">
