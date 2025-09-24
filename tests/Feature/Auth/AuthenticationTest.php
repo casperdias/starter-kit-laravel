@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Auth\User;
+use Illuminate\Support\Facades\RateLimiter;
+use Laravel\Fortify\Features;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -22,6 +24,38 @@ test('users can authenticate using the login screen', function () {
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
+});
+
+test('users with 2FA are redirected to the 2FA challenge', function () {
+    if (! Features::canManageTwoFactorAuthentication()) {
+        $this->markTestSkipped('Two-factor authentication is not enabled.');
+    }
+
+    Features::twoFactorAuthentication([
+        'confirm' => true,
+        'confirmPassword' => true,
+    ]);
+
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@test.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    $user->forceFill([
+        'two_factor_secret' => encrypt('test-secret'),
+        'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+        'two_factor_confirmed_at' => now(),
+    ])->save();
+
+    $response = $this->post(route('login'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $response->assertRedirect(route('two-factor.login'));
+    $response->assertSessionHas('login.id', $user->id);
+    $this->assertGuest();
 });
 
 test('users can not authenticate with invalid password', function () {
@@ -50,4 +84,23 @@ test('users can logout', function () {
 
     $this->assertGuest();
     $response->assertRedirect('/');
+});
+
+test('users are rate limited', function () {
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@test.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    RateLimiter::increment(implode('|', [$user->email, '127.0.0.1']), amount: 10);
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'wrong-password',
+    ]);
+
+    $response->assertSessionHasErrors('email');
+    $errors = session('errors');
+    $this->assertStringContainsString('Too many login attempts', $errors->first('email'));
 });
