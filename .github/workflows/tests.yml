@@ -34,11 +34,17 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
-      - name: Install Dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-
       - name: Copy Environment File
         run: cp .env.example .env
+
+      - name: If ENV file contains DB_CONNECTION=sqlite, create the SQLite database file
+        run: |
+          if grep -q 'DB_CONNECTION=sqlite' .env; then
+            touch database/database.sqlite
+          fi
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate Application Key
         run: php artisan key:generate
