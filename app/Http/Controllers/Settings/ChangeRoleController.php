@@ -18,8 +18,11 @@ class ChangeRoleController extends Controller
         ]);
 
         $user = $request->user();
-        $role = Role::findOrFail($request->input('role'));
-        $user->changeRole($role);
+        $role = Role::find($request->input('role'));
+
+        if (! $user->changeRole($role)) {
+            return back()->withErrors(['message' => __('You do not have this role.')]);
+        }
 
         return back()
             ->with('success', __('Role changed successfully.'));

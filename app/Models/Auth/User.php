@@ -95,16 +95,18 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function changeRole(Role $role)
     {
+        if (! $this->roles()->where('role_id', $role->id)->exists()) {
+            return false;
+        }
+
         $this->roles()->updateExistingPivot(
             $this->roles->pluck('id')->toArray(),
             ['status' => 'INACTIVE']
         );
 
-        if ($this->roles()->where('role_id', $role->id)->exists()) {
-            $this->roles()->updateExistingPivot($role->id, ['status' => 'ACTIVE']);
+        $this->roles()->updateExistingPivot($role->id, ['status' => 'ACTIVE']);
 
-            return true;
-        }
+        return true;
     }
 
     public function hasRole($role)
