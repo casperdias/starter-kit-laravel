@@ -3,7 +3,7 @@ import { Display, List } from '@/components/content/news';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem, News, Pagination } from '@/types';
+import { BreadcrumbItem, CursorPagination, News } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -12,7 +12,7 @@ const route = useRoute();
 defineProps<Props>();
 
 interface Props {
-    news: Pagination<News>;
+    news: CursorPagination<News>;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [

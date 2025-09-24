@@ -17,20 +17,19 @@ class NewsController extends Controller
     public function index()
     {
         $search = request('search', '');
-        $page = request('page', 1);
-        $perPage = request('per_page', 5);
+        $perPage = request('per_page', 2);
 
         $news = News::query()
             ->with('author')
             ->when($search, fn ($query) => $query->where('title', 'like', "%{$search}%"))
             ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+            ->cursorPaginate($perPage);
 
         // Add hide_content to the request for the resource
         request()->merge(['hide_content' => true]);
 
         return Inertia::render('content/news/Index', [
-            'news' => NewsResource::collection($news),
+            'news' => Inertia::deepMerge(NewsResource::collection($news)),
             'search' => $search,
         ]);
     }

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import DefaultPagination from '@/components/DefaultPagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRoute } from '@/composables/useRoute';
-import { AppPageProps, News, Pagination } from '@/types';
+import { AppPageProps, CursorPagination, News } from '@/types';
 
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { ArchiveX, Megaphone, Newspaper, Plus, Search, ShieldPlus } from 'lucide-vue-next';
@@ -19,7 +18,7 @@ const permissions = page.props.auth.user.permissions;
 const props = defineProps<Props>();
 
 interface Props {
-    news: Pagination<News>;
+    news: CursorPagination<News>;
 }
 
 const icon = (type: string) => {
@@ -112,6 +111,5 @@ onBeforeUnmount(() => {
                 </template>
             </div>
         </ScrollArea>
-        <DefaultPagination :pagination="news" :only="['news']" />
     </div>
 </template>

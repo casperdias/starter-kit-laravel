@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { changePage } from '@/composables/indexHelper';
+import { changePage } from '@/composables/paginationHelper';
 import { cn } from '@/lib/utils';
 import { Pagination as PaginationType } from '@/types';
 import { HTMLAttributes, ref, watch } from 'vue';
