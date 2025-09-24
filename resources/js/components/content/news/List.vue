@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { changePage } from '@/composables/paginationHelper';
 import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, CursorPagination, News } from '@/types';
 
@@ -56,6 +57,11 @@ watch(searchTerm, (newTerm) => {
 onBeforeUnmount(() => {
     if (searchTimeout) clearTimeout(searchTimeout);
 });
+
+function loadMore() {
+    if (!props.news.meta.next_cursor) return;
+    changePage(props.news.meta.path, props.news.meta.next_cursor as string, 'cursor', ['news']);
+}
 </script>
 
 <template>
@@ -111,5 +117,11 @@ onBeforeUnmount(() => {
                 </template>
             </div>
         </ScrollArea>
+        <Button @click="loadMore" v-if="props.news.meta.next_cursor">
+            <span>Load More</span>
+        </Button>
+        <Button v-else disabled class="w-full cursor-not-allowed">
+            <span>No More News</span>
+        </Button>
     </div>
 </template>

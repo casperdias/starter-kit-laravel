@@ -17,7 +17,7 @@ class NewsController extends Controller
     public function index()
     {
         $search = request('search', '');
-        $perPage = request('per_page', 2);
+        $perPage = request('per_page', 5);
 
         $news = News::query()
             ->with('author')
