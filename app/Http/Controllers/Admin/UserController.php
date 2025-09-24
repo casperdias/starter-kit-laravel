@@ -10,6 +10,7 @@ use App\Http\Resources\Admin\RoleResource;
 use App\Http\Resources\Admin\UserResource;
 use App\Models\Auth\Role;
 use App\Models\Auth\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -56,6 +57,8 @@ class UserController extends Controller
         Gate::authorize('create', User::class);
 
         $user = $creator->create($request->all());
+
+        event(new Registered($user));
 
         return back()
             ->with('success', 'User created successfully.');

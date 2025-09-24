@@ -2,6 +2,12 @@
 
 use App\Models\Auth\User;
 
+test('confirm password redirect to login if not authenticated', function () {
+    $response = $this->get('/user/confirm-password');
+
+    $response->assertRedirect('/login');
+});
+
 test('confirm password screen can be rendered', function () {
     $user = User::create([
         'name' => 'Test User',

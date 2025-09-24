@@ -46,6 +46,8 @@ test('email is not verified with invalid hash', function () {
         'password' => bcrypt('password'),
     ]);
 
+    Event::fake();
+
     $verificationUrl = URL::temporarySignedRoute(
         'verification.verify',
         now()->addMinutes(60),
@@ -54,5 +56,59 @@ test('email is not verified with invalid hash', function () {
 
     $this->actingAs($user)->get($verificationUrl);
 
+    Event::assertNotDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+test('email is not verified with invalid user id', function () {
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@test.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    Event::fake();
+
+    $verificationUrl = URL::temporarySignedRoute(
+        'verification.verify',
+        now()->addMinutes(60),
+        ['id' => 999, 'hash' => sha1($user->email)]
+    );
+
+    $this->actingAs($user)->get($verificationUrl);
+
+    Event::assertNotDispatched(Verified::class);
+    expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+test('verified user is redirected to dashboard from verification prompt', function () {
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@test.com',
+        'password' => bcrypt('password'),
+    ]);
+    $user->markEmailAsVerified();
+
+    Event::fake();
+
+    $response = $this->actingAs($user)->get('/verify-email');
+
+    Event::assertNotDispatched(Verified::class);
+    $response->assertRedirect(route('dashboard', absolute: false));
+});
+
+test('already verify user visiting verify route is redirected without dispatching event', function () {
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@test.com',
+        'password' => bcrypt('password'),
+    ]);
+    $user->markEmailAsVerified();
+
+    Event::fake();
+
+    $response = $this->actingAs($user)->get('/verify-email');
+
+    Event::assertNotDispatched(Verified::class);
+    $response->assertRedirect(route('dashboard', absolute: false));
 });
