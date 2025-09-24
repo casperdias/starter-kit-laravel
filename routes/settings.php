@@ -8,7 +8,7 @@ use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'verified')->group(function () {
     Route::prefix('settings')->group(function () {
         // Redirect
         Route::redirect('', '/settings/profile');

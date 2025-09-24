@@ -4,7 +4,13 @@ use App\Models\Auth\User;
 use Illuminate\Support\Facades\Hash;
 
 test('password can be updated', function () {
-    $user = User::factory()->create();
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@test.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    $user->markEmailAsVerified();
 
     $response = $this
         ->actingAs($user)
@@ -23,7 +29,13 @@ test('password can be updated', function () {
 });
 
 test('correct password must be provided to update password', function () {
-    $user = User::factory()->create();
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@test.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    $user->markEmailAsVerified();
 
     $response = $this
         ->actingAs($user)
@@ -33,6 +45,8 @@ test('correct password must be provided to update password', function () {
             'password' => 'new-password',
             'password_confirmation' => 'new-password',
         ]);
+
+    // dd($response->getContent());
 
     $response
         ->assertSessionHasErrors('current_password')

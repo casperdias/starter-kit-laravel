@@ -3,7 +3,6 @@ import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Form, Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
@@ -19,28 +18,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: '/settings/password',
     },
 ];
-
-const passwordInput = ref<HTMLInputElement | null>(null);
-const currentPasswordInput = ref<HTMLInputElement | null>(null);
-
-const handleError = (errors: any) => {
-    if (errors.password) {
-        if (passwordInput.value instanceof HTMLInputElement) {
-            passwordInput.value.value = '';
-            passwordInput.value.focus();
-            if (currentPasswordInput.value) {
-                currentPasswordInput.value.value = '';
-            }
-        }
-    }
-
-    if (errors.current_password) {
-        if (currentPasswordInput.value instanceof HTMLInputElement) {
-            currentPasswordInput.value.value = '';
-            currentPasswordInput.value.focus();
-        }
-    }
-};
 </script>
 
 <template>
@@ -59,14 +36,13 @@ const handleError = (errors: any) => {
                     :options="{
                         preserveScroll: true,
                     }"
-                    @error="handleError"
                     reset-on-success
+                    :reset-on-error="['password', 'password_confirmation', 'current_password']"
                 >
                     <div class="grid gap-2">
                         <Label for="current_password">Current password</Label>
                         <Input
                             id="current_password"
-                            ref="currentPasswordInput"
                             name="current_password"
                             type="password"
                             class="mt-1 block w-full"
@@ -80,7 +56,6 @@ const handleError = (errors: any) => {
                         <Label for="password">New password</Label>
                         <Input
                             id="password"
-                            ref="passwordInput"
                             name="password"
                             type="password"
                             class="mt-1 block w-full"
