@@ -33,18 +33,10 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request, ResetUserPassword $resetUserPassword): RedirectResponse
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => ['required', 'confirmed'],
-        ]);
-
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request, $resetUserPassword) {
-                $resetUserPassword->reset($user, [
-                    'password' => $request->password,
-                ]);
+                $resetUserPassword->reset($user, $request->only('password', 'password_confirmation'));
                 $user->setRememberToken(Str::random(60));
                 $user->save();
 

@@ -29,7 +29,6 @@ defineProps<Props>();
                 (data) => ({
                     ...data,
                     token: token,
-                    email: email,
                 })
             "
             reset-on-success
@@ -38,7 +37,7 @@ defineProps<Props>();
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email</Label>
-                    <Input id="email" type="email" name="email" autocomplete="email" class="mt-1 block w-full" :value="email" readonly />
+                    <Input id="email" type="email" name="email" autocomplete="email" class="mt-1 block w-full" :default-value="email" readonly />
                     <InputError :message="errors.email" class="mt-2" />
                 </div>
 

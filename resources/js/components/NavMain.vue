@@ -21,7 +21,7 @@ const page = usePage();
                     :is-active="page.url === item.href || page.url.startsWith(item.href + '/') || page.url.startsWith(item.href + '?')"
                     :tooltip="item.title"
                 >
-                    <Link :href="item.href">
+                    <Link :href="item.href" preserve-scroll preserve-state>
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
                     </Link>
