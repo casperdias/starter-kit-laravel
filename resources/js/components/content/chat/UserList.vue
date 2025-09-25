@@ -62,7 +62,6 @@ useInfiniteScroll(
 );
 
 const userOnline = useStorage<User[]>('user-online', []);
-console.log(userOnline.value);
 </script>
 
 <template>
