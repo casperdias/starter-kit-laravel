@@ -2,13 +2,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { changePage } from '@/composables/paginationHelper';
 import { useInitials } from '@/composables/useInitials';
 import { useRoute } from '@/composables/useRoute';
 import { CursorPagination, User } from '@/types';
+import { router } from '@inertiajs/vue3';
 import { useInfiniteScroll } from '@vueuse/core';
 import { Search } from 'lucide-vue-next';
-import { computed, ref, useTemplateRef } from 'vue';
+import { computed, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue';
 
 const route = useRoute();
 
@@ -17,6 +19,28 @@ const props = defineProps<{
 }>();
 
 const searchTerm = ref(route().params.search || '');
+let searchTimeout: ReturnType<typeof setTimeout>;
+
+watch(searchTerm, (newTerm) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        router.get(
+            props.users.meta.path,
+            {
+                search: newTerm,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            },
+        );
+    }, 500);
+});
+
+onBeforeUnmount(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+});
 
 const { getInitials } = useInitials();
 
@@ -49,7 +73,7 @@ useInfiniteScroll(
             </div>
         </CardHeader>
         <CardContent>
-            <div class="h-[75vh] divide-y divide-border overflow-y-auto" ref="userList">
+            <div class="max-h-[70vh] divide-y divide-border overflow-y-auto" ref="userList">
                 <div v-for="user in users.data" :key="user.id" class="flex items-center gap-3 py-2">
                     <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
                         <AvatarImage v-if="showAvatar(user)" :src="user.avatar!" :alt="user.name" />
@@ -64,6 +88,7 @@ useInfiniteScroll(
                     </div>
                 </div>
             </div>
+            <ScrollArea v-if="users.meta.next_cursor" class="mt-2 h-2"> </ScrollArea>
         </CardContent>
     </Card>
 </template>

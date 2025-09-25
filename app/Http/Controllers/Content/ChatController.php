@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Content;
 
-use App\Models\Auth\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\UserResource;
-use Illuminate\Http\Request;
+use App\Models\Auth\User;
 use Inertia\Inertia;
 
 class ChatController extends Controller
 {
     public function index()
     {
-        $perPage = request('per_page', 10);
+        $perPage = request('per_page', 15);
         $search = request('search', '');
         $users = User::select('id', 'name', 'email')
             ->where('id', '!=', auth()->id())
@@ -20,7 +19,7 @@ class ChatController extends Controller
             ->cursorPaginate($perPage);
 
         return Inertia::render('content/chat/Index', [
-            'users' => Inertia::deepMerge(UserResource::collection($users)),
+            'users' => Inertia::deepMerge(UserResource::collection($users))->matchOn('data.id'),
             'search' => $search,
         ]);
     }

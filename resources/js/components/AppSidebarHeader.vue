@@ -2,8 +2,9 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useRoute } from '@/composables/useRoute';
-import type { AppPageProps, BreadcrumbItemType } from '@/types';
+import type { AppPageProps, BreadcrumbItemType, User } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
+import { useEchoPresence } from '@laravel/echo-vue';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
 import { Badge } from './ui/badge';
@@ -44,6 +45,22 @@ const changeRole = () => {
         },
     );
 };
+
+const userOnline = ref<User[]>([]);
+const { channel: channelOnline } = useEchoPresence('presence-online');
+
+router.remember(userOnline.value, 'userTest');
+
+channelOnline()
+    .here((users: User[]) => {
+        userOnline.value = users;
+    })
+    .joining((user: User) => {
+        userOnline.value.push(user);
+    })
+    .leaving((user: User) => {
+        userOnline.value = userOnline.value.filter((u) => u.id !== user.id);
+    });
 </script>
 
 <template>
@@ -57,6 +74,18 @@ const changeRole = () => {
             </template>
         </div>
         <div class="flex items-center gap-2">
+            <Badge class="gap-2">
+                <p>{{ userOnline.length }} Online</p>
+                <div class="flex items-center justify-center gap-2">
+                    <div class="group relative flex h-3 w-3">
+                        <span
+                            class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                            :class="userOnline.length > 0 ? 'bg-green-600' : 'bg-red-600'"
+                        ></span>
+                        <span class="inline-block h-3 w-3 rounded-full" :class="userOnline.length > 0 ? 'bg-green-600' : 'bg-red-600'"></span>
+                    </div>
+                </div>
+            </Badge>
             <Badge v-if="roles.length <= 1">
                 {{ roles.length === 1 ? roles[0].display_name : 'Tidak Ada Role' }}
             </Badge>
