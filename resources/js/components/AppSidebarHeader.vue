@@ -49,8 +49,6 @@ const changeRole = () => {
 const userOnline = ref<User[]>([]);
 const { channel: channelOnline } = useEchoPresence('presence-online');
 
-router.remember(userOnline.value, 'userTest');
-
 channelOnline()
     .here((users: User[]) => {
         userOnline.value = users;
