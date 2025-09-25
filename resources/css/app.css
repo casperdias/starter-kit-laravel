@@ -168,4 +168,18 @@
     [data-sonner-toast][data-styled='true'] [data-description] {
         color: inherit !important;
     }
+
+    /* width */
+    ::-webkit-scrollbar {
+        @apply h-[8px] w-[8px];
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        @apply rounded-lg bg-sidebar-accent;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
 }
