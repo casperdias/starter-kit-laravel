@@ -30,9 +30,9 @@ const navItems: { [key: string]: NavItem[] } = {
         },
         {
             title: 'Chats',
-            href: '/chat',
+            href: '/chats',
             icon: MessageCircleMore,
-        }
+        },
     ],
     admin: [
         {

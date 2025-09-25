@@ -18,8 +18,8 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'created_at' => $this->created_at->toDateTimeString(),
-            'email_verified_at' => $this->email_verified_at ? $this->email_verified_at->toDateTimeString() : null,
+            'created_at' => $this->when($this->created_at, fn() => $this->created_at->toDateTimeString()),
+            'email_verified_at' => $this->when($this->email_verified_at, fn() => $this->email_verified_at->toDateTimeString()),
         ];
     }
 }

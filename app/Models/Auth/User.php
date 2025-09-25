@@ -138,15 +138,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Chat::class, 'to_id');
     }
-
-    public function lastChat()
-    {
-        return $this->hasOne(Chat::class)
-            ->where(function ($query) {
-                $query->where('from_id', $this->id)
-                    ->orWhere('to_id', $this->id);
-            })
-            ->orderBy('created_at', 'desc')
-            ->latest();
-    }
 }

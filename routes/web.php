@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\Content\ChatController;
 use App\Http\Controllers\Content\NewsController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +37,10 @@ Route::middleware(['auth', 'verified', EncryptHistoryMiddleware::class])->group(
     });
 
     // News management
-    Route::resource('news', NewsController::class);
+    Route::resource('news', NewsController::class)->only(['index', 'create', 'store', 'show']);
+
+    // Chat
+    Route::resource('chats', ChatController::class);
 });
 
 require __DIR__.'/settings.php';
