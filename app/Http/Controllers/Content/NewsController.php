@@ -25,7 +25,6 @@ class NewsController extends Controller
             ->orderBy('created_at', 'desc')
             ->cursorPaginate($perPage);
 
-        // Add hide_content to the request for the resource
         request()->merge(['hide_content' => true]);
 
         return Inertia::render('content/news/Index', [

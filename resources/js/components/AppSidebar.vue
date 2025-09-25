@@ -6,7 +6,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Newspaper } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, MessageCircleMore, Newspaper } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 const route = useRoute();
@@ -28,6 +28,11 @@ const navItems: { [key: string]: NavItem[] } = {
             href: '/news',
             icon: Newspaper,
         },
+        {
+            title: 'Chats',
+            href: '/chat',
+            icon: MessageCircleMore,
+        }
     ],
     admin: [
         {
@@ -62,7 +67,6 @@ function filterNavItems(items: NavItem[]): NavItem[] {
     });
 }
 
-// Apply filtering to navigation items
 const filteredNavItems = computed(() => {
     const filtered: { [key: string]: NavItem[] } = {};
     for (const [groupLabel, items] of Object.entries(navItems)) {

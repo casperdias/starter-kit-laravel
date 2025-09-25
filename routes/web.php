@@ -8,12 +8,13 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Content\NewsController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use Inertia\EncryptHistoryMiddleware;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
 })->name('home');
 
-Route::middleware(['auth', 'verified', \Inertia\EncryptHistoryMiddleware::class])->group(function () {
+Route::middleware(['auth', 'verified', EncryptHistoryMiddleware::class])->group(function () {
     Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     Route::prefix('admin')->name('admin.')->group(function () {
