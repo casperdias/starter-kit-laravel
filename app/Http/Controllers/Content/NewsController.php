@@ -18,10 +18,12 @@ class NewsController extends Controller
     {
         $search = request('search', '');
         $perPage = request('per_page', 5);
+        $category = request('category', 'all');
 
         $news = News::query()
             ->with('author')
             ->when($search, fn ($query) => $query->where('title', 'like', "%{$search}%"))
+            ->when($category && $category !== 'all', fn ($query) => $query->where('type', $category))
             ->orderBy('created_at', 'desc')
             ->cursorPaginate($perPage);
 

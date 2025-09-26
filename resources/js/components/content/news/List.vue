@@ -35,20 +35,26 @@ const icon = (type: string) => {
 };
 
 const searchTerm = ref(route().params.search || '');
+const category = ref(route().params.category || 'all');
+const filterOpen = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout>;
 
-watch(searchTerm, (newTerm) => {
+watch([searchTerm, category], ([newTerm, newCategory]) => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         router.get(
             props.news.meta.path,
             {
                 search: newTerm,
+                category: newCategory !== 'all' ? newCategory : undefined,
             },
             {
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
+                onFinish: () => {
+                    filterOpen.value = false;
+                },
             },
         );
     }, 500);
@@ -74,7 +80,7 @@ function loadMore() {
                         <Search class="size-6 text-muted-foreground" />
                     </span>
                 </div>
-                <Filter />
+                <Filter v-model:category="category" v-model:open="filterOpen" />
             </CardHeader>
             <CardContent v-if="permissions.includes('create-news')">
                 <Link :href="route('news.create')">
