@@ -11,7 +11,7 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $perPage = request('per_page', 15);
+        $perPage = request('per_page', 10);
         $search = request('search', '');
         $users = User::select('id', 'name', 'email')
             ->where('id', '!=', auth()->id())
@@ -19,7 +19,7 @@ class ChatController extends Controller
             ->cursorPaginate($perPage);
 
         return Inertia::render('content/chat/Index', [
-            'users' => Inertia::deepMerge(UserResource::collection($users))->matchOn('data.id'),
+            'users' => Inertia::scroll(UserResource::collection($users)),
             'search' => $search,
         ]);
     }

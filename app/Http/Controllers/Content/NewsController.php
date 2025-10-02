@@ -30,7 +30,7 @@ class NewsController extends Controller
         request()->merge(['hide_content' => true]);
 
         return Inertia::render('content/news/Index', [
-            'news' => Inertia::deepMerge(NewsResource::collection($news)),
+            'news' => Inertia::scroll(NewsResource::collection($news)),
             'search' => $search,
         ]);
     }

@@ -2,12 +2,10 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { changePage } from '@/composables/paginationHelper';
 import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, CursorPagination, News } from '@/types';
 
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { InfiniteScroll, Link, router, usePage } from '@inertiajs/vue3';
 import { ArchiveX, Megaphone, Newspaper, Plus, Search, ShieldPlus } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
 import Filter from './Filter.vue';
@@ -63,11 +61,6 @@ watch([searchTerm, category], ([newTerm, newCategory]) => {
 onBeforeUnmount(() => {
     if (searchTimeout) clearTimeout(searchTimeout);
 });
-
-function loadMore() {
-    if (!props.news.meta.next_cursor) return;
-    changePage(props.news.meta.path, props.news.meta.next_cursor as string, 'cursor', ['news']);
-}
 </script>
 
 <template>
@@ -91,8 +84,8 @@ function loadMore() {
                 </Link>
             </CardContent>
         </Card>
-        <ScrollArea class="max-h-[60vh] w-full">
-            <div class="space-y-4">
+        <div class="h-[70vh] divide-y divide-border overflow-y-auto pr-5">
+            <InfiniteScroll data="news" class="space-y-4">
                 <template v-if="news.data.length === 0">
                     <Button variant="ghost" class="h-fit w-full border px-2 py-4">
                         <div class="flex flex-col items-center justify-center space-y-2">
@@ -121,13 +114,7 @@ function loadMore() {
                         </div>
                     </Button>
                 </template>
-            </div>
-        </ScrollArea>
-        <Button @click="loadMore" v-if="props.news.meta.next_cursor">
-            <span>Load More</span>
-        </Button>
-        <Button v-else disabled class="w-full cursor-not-allowed">
-            <span>No More News</span>
-        </Button>
+            </InfiniteScroll>
+        </div>
     </div>
 </template>

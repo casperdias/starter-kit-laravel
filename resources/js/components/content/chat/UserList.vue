@@ -3,14 +3,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { changePage } from '@/composables/paginationHelper';
 import { useInitials } from '@/composables/useInitials';
 import { useRoute } from '@/composables/useRoute';
 import { CursorPagination, User } from '@/types';
-import { router } from '@inertiajs/vue3';
-import { useInfiniteScroll, useStorage } from '@vueuse/core';
+import { InfiniteScroll, router } from '@inertiajs/vue3';
+import { useStorage } from '@vueuse/core';
 import { Search } from 'lucide-vue-next';
-import { computed, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 const route = useRoute();
 
@@ -48,19 +47,6 @@ const showAvatar = computed(() => {
     return (user: User) => user.avatar && user.avatar !== '';
 });
 
-const userList = useTemplateRef<HTMLElement>('userList');
-
-useInfiniteScroll(
-    userList,
-    () => {
-        changePage(props.users.meta.path, props.users.meta.next_cursor as string, 'cursor', ['users']);
-    },
-    {
-        distance: 10,
-        canLoadMore: () => props.users.meta.next_cursor !== null,
-    },
-);
-
 const userOnline = useStorage<User[]>('user-online', []);
 </script>
 
@@ -75,32 +61,34 @@ const userOnline = useStorage<User[]>('user-online', []);
             </div>
         </CardHeader>
         <CardContent>
-            <div class="h-[70vh] divide-y divide-border overflow-y-auto pr-5" ref="userList">
-                <div v-for="user in users.data" :key="user.id" class="flex items-center gap-3 py-2">
-                    <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
-                        <AvatarImage v-if="showAvatar(user)" :src="user.avatar!" :alt="user.name" />
-                        <AvatarFallback class="rounded-lg text-black dark:text-white">
-                            {{ getInitials(user.name) }}
-                        </AvatarFallback>
-                    </Avatar>
-                    <div class="flex items-center gap-3">
-                        <p class="text-sm leading-5 font-medium">
-                            {{ user.name }}
-                        </p>
-                    </div>
-                    <div class="ml-auto flex items-center justify-center gap-2">
-                        <div class="group relative flex h-3 w-3">
-                            <span
-                                class="absolute inline-flex h-full w-full animate-ping rounded-full"
-                                :class="userOnline.find((u) => u.id === user.id) ? 'bg-green-600' : 'bg-red-600'"
-                            ></span>
-                            <span
-                                class="inline-block h-3 w-3 rounded-full"
-                                :class="userOnline.find((u) => u.id === user.id) ? 'bg-green-600' : 'bg-red-600'"
-                            ></span>
+            <div class="h-[70vh] overflow-y-auto pr-5">
+                <InfiniteScroll data="users" class="divide-y divide-border">
+                    <div v-for="user in users.data" :key="user.id" class="flex items-center gap-3 py-2">
+                        <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
+                            <AvatarImage v-if="showAvatar(user)" :src="user.avatar!" :alt="user.name" />
+                            <AvatarFallback class="rounded-lg text-black dark:text-white">
+                                {{ getInitials(user.name) }}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div class="flex items-center gap-3">
+                            <p class="text-sm leading-5 font-medium">
+                                {{ user.name }}
+                            </p>
+                        </div>
+                        <div class="ml-auto flex items-center justify-center gap-2">
+                            <div class="group relative flex h-3 w-3">
+                                <span
+                                    class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                    :class="userOnline.find((u) => u.id === user.id) ? 'bg-green-600' : 'bg-red-600'"
+                                ></span>
+                                <span
+                                    class="inline-block h-3 w-3 rounded-full"
+                                    :class="userOnline.find((u) => u.id === user.id) ? 'bg-green-600' : 'bg-red-600'"
+                                ></span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </InfiniteScroll>
             </div>
             <ScrollArea v-if="users.meta.next_cursor" class="mt-2 h-2"> </ScrollArea>
         </CardContent>
