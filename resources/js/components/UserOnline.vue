@@ -1,11 +1,10 @@
 <script setup lang="ts">
+import { useOnlineUsers } from '@/composables/notificationHelper';
 import { User } from '@/types';
 import { useEchoPresence } from '@laravel/echo-vue';
-import { createGlobalState, useStorage } from '@vueuse/core';
 import { Badge } from './ui/badge';
 
-const useState = createGlobalState(() => useStorage<User[]>('user-online', []));
-const userOnline = useState();
+const userOnline = useOnlineUsers();
 const { channel } = useEchoPresence('presence-online');
 
 channel()
@@ -13,7 +12,9 @@ channel()
         userOnline.value = users;
     })
     .joining((user: User) => {
-        userOnline.value.push(user);
+        if (!userOnline.value.some((u) => u.id === user.id)) {
+            userOnline.value.push(user);
+        }
     })
     .leaving((user: User) => {
         userOnline.value = userOnline.value.filter((u) => u.id !== user.id);

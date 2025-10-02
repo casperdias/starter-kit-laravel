@@ -6,3 +6,12 @@ export const fetchNotifications = async (page: number, per_page: number, show_un
     });
     return response.data;
 };
+
+import { User } from '@/types';
+import { ref } from 'vue';
+
+const userOnline = ref<User[]>([]);
+
+export function useOnlineUsers() {
+    return userOnline;
+}

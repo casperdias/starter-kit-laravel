@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
             </CardContent>
         </Card>
         <div class="h-[70vh] divide-y divide-border overflow-y-auto pr-5">
-            <InfiniteScroll data="news" class="space-y-4">
+            <InfiniteScroll data="news" class="space-y-4" preserve-url>
                 <template v-if="news.data.length === 0">
                     <Button variant="ghost" class="h-fit w-full border px-2 py-4">
                         <div class="flex flex-col items-center justify-center space-y-2">

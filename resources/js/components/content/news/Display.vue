@@ -74,15 +74,17 @@ onMounted(async () => {
     <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
         <template v-if="newsDetail">
             <ScrollArea class="h-[85vh] w-full rounded-md border p-3">
-                <div class="mb-2 flex items-center gap-2 px-2">
-                    <component :is="icon" class="size-10" />
-                    <div class="w-full space-y-1">
-                        <div class="flex items-center justify-between">
+                <div class="flex w-full flex-col gap-2">
+                    <div class="flex items-center gap-2 px-2">
+                        <component :is="icon" class="size-10" />
+                        <div class="flex w-full items-center justify-between gap-1">
                             <h2 class="text-xl font-bold">{{ newsDetail.title || 'Judul' }}</h2>
                             <p class="text-sm text-muted-foreground">{{ newsDetail.created_at || 'Unknown' }}</p>
                         </div>
-                        <p class="text-sm text-muted-foreground">By {{ newsDetail.author || 'Unknown' }}</p>
-                        <p class="text-xs text-muted-foreground">{{ newsDetail.diff_created_at }}</p>
+                    </div>
+                    <div class="flex items-center justify-between px-2">
+                        <p class="text-sm font-semibold text-muted-foreground">By {{ newsDetail.author || 'Unknown' }}</p>
+                        <p class="text-sm text-muted-foreground">{{ newsDetail.diff_created_at }}</p>
                     </div>
                 </div>
                 <Separator class="my-2" />
