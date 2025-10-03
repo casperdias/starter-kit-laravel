@@ -7,15 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
-    protected $fillable = ['from_id', 'to_id', 'message'];
+    use SoftDeletes;
 
-    public function from()
+    protected $fillable = ['conversation_id', 'user_id', 'message', 'type', 'metadata'];
+
+    protected $casts = [
+        'metadata' => 'array',
+    ];
+
+    public function conversation()
     {
-        return $this->belongsTo(User::class, 'from_id');
+        return $this->belongsTo(Conversation::class);
     }
 
-    public function to()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'to_id');
+        return $this->belongsTo(User::class);
     }
 }

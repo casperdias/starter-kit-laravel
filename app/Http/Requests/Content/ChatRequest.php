@@ -23,8 +23,6 @@ class ChatRequest extends FormRequest
     {
         return [
             'message' => ['required', 'string', 'max:1000'],
-            'attachments' => ['array'],
-            'attachments.*' => ['file', 'max:10240'],
         ];
     }
 }
