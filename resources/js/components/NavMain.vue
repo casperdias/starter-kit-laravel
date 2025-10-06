@@ -21,10 +21,22 @@ const page = usePage();
                     :is-active="page.url === item.href || page.url.startsWith(item.href + '/') || page.url.startsWith(item.href + '?')"
                     :tooltip="item.title"
                 >
-                    <Link :href="item.href" preserve-scroll preserve-state>
-                        <component :is="item.icon" />
-                        <span>{{ item.title }}</span>
-                    </Link>
+                    <template v-if="!(page.url === item.href || page.url.startsWith(item.href + '/') || page.url.startsWith(item.href + '?'))">
+                        <Link
+                            :href="item.href"
+                            preserve-scroll
+                            preserve-state
+                        >
+                            <component :is="item.icon" />
+                            <span>{{ item.title }}</span>
+                        </Link>
+                    </template>
+                    <template v-else>
+                        <div class="flex items-center gap-2 cursor-default">
+                            <component :is="item.icon" />
+                            <span>{{ item.title }}</span>
+                        </div>
+                    </template>
                 </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
