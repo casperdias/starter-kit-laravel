@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\UserResource;
-use App\Models\Auth\User;
 use Inertia\Inertia;
 
 class ChatController extends Controller
@@ -13,13 +11,8 @@ class ChatController extends Controller
     {
         $perPage = request('per_page', 10);
         $search = request('search', '');
-        $users = User::select('id', 'name', 'email')
-            ->where('id', '!=', auth()->id())
-            ->when($search, fn ($query) => $query->where('name', 'like', "%{$search}%"))
-            ->cursorPaginate($perPage);
 
         return Inertia::render('content/chat/Index', [
-            'users' => Inertia::scroll(UserResource::collection($users)),
             'search' => $search,
         ]);
     }

@@ -22,17 +22,13 @@ const page = usePage();
                     :tooltip="item.title"
                 >
                     <template v-if="!(page.url === item.href || page.url.startsWith(item.href + '/') || page.url.startsWith(item.href + '?'))">
-                        <Link
-                            :href="item.href"
-                            preserve-scroll
-                            preserve-state
-                        >
+                        <Link :href="item.href" preserve-scroll preserve-state>
                             <component :is="item.icon" />
                             <span>{{ item.title }}</span>
                         </Link>
                     </template>
                     <template v-else>
-                        <div class="flex items-center gap-2 cursor-default">
+                        <div class="flex cursor-default items-center gap-2">
                             <component :is="item.icon" />
                             <span>{{ item.title }}</span>
                         </div>
