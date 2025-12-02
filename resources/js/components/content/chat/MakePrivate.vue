@@ -8,6 +8,7 @@ import { User } from '@/types';
 import axios from 'axios';
 import { ArchiveX, ChevronDown, LoaderCircle, MessageSquare, Search, UserRound, X } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
+import { toast } from 'vue-sonner';
 
 const route = useRoute();
 
@@ -20,35 +21,37 @@ const page = ref(1);
 const dialogOpen = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout>;
 
-const fetchUsers = async (search: string = '', reset: boolean = true) => {
-    try {
-        if (reset) {
-            isLoading.value = true;
-            page.value = 1;
-        } else {
-            isLoadingMore.value = true;
-        }
+const fetchUsers = (search: string = '', reset: boolean = true) => {
+    if (reset) {
+        isLoading.value = true;
+        page.value = 1;
+    } else {
+        isLoadingMore.value = true;
+    }
 
-        const response = await axios.get(route('external.user-list'), {
+    axios
+        .get(route('external.user-list'), {
             params: {
                 search: search.trim(),
                 page: page.value,
             },
+        })
+        .then((response) => {
+            if (reset) {
+                users.value = response.data.users;
+            } else {
+                users.value = [...users.value, ...response.data.users];
+            }
+
+            hasMore.value = response.data.hasMore;
+        })
+        .catch((error) => {
+            console.error('Error fetching user list:', error);
+        })
+        .finally(() => {
+            isLoading.value = false;
+            isLoadingMore.value = false;
         });
-
-        if (reset) {
-            users.value = response.data.users;
-        } else {
-            users.value = [...users.value, ...response.data.users];
-        }
-
-        hasMore.value = response.data.hasMore;
-    } catch (error) {
-        console.error('Error fetching user list:', error);
-    } finally {
-        isLoading.value = false;
-        isLoadingMore.value = false;
-    }
 };
 
 const loadMore = () => {
@@ -87,6 +90,23 @@ watch(searchTerm, (newSearchTerm) => {
 onBeforeUnmount(() => {
     if (searchTimeout) clearTimeout(searchTimeout);
 });
+
+const startChat = (userId: string | number) => {
+    axios
+        .post(route('chats.store'), {
+            type: 'private',
+            user_id: userId,
+        })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            toast.error('Failed to Start Chat', {
+                description: error.message || 'An error occurred',
+                closeButton: true,
+            });
+        });
+};
 </script>
 
 <template>
@@ -144,7 +164,7 @@ onBeforeUnmount(() => {
                         <div class="flex items-center gap-2">
                             <UserInfo :user="user" :show-email="true" />
                         </div>
-                        <Button size="sm">
+                        <Button size="sm" @click="startChat(user.id)">
                             <MessageSquare />
                         </Button>
                     </div>

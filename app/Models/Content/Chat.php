@@ -3,11 +3,14 @@
 namespace App\Models\Content;
 
 use App\Models\Auth\User;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
-    use SoftDeletes;
+    use HasUuids, SoftDeletes;
+
+    protected $primaryKey = 'uuid';
 
     protected $fillable = ['conversation_id', 'user_id', 'message', 'type', 'metadata'];
 

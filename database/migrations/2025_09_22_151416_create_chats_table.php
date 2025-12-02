@@ -19,12 +19,11 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->string('avatar')->nullable();
-            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
 
         Schema::create('conversation_participants', function (Blueprint $table) {
-            $table->id();
             $table->foreignIdFor(Conversation::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->enum('role', ['admin', 'member'])->default('member');
@@ -34,7 +33,7 @@ return new class extends Migration
         });
 
         Schema::create('chats', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('uuid');
             $table->foreignIdFor(Conversation::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->text('message');

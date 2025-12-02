@@ -15,7 +15,7 @@ export interface NavItem {
     href: string;
     icon?: LucideIcon;
     isActive?: boolean;
-    permissions?: string[];
+    permissions?: Array<string>;
 }
 
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -60,25 +60,25 @@ export interface User {
         id: number;
         display_name: string;
     };
-    roles: {
+    roles: Array<{
         id: number;
         display_name: string;
-    }[];
-    permissions: string[];
+    }>;
+    permissions: Array<string>;
 }
 
 export interface Pagination<T> {
-    data: T[];
+    data: Array<T>;
     links: PaginationLinks;
     meta: {
         current_page: number;
         from: number;
         last_page: number;
-        links: {
+        links: Array<{
             label: string;
             url: string | null;
             active: boolean;
-        }[];
+        }>;
         path: string;
         per_page: number;
         to: number;
@@ -87,7 +87,7 @@ export interface Pagination<T> {
 }
 
 export interface CursorPagination<T> {
-    data: T[];
+    data: Array<T>;
     links: PaginationLinks;
     meta: {
         next_cursor: string | null;
@@ -132,6 +132,21 @@ export interface News {
     author?: string;
     created_at: string;
     diff_created_at: string;
+    updated_at: string;
+}
+
+export interface Conversation {
+    id: number;
+    type: 'private' | 'group';
+    name: string;
+    description: string | null;
+    avatar: string | null;
+    created_at: string;
+    participants: Array<
+        User & {
+            role: string;
+        }
+    >;
     updated_at: string;
 }
 

@@ -43,6 +43,7 @@ class Conversation extends Model
 
         if (! $conversation) {
             $conversation = self::create([
+                'name' => 'Private '.$user1.'-'.$user2,
                 'type' => 'private',
                 'created_by' => $user1,
             ]);
