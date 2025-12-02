@@ -2,30 +2,70 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { MessageSquare, Search, UserRound, X } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
-import axios from 'axios';
-import { User } from '@/types';
+import UserInfo from '@/components/UserInfo.vue';
 import { useRoute } from '@/composables/useRoute';
+import { User } from '@/types';
+import axios from 'axios';
+import { ArchiveX, LoaderCircle, MessageSquare, Search, UserRound, X } from 'lucide-vue-next';
+import { onBeforeUnmount, ref, watch } from 'vue';
 
 const route = useRoute();
 
 const searchTerm = ref('');
 const users = ref<User[]>([]);
+const hasMore = ref(false);
+const isLoading = ref(false);
+const dialogOpen = ref(false);
+let searchTimeout: ReturnType<typeof setTimeout>;
 
-onMounted(() => {
-    axios.get(route('external.user-list'))
-        .then(response => {
-            console.log('User List:', response.data);
-        })
-        .catch(error => {
-            console.error('Error fetching user list:', error);
+const fetchUsers = async (search: string = '') => {
+    try {
+        isLoading.value = true;
+        const response = await axios.get(route('external.user-list'), {
+            params: {
+                search: search.trim(),
+            },
         });
+        users.value = response.data.users;
+        hasMore.value = response.data.hasMore;
+    } catch (error) {
+        console.error('Error fetching user list:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+watch(dialogOpen, (isOpen) => {
+    if (isOpen) {
+        fetchUsers();
+    } else {
+        searchTerm.value = '';
+        users.value = [];
+    }
+});
+
+watch(searchTerm, (newSearchTerm) => {
+    if (!dialogOpen.value) return;
+
+    clearTimeout(searchTimeout);
+
+    if (newSearchTerm.trim() === '') {
+        fetchUsers();
+        return;
+    }
+
+    searchTimeout = setTimeout(() => {
+        fetchUsers(newSearchTerm);
+    }, 500);
+});
+
+onBeforeUnmount(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
 });
 </script>
 
 <template>
-    <Dialog>
+    <Dialog v-model:open="dialogOpen">
         <DialogTrigger as-child>
             <Button class="w-full">
                 <UserRound />
@@ -51,10 +91,40 @@ onMounted(() => {
                 </div>
             </DialogHeader>
             <div class="relative flex h-full w-full items-center">
-                <Input id="search" type="text" name="search" placeholder="Search..." class="w-full pl-10" v-model="searchTerm" />
+                <Input
+                    id="search"
+                    type="text"
+                    name="search"
+                    placeholder="Search..."
+                    class="w-full pl-10"
+                    v-model="searchTerm"
+                    :disabled="isLoading"
+                />
                 <span class="absolute inset-y-0 start-0 flex items-center justify-center px-2">
                     <Search class="size-6 text-muted-foreground" />
                 </span>
+            </div>
+
+            <div class="max-h-96 overflow-y-auto">
+                <div v-if="isLoading" class="flex flex-col items-center justify-center space-y-2">
+                    <LoaderCircle class="size-10 animate-spin" />
+                    <p class="font-semibold">No users found.</p>
+                </div>
+                <div v-else-if="users.length === 0" class="flex flex-col items-center justify-center space-y-2">
+                    <ArchiveX class="size-10" />
+                    <p class="font-semibold">No users found.</p>
+                </div>
+                <div v-else class="space-y-3">
+                    <div v-for="user in users" :key="user.id" class="flex items-center justify-between rounded border p-2">
+                        <div class="flex items-center gap-2">
+                            <UserInfo :user="user" :show-email="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="hasMore">
+
             </div>
         </DialogContent>
     </Dialog>

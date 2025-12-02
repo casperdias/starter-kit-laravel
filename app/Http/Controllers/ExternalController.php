@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Auth\User;
 use App\Http\Resources\Admin\UserResource;
+use App\Models\Auth\User;
 use Illuminate\Http\Request;
 
 class ExternalController extends Controller
@@ -13,6 +13,7 @@ class ExternalController extends Controller
         $search = request('search', '');
 
         $users = User::select('id', 'name', 'email')
+            ->whereNot('id', auth()->id())
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
