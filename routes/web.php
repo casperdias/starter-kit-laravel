@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Content\ChatController;
 use App\Http\Controllers\Content\NewsController;
+use App\Http\Controllers\ExternalController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\EncryptHistoryMiddleware;
@@ -41,6 +42,11 @@ Route::middleware(['auth', 'verified', EncryptHistoryMiddleware::class])->group(
 
     // Chat
     Route::resource('chats', ChatController::class);
+
+    // External
+    Route::controller(ExternalController::class)->prefix('external')->name('external.')->group(function () {
+        Route::get('user-list', 'userList')->name('user-list');
+    });
 });
 
 require __DIR__.'/settings.php';
