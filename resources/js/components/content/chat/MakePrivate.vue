@@ -6,7 +6,7 @@ import UserInfo from '@/components/UserInfo.vue';
 import { useRoute } from '@/composables/useRoute';
 import { User } from '@/types';
 import axios from 'axios';
-import { ArchiveX, LoaderCircle, MessageSquare, Search, UserRound, X } from 'lucide-vue-next';
+import { ArchiveX, ChevronDown, LoaderCircle, MessageSquare, Search, UserRound, X } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
 
 const route = useRoute();
@@ -15,23 +15,46 @@ const searchTerm = ref('');
 const users = ref<User[]>([]);
 const hasMore = ref(false);
 const isLoading = ref(false);
+const isLoadingMore = ref(false);
+const page = ref(1);
 const dialogOpen = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout>;
 
-const fetchUsers = async (search: string = '') => {
+const fetchUsers = async (search: string = '', reset: boolean = true) => {
     try {
-        isLoading.value = true;
+        if (reset) {
+            isLoading.value = true;
+            page.value = 1;
+        } else {
+            isLoadingMore.value = true;
+        }
+
         const response = await axios.get(route('external.user-list'), {
             params: {
                 search: search.trim(),
+                page: page.value,
             },
         });
-        users.value = response.data.users;
+
+        if (reset) {
+            users.value = response.data.users;
+        } else {
+            users.value = [...users.value, ...response.data.users];
+        }
+
         hasMore.value = response.data.hasMore;
     } catch (error) {
         console.error('Error fetching user list:', error);
     } finally {
         isLoading.value = false;
+        isLoadingMore.value = false;
+    }
+};
+
+const loadMore = () => {
+    if (hasMore.value && !isLoadingMore.value) {
+        page.value += 1;
+        fetchUsers(searchTerm.value, false);
     }
 };
 
@@ -41,6 +64,8 @@ watch(dialogOpen, (isOpen) => {
     } else {
         searchTerm.value = '';
         users.value = [];
+        page.value = 1;
+        hasMore.value = false;
     }
 });
 
@@ -106,11 +131,11 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="max-h-96 overflow-y-auto">
-                <div v-if="isLoading" class="flex flex-col items-center justify-center space-y-2">
+                <div v-if="isLoading" class="flex flex-col items-center justify-center space-y-2 py-8">
                     <LoaderCircle class="size-10 animate-spin" />
-                    <p class="font-semibold">No users found.</p>
+                    <p class="font-semibold">Loading users...</p>
                 </div>
-                <div v-else-if="users.length === 0" class="flex flex-col items-center justify-center space-y-2">
+                <div v-else-if="users.length === 0" class="flex flex-col items-center justify-center space-y-2 py-8">
                     <ArchiveX class="size-10" />
                     <p class="font-semibold">No users found.</p>
                 </div>
@@ -119,12 +144,23 @@ onBeforeUnmount(() => {
                         <div class="flex items-center gap-2">
                             <UserInfo :user="user" :show-email="true" />
                         </div>
+                        <Button size="sm">
+                            <MessageSquare />
+                        </Button>
+                    </div>
+
+                    <div v-if="isLoadingMore" class="flex items-center justify-center py-4">
+                        <LoaderCircle class="size-6 animate-spin" />
+                        <span class="ml-2 text-sm">Loading more...</span>
                     </div>
                 </div>
             </div>
 
-            <div v-if="hasMore">
-
+            <div v-if="hasMore && !isLoading && users.length > 0" class="flex justify-center">
+                <Button @click="loadMore" variant="outline" size="sm" :disabled="isLoadingMore" class="w-full">
+                    <ChevronDown class="mr-2 h-4 w-4" />
+                    Load More Users
+                </Button>
             </div>
         </DialogContent>
     </Dialog>

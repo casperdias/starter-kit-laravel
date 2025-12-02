@@ -30,7 +30,6 @@ class Conversation extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // Helper method to find or create private conversation
     public static function findOrCreatePrivate($user1, $user2)
     {
         $conversation = self::where('type', 'private')
@@ -54,7 +53,6 @@ class Conversation extends Model
         return $conversation;
     }
 
-    // Check if user is participant
     public function isParticipant($userId)
     {
         return $this->participants()->where('user_id', $userId)->exists();

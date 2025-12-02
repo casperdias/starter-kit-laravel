@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['private', 'group'])->default('private');
-            $table->string('name')->nullable(); // For group chats
-            $table->text('description')->nullable(); // For group chats
-            $table->string('avatar')->nullable(); // For group chats
+            $table->string('name')->nullable();
+            $table->text('description')->nullable();
+            $table->string('avatar')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Conversation::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->enum('role', ['admin', 'member'])->default('member'); // For group admin
+            $table->enum('role', ['admin', 'member'])->default('member');
             $table->timestamps();
 
             $table->unique(['conversation_id', 'user_id']);
@@ -38,8 +38,8 @@ return new class extends Migration
             $table->foreignIdFor(Conversation::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->text('message');
-            $table->string('type')->default('text'); // text, image, file, etc.
-            $table->json('metadata')->nullable(); // for file paths, etc.
+            $table->string('type')->default('text');
+            $table->json('metadata')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
