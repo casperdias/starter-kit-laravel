@@ -37,7 +37,6 @@ class UserController extends Controller
 
         return Inertia::render('admin/user/Index', [
             'users' => UserResource::collection($users),
-            'search' => $search,
         ]);
     }
 
@@ -88,7 +87,6 @@ class UserController extends Controller
         return Inertia::render('admin/user/Show', [
             'user' => new UserResource($user),
             'roles' => RoleResource::collection($roles),
-            'search' => $search,
         ]);
     }
 

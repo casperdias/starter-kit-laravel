@@ -35,7 +35,6 @@ class RoleController extends Controller
 
         return Inertia::render('admin/role/Index', [
             'roles' => RoleResource::collection($roles),
-            'search' => $search,
         ]);
     }
 
@@ -84,7 +83,6 @@ class RoleController extends Controller
         return Inertia::render('admin/role/Show', [
             'role' => new RoleResource($role),
             'permissions' => PermissionResource::collection($permissions),
-            'search' => $search,
         ]);
     }
 

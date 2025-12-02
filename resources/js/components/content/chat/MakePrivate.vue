@@ -123,7 +123,7 @@ const startChat = (userId: string | number) => {
                     <MessageSquare class="size-10" />
                     <div class="hidden max-w-[400px] space-y-2 md:block">
                         <DialogTitle>Private Chat</DialogTitle>
-                        <DialogDescription>Search User, Then Select</DialogDescription>
+                        <DialogDescription>Search User, Then Chat</DialogDescription>
                     </div>
                 </div>
                 <div class="flex items-center justify-end gap-2">

@@ -177,7 +177,7 @@ watch(
                                         <PinInputSlot autofocus v-for="(id, index) in 6" :key="id" :index="index" :disabled="processing" />
                                     </PinInputGroup>
                                 </PinInput>
-                                <InputError :message="errors?.confirmTwoFactorAuthentication?.code" />
+                                <InputError :message="errors?.confirmTwoFactorAuthentication" />
                             </div>
 
                             <div class="flex w-full items-center space-x-5">

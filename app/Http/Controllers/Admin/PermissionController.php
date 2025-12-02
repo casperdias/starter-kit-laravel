@@ -32,7 +32,6 @@ class PermissionController extends Controller
 
         return Inertia::render('admin/permission/Index', [
             'permissions' => PermissionResource::collection($permissions),
-            'search' => $search,
         ]);
     }
 

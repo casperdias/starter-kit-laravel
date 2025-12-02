@@ -31,7 +31,6 @@ class NewsController extends Controller
 
         return Inertia::render('content/news/Index', [
             'news' => Inertia::scroll(NewsResource::collection($news)),
-            'search' => $search,
         ]);
     }
 

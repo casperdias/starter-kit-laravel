@@ -22,7 +22,6 @@ class ChatController extends Controller
             })->cursorPaginate(8);
 
         return Inertia::render('content/chat/Index', [
-            'search' => $search,
             'conversations' => ConversationResource::collection($conversations),
         ]);
     }

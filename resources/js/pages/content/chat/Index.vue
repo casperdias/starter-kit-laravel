@@ -4,12 +4,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Conversation, CursorPagination } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { MessagesSquare, Search } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const route = useRoute();
+
+defineProps<Props>();
+
+interface Props {
+    conversations: CursorPagination<Conversation>;
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

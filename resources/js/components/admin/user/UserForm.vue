@@ -37,7 +37,6 @@ defineEmits<{
                 :model-value="form.name"
                 @update:model-value="$emit('update:form', { ...form, name: String($event) })"
                 type="text"
-                class="input"
                 required
             />
             <InputError :message="errors.name" />
@@ -48,7 +47,6 @@ defineEmits<{
                 :model-value="form.email"
                 @update:model-value="$emit('update:form', { ...form, email: String($event) })"
                 type="email"
-                class="input"
                 required
             />
             <InputError :message="errors.email" />

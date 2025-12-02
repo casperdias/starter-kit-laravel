@@ -41,7 +41,6 @@ defineEmits<{
                 :model-value="form.name"
                 @update:model-value="$emit('update:form', { ...form, name: String($event) })"
                 type="text"
-                class="input"
                 required
             />
             <InputError :message="errors.name" />
@@ -52,7 +51,6 @@ defineEmits<{
                 :model-value="form.display_name"
                 @update:model-value="$emit('update:form', { ...form, display_name: String($event) })"
                 type="text"
-                class="input"
                 required
             />
             <InputError :message="errors.display_name" />
@@ -62,7 +60,6 @@ defineEmits<{
                 id="description"
                 :model-value="form.description"
                 @update:model-value="$emit('update:form', { ...form, description: String($event) })"
-                class="textarea"
             />
             <InputError :message="errors.description" />
         </div>
