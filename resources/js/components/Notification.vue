@@ -8,8 +8,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { truncateMessage } from '@/composables/helper';
 import { fetchNotifications } from '@/composables/notificationHelper';
-import { truncateMessage } from '@/composables/textHelper';
 import { useRoute } from '@/composables/useRoute';
 import { Notification } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
