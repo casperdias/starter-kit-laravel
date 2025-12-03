@@ -72,7 +72,7 @@ onChange((files) => {
                     <MessagesSquare class="size-10" />
                     <div class="hidden max-w-[400px] space-y-2 md:block">
                         <DialogTitle>Group Chat</DialogTitle>
-                        <DialogDescription>Search User, Select User, Create Group</DialogDescription>
+                        <DialogDescription>Fill Information, Select User, Create Group</DialogDescription>
                     </div>
                 </div>
                 <div class="flex items-center justify-end gap-2">
@@ -195,7 +195,7 @@ onChange((files) => {
                     </div>
                 </div>
 
-                <div class="mt-4 flex items-center justify-between">
+                <div class="flex items-center justify-between">
                     <Button :disabled="stepIndex === 1" variant="outline" size="sm" @click="stepIndex--"> Back </Button>
                     <Button v-if="stepIndex === steps.length" size="sm" type="submit" :disabled="!form.name.trim()"> Create Group </Button>
                     <Button v-else type="button" size="sm" @click="stepIndex++" :disabled="!form.name.trim()"> Next </Button>
