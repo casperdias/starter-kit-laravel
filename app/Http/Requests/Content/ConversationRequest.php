@@ -33,14 +33,14 @@ class ConversationRequest extends FormRequest
                 'different:'.$userId,
             ],
 
-            'users' => [
+            'members' => [
                 Rule::requiredIf($this->type === 'group'),
                 'array',
                 'min:1',
                 'max:20',
             ],
 
-            'users.*' => [
+            'members.*.id' => [
                 'exists:users,id',
                 'different:'.$userId,
             ],

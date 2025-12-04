@@ -31,6 +31,8 @@ class ChatController extends Controller
     {
         $me = auth()->user();
 
-        return $startConversation->create($request, $me);
+        $conversation = $startConversation->create($request, $me);
+
+        return back()->with('message', $conversation->id);
     }
 }

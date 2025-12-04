@@ -5,10 +5,9 @@ import { Input } from '@/components/ui/input';
 import UserInfo from '@/components/UserInfo.vue';
 import { useUserFetch } from '@/composables/helper';
 import { useRoute } from '@/composables/useRoute';
-import axios from 'axios';
+import { useForm } from '@inertiajs/vue3';
 import { ArchiveX, ChevronDown, LoaderCircle, MessageSquare, Search, UserRound, X } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
-import { toast } from 'vue-sonner';
 
 const route = useRoute();
 
@@ -16,15 +15,7 @@ const searchTerm = ref('');
 const dialogOpen = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout>;
 
-const {
-    users,
-    hasMore,
-    isLoading,
-    isLoadingMore,
-    fetchUsers,
-    loadMore,
-    resetUsers,
-} = useUserFetch();
+const { users, hasMore, isLoading, isLoadingMore, fetchUsers, loadMore, resetUsers } = useUserFetch();
 
 watch(dialogOpen, (isOpen) => {
     if (isOpen) {
@@ -55,20 +46,18 @@ onBeforeUnmount(() => {
 });
 
 const startChat = (userId: string | number) => {
-    axios
-        .post(route('chats.store'), {
-            type: 'private',
-            user_id: userId,
-        })
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            toast.error('Failed to Start Chat', {
-                description: error.message || 'An error occurred',
-                closeButton: true,
-            });
-        });
+    const form = useForm({
+        type: 'private',
+        user_id: userId,
+    });
+
+    form.post(route('chats.store'), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            form.reset();
+        },
+    });
 };
 </script>
 

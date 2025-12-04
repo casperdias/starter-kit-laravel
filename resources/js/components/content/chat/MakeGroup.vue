@@ -8,11 +8,29 @@ import { Stepper, StepperDescription, StepperItem, StepperSeparator, StepperTitl
 import { Textarea } from '@/components/ui/textarea';
 import UserInfo from '@/components/UserInfo.vue';
 import { useUserFetch } from '@/composables/helper';
+import { useRoute } from '@/composables/useRoute';
 import { User } from '@/types';
 import { useForm } from '@inertiajs/vue3';
 import { useFileDialog, useObjectUrl } from '@vueuse/core';
-import { ArchiveX, Check, ChevronDown, FileText, Image as ImageIcon, LoaderCircle, MessagesSquare, Minus, Plus, Search, SendHorizonal, Users, UsersRound, X } from 'lucide-vue-next';
+import {
+    ArchiveX,
+    Check,
+    ChevronDown,
+    FileText,
+    Image as ImageIcon,
+    LoaderCircle,
+    MessagesSquare,
+    Minus,
+    Plus,
+    Search,
+    SendHorizonal,
+    Users,
+    UsersRound,
+    X,
+} from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
+
+const route = useRoute();
 
 const form = useForm({
     name: '',
@@ -68,15 +86,7 @@ const searchTerm = ref('');
 const dialogOpen = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout>;
 
-const {
-    users,
-    hasMore,
-    isLoading,
-    isLoadingMore,
-    fetchUsers,
-    loadMore,
-    resetUsers,
-} = useUserFetch();
+const { users, hasMore, isLoading, isLoadingMore, fetchUsers, loadMore, resetUsers } = useUserFetch();
 
 watch(dialogOpen, (isOpen) => {
     if (isOpen) {
@@ -105,6 +115,16 @@ watch(searchTerm, (newSearchTerm) => {
 onBeforeUnmount(() => {
     if (searchTimeout) clearTimeout(searchTimeout);
 });
+
+const createGroup = () => {
+    form.post(route('chats.store'), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            form.reset();
+        },
+    });
+};
 </script>
 
 <template>
@@ -264,10 +284,15 @@ onBeforeUnmount(() => {
                                 <div class="flex items-center gap-2">
                                     <UserInfo :user="user" :show-email="true" />
                                 </div>
-                                <Button size="sm" @click="form.members.push(user)" v-if="!form.members.some((member) => user.id  === member.id)">
+                                <Button size="sm" @click="form.members.push(user)" v-if="!form.members.some((member) => user.id === member.id)">
                                     <Plus />
                                 </Button>
-                                <Button size="sm" variant="destructive" @click="form.members = form.members.filter((member) => member.id !== user.id)" v-else>
+                                <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    @click="form.members = form.members.filter((member) => member.id !== user.id)"
+                                    v-else
+                                >
                                     <Minus />
                                 </Button>
                             </div>
@@ -326,39 +351,25 @@ onBeforeUnmount(() => {
                         <div class="space-y-4 rounded-lg border p-4">
                             <div class="flex items-center justify-between">
                                 <h3 class="text-lg font-semibold">Members</h3>
-                                <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium">
-                                    {{ form.members.length }} member(s)
-                                </span>
+                                <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium"> {{ form.members.length }} member(s) </span>
                             </div>
 
                             <div v-if="form.members.length === 0" class="flex flex-col items-center justify-center py-6">
-                                <UsersRound class="h-12 w-12 text-muted-foreground mb-2" />
+                                <UsersRound class="mb-2 h-12 w-12 text-muted-foreground" />
                                 <p class="text-muted-foreground">No members selected</p>
                             </div>
 
-                            <div v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2 overflow-auto h-40">
-                                <div
-                                    v-for="member in form.members"
-                                    :key="member.id"
-                                    class="flex items-center gap-3 rounded-lg border p-3"
-                                >
+                            <div v-else class="grid max-h-40 grid-cols-1 gap-3 overflow-auto sm:grid-cols-2">
+                                <div v-for="member in form.members" :key="member.id" class="flex items-center gap-3 rounded-lg border p-3">
                                     <div class="relative h-10 w-10 overflow-hidden rounded-full">
-                                        <img
-                                            v-if="member.avatar"
-                                            :src="member.avatar"
-                                            :alt="member.name"
-                                            class="h-full w-full object-cover"
-                                        />
-                                        <div
-                                            v-else
-                                            class="flex h-full w-full items-center justify-center bg-primary/10"
-                                        >
+                                        <img v-if="member.avatar" :src="member.avatar" :alt="member.name" class="h-full w-full object-cover" />
+                                        <div v-else class="flex h-full w-full items-center justify-center bg-primary/10">
                                             <span class="font-medium text-primary">
                                                 {{ member.name.charAt(0).toUpperCase() }}
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="flex-1 min-w-0">
+                                    <div class="min-w-0 flex-1">
                                         <p class="truncate font-medium">{{ member.name }}</p>
                                         <p class="truncate text-sm text-muted-foreground">{{ member.email }}</p>
                                     </div>
@@ -370,7 +381,7 @@ onBeforeUnmount(() => {
 
                 <div class="flex items-center justify-between">
                     <Button :disabled="stepIndex === 1" variant="outline" size="sm" @click="stepIndex--"> Back </Button>
-                    <Button v-if="stepIndex === steps.length" size="sm" type="submit"> Create Group </Button>
+                    <Button v-if="stepIndex === steps.length" size="sm" type="submit" @click="createGroup"> Create Group </Button>
                     <Button v-else type="button" size="sm" @click="stepIndex++"> Next </Button>
                 </div>
             </Stepper>

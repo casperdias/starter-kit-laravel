@@ -138,11 +138,11 @@ class UserController extends Controller
         Gate::authorize('delete', $user);
 
         if ($user->id === auth()->id()) {
-            return back()->withErrors(['message' => 'You cannot delete your own account.']);
+            return back()->withErrors(['message' => __('You cannot delete your own account.')]);
         }
 
         if ($user->id === 1) {
-            return back()->withErrors(['message' => 'You cannot delete a super admin user.']);
+            return back()->withErrors(['message' => __('You cannot delete a super admin user.')]);
         }
 
         $user->delete();

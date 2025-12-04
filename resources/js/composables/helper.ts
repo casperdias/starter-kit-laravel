@@ -1,7 +1,7 @@
-import { ref } from 'vue';
-import axios from 'axios';
-import { User } from '@/types';
 import { useRoute } from '@/composables/useRoute';
+import { User } from '@/types';
+import axios from 'axios';
+import { ref } from 'vue';
 
 export function useUserFetch() {
     const route = useRoute();
