@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Actions\Chat\StartConversation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\ConversationRequest;
 use App\Http\Resources\Content\ConversationResource;
@@ -26,20 +27,10 @@ class ChatController extends Controller
         ]);
     }
 
-    public function store(ConversationRequest $request)
+    public function store(ConversationRequest $request, StartConversation $startConversation)
     {
         $me = auth()->user();
 
-        if ($request->type === 'private') {
-            $conversation = Conversation::findOrCreatePrivate($me->id, $request->user_id);
-
-            return response()->json([
-                'conversation_id' => $conversation->id,
-            ], 201);
-        } else {
-            abort(404);
-        }
-
-        abort(404);
+        return $startConversation->create($request, $me);
     }
 }

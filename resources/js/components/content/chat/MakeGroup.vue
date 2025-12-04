@@ -287,6 +287,87 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
+                <div v-if="stepIndex === 3" class="grid gap-4">
+                    <!-- Group Information Summary -->
+                    <div class="space-y-6">
+                        <div class="space-y-4 rounded-lg border p-4">
+                            <h3 class="text-lg font-semibold">Group Details</h3>
+
+                            <!-- Avatar Preview -->
+                            <div class="flex items-center gap-4">
+                                <div class="relative h-20 w-20 overflow-hidden rounded-full border">
+                                    <template v-if="avatarUrl">
+                                        <img :src="avatarUrl" alt="Group avatar" class="h-full w-full object-cover" />
+                                    </template>
+                                    <template v-else>
+                                        <div class="flex h-full w-full items-center justify-center bg-muted">
+                                            <ImageIcon class="h-8 w-8 text-muted-foreground" />
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1 space-y-2">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Group Name</p>
+                                        <p class="text-lg font-semibold">{{ form.name || '-' }}</p>
+                                        <InputError :message="form.errors.name" />
+                                    </div>
+
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Description</p>
+                                        <p class="text-sm">{{ form.description || '-' }}</p>
+                                        <InputError :message="form.errors.description" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Members Summary -->
+                        <div class="space-y-4 rounded-lg border p-4">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold">Members</h3>
+                                <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium">
+                                    {{ form.members.length }} member(s)
+                                </span>
+                            </div>
+
+                            <div v-if="form.members.length === 0" class="flex flex-col items-center justify-center py-6">
+                                <UsersRound class="h-12 w-12 text-muted-foreground mb-2" />
+                                <p class="text-muted-foreground">No members selected</p>
+                            </div>
+
+                            <div v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2 overflow-auto h-40">
+                                <div
+                                    v-for="member in form.members"
+                                    :key="member.id"
+                                    class="flex items-center gap-3 rounded-lg border p-3"
+                                >
+                                    <div class="relative h-10 w-10 overflow-hidden rounded-full">
+                                        <img
+                                            v-if="member.avatar"
+                                            :src="member.avatar"
+                                            :alt="member.name"
+                                            class="h-full w-full object-cover"
+                                        />
+                                        <div
+                                            v-else
+                                            class="flex h-full w-full items-center justify-center bg-primary/10"
+                                        >
+                                            <span class="font-medium text-primary">
+                                                {{ member.name.charAt(0).toUpperCase() }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="truncate font-medium">{{ member.name }}</p>
+                                        <p class="truncate text-sm text-muted-foreground">{{ member.email }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex items-center justify-between">
                     <Button :disabled="stepIndex === 1" variant="outline" size="sm" @click="stepIndex--"> Back </Button>
                     <Button v-if="stepIndex === steps.length" size="sm" type="submit"> Create Group </Button>
