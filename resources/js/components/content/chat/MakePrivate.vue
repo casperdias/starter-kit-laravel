@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import UserInfo from '@/components/UserInfo.vue';
+import { useUserFetch } from '@/composables/helper';
 import { useRoute } from '@/composables/useRoute';
-import { User } from '@/types';
 import axios from 'axios';
 import { ArchiveX, ChevronDown, LoaderCircle, MessageSquare, Search, UserRound, X } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
@@ -13,62 +13,25 @@ import { toast } from 'vue-sonner';
 const route = useRoute();
 
 const searchTerm = ref('');
-const users = ref<User[]>([]);
-const hasMore = ref(false);
-const isLoading = ref(false);
-const isLoadingMore = ref(false);
-const page = ref(1);
 const dialogOpen = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout>;
 
-const fetchUsers = (search: string = '', reset: boolean = true) => {
-    if (reset) {
-        isLoading.value = true;
-        page.value = 1;
-    } else {
-        isLoadingMore.value = true;
-    }
-
-    axios
-        .get(route('external.user-list'), {
-            params: {
-                search: search.trim(),
-                page: page.value,
-            },
-        })
-        .then((response) => {
-            if (reset) {
-                users.value = response.data.users;
-            } else {
-                users.value = [...users.value, ...response.data.users];
-            }
-
-            hasMore.value = response.data.hasMore;
-        })
-        .catch((error) => {
-            console.error('Error fetching user list:', error);
-        })
-        .finally(() => {
-            isLoading.value = false;
-            isLoadingMore.value = false;
-        });
-};
-
-const loadMore = () => {
-    if (hasMore.value && !isLoadingMore.value) {
-        page.value += 1;
-        fetchUsers(searchTerm.value, false);
-    }
-};
+const {
+    users,
+    hasMore,
+    isLoading,
+    isLoadingMore,
+    fetchUsers,
+    loadMore,
+    resetUsers,
+} = useUserFetch();
 
 watch(dialogOpen, (isOpen) => {
     if (isOpen) {
         fetchUsers();
     } else {
         searchTerm.value = '';
-        users.value = [];
-        page.value = 1;
-        hasMore.value = false;
+        resetUsers();
     }
 });
 
@@ -177,7 +140,7 @@ const startChat = (userId: string | number) => {
             </div>
 
             <div v-if="hasMore && !isLoading && users.length > 0" class="flex justify-center">
-                <Button @click="loadMore" variant="outline" size="sm" :disabled="isLoadingMore" class="w-full">
+                <Button @click="loadMore(searchTerm)" variant="outline" size="sm" :disabled="isLoadingMore" class="w-full">
                     <ChevronDown class="mr-2 h-4 w-4" />
                     Load More Users
                 </Button>

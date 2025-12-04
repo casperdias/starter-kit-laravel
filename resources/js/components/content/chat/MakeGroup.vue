@@ -1,21 +1,25 @@
 <script setup lang="ts">
+import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Stepper, StepperDescription, StepperItem, StepperSeparator, StepperTitle } from '@/components/ui/stepper';
 import { Textarea } from '@/components/ui/textarea';
+import UserInfo from '@/components/UserInfo.vue';
+import { useUserFetch } from '@/composables/helper';
+import { User } from '@/types';
 import { useForm } from '@inertiajs/vue3';
 import { useFileDialog, useObjectUrl } from '@vueuse/core';
-import { Check, FileText, Image as ImageIcon, MessagesSquare, Search, Users, UsersRound, X } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ArchiveX, Check, ChevronDown, FileText, Image as ImageIcon, LoaderCircle, MessagesSquare, Minus, Plus, Search, SendHorizonal, Users, UsersRound, X } from 'lucide-vue-next';
+import { onBeforeUnmount, ref, watch } from 'vue';
 
 const form = useForm({
     name: '',
     type: 'group',
     description: '',
     avatar: null as File | null,
-    members: [],
+    members: [] as User[],
 });
 
 const stepIndex = ref(1);
@@ -32,10 +36,13 @@ const steps = [
         description: 'Choose member',
         icon: Users,
     },
+    {
+        step: 3,
+        title: 'Confirmation',
+        description: 'Final Check',
+        icon: SendHorizonal,
+    },
 ];
-
-const searchTerm = ref('');
-const isLoading = ref(false);
 
 const { files, open, reset, onChange } = useFileDialog({
     accept: 'image/*',
@@ -56,10 +63,52 @@ onChange((files) => {
         avatarFile.value = null;
     }
 });
+
+const searchTerm = ref('');
+const dialogOpen = ref(false);
+let searchTimeout: ReturnType<typeof setTimeout>;
+
+const {
+    users,
+    hasMore,
+    isLoading,
+    isLoadingMore,
+    fetchUsers,
+    loadMore,
+    resetUsers,
+} = useUserFetch();
+
+watch(dialogOpen, (isOpen) => {
+    if (isOpen) {
+        fetchUsers();
+    } else {
+        searchTerm.value = '';
+        resetUsers();
+    }
+});
+
+watch(searchTerm, (newSearchTerm) => {
+    if (!dialogOpen.value) return;
+
+    clearTimeout(searchTimeout);
+
+    if (newSearchTerm.trim() === '') {
+        fetchUsers();
+        return;
+    }
+
+    searchTimeout = setTimeout(() => {
+        fetchUsers(newSearchTerm);
+    }, 500);
+});
+
+onBeforeUnmount(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+});
 </script>
 
 <template>
-    <Dialog>
+    <Dialog v-model:open="dialogOpen">
         <DialogTrigger as-child>
             <Button class="w-full">
                 <UsersRound />
@@ -139,7 +188,7 @@ onChange((files) => {
                             </div>
 
                             <!-- Upload Controls -->
-                            <div class="flex-1 space-y-3">
+                            <div class="flex-1 space-y-2">
                                 <div class="flex gap-2">
                                     <Button type="button" variant="outline" @click="open">
                                         <ImageIcon class="mr-2 h-4 w-4" />
@@ -152,7 +201,10 @@ onChange((files) => {
                                     </Button>
                                 </div>
 
-                                <p class="text-xs text-muted-foreground">Recommended: Square image, max 2MB. JPG, PNG, or WebP.</p>
+                                <div>
+                                    <p class="text-xs text-muted-foreground">Recommended: Square image, max 2MB. JPG, PNG, or WebP.</p>
+                                    <InputError :message="form.errors.avatar" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,6 +214,7 @@ onChange((files) => {
                         <Label for="name">Group Name</Label>
                         <Input id="name" v-model="form.name" placeholder="Enter group name" :maxlength="50" />
                         <p class="text-xs text-muted-foreground">{{ form.name.length }}/50 characters</p>
+                        <InputError :message="form.errors.name" />
                     </div>
 
                     <!-- Description -->
@@ -175,6 +228,7 @@ onChange((files) => {
                             class="w-full min-w-0 overflow-auto"
                         />
                         <p class="text-xs text-muted-foreground">{{ form.description.length }}/200 characters</p>
+                        <InputError :message="form.errors.description" />
                     </div>
                 </div>
 
@@ -193,12 +247,50 @@ onChange((files) => {
                             <Search class="size-6 text-muted-foreground" />
                         </span>
                     </div>
+
+                    <p class="text-xs text-muted-foreground">{{ form.members.length }} Member/s</p>
+
+                    <div class="max-h-96 overflow-y-auto">
+                        <div v-if="isLoading" class="flex flex-col items-center justify-center space-y-2 py-8">
+                            <LoaderCircle class="size-10 animate-spin" />
+                            <p class="font-semibold">Loading users...</p>
+                        </div>
+                        <div v-else-if="users.length === 0" class="flex flex-col items-center justify-center space-y-2 py-8">
+                            <ArchiveX class="size-10" />
+                            <p class="font-semibold">No users found.</p>
+                        </div>
+                        <div v-else class="space-y-3">
+                            <div v-for="user in users" :key="user.id" class="flex items-center justify-between rounded border p-2">
+                                <div class="flex items-center gap-2">
+                                    <UserInfo :user="user" :show-email="true" />
+                                </div>
+                                <Button size="sm" @click="form.members.push(user)" v-if="!form.members.some((member) => user.id  === member.id)">
+                                    <Plus />
+                                </Button>
+                                <Button size="sm" variant="destructive" @click="form.members = form.members.filter((member) => member.id !== user.id)" v-else>
+                                    <Minus />
+                                </Button>
+                            </div>
+
+                            <div v-if="isLoadingMore" class="flex items-center justify-center py-4">
+                                <LoaderCircle class="size-6 animate-spin" />
+                                <span class="ml-2 text-sm">Loading more...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="hasMore && !isLoading && users.length > 0" class="flex justify-center">
+                        <Button @click="loadMore(searchTerm)" variant="outline" size="sm" :disabled="isLoadingMore" class="w-full">
+                            <ChevronDown class="mr-2 h-4 w-4" />
+                            Load More Users
+                        </Button>
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-between">
                     <Button :disabled="stepIndex === 1" variant="outline" size="sm" @click="stepIndex--"> Back </Button>
-                    <Button v-if="stepIndex === steps.length" size="sm" type="submit" :disabled="!form.name.trim()"> Create Group </Button>
-                    <Button v-else type="button" size="sm" @click="stepIndex++" :disabled="!form.name.trim()"> Next </Button>
+                    <Button v-if="stepIndex === steps.length" size="sm" type="submit"> Create Group </Button>
+                    <Button v-else type="button" size="sm" @click="stepIndex++"> Next </Button>
                 </div>
             </Stepper>
         </DialogContent>

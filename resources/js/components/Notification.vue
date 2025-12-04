@@ -8,7 +8,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { truncateMessage } from '@/composables/helper';
 import { fetchNotifications } from '@/composables/notificationHelper';
 import { useRoute } from '@/composables/useRoute';
 import { Notification } from '@/types';
@@ -69,7 +68,7 @@ useEchoNotification(`App.Models.User.${auth.user.id}`, (notification: Notificati
                 <DropdownMenuItem v-for="notification in notifications" :key="notification.id">
                     <div class="flex flex-col">
                         <span class="font-medium">{{ notification.data.type }}</span>
-                        <span class="text-sm text-muted-foreground">{{ truncateMessage(notification.data.message) }}</span>
+                        <span class="text-sm text-muted-foreground line-clamp-1">{{ notification.data.message }}</span>
                     </div>
                 </DropdownMenuItem>
             </template>
