@@ -17,7 +17,9 @@ class ChatController extends Controller
         $search = request('search', '');
         $me = auth()->user();
 
-        $conversations = Conversation::with('participants')
+        request()->merge(['hide_content' => true]);
+
+        $conversations = Conversation::with(['participants', 'lastMessage.user'])
             ->WhereHas('participants', function ($query) use ($me) {
                 $query->where('id', $me->id);
             })->cursorPaginate(8);

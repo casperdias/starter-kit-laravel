@@ -30,6 +30,7 @@ class ConversationResource extends JsonResource
                     );
                 });
             }),
+            'last_message' => new ChatResource($this->whenLoaded('lastMessage')),
             'updated_at' => $this->updated_at->format('d F Y H:i:s T'),
         ];
     }

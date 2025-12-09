@@ -82,7 +82,7 @@ const startChat = (userId: string | number) => {
                     <DialogClose as-child>
                         <Button variant="destructive" size="sm">
                             <X class="h-4 w-4" />
-                            <p class="hidden md:block">Tutup</p>
+                            <p class="hidden md:block">Close</p>
                         </Button>
                     </DialogClose>
                 </div>

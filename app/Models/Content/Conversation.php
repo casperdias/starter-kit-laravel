@@ -24,6 +24,11 @@ class Conversation extends Model
         return $this->hasMany(Chat::class)->latest();
     }
 
+    public function lastMessage()
+    {
+        return $this->hasOne(Chat::class)->latest('created_at');
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

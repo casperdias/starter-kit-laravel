@@ -33,7 +33,7 @@ return new class extends Migration
         });
 
         Schema::create('chats', function (Blueprint $table) {
-            $table->uuid('uuid');
+            $table->uuid('uuid')->primary();
             $table->foreignIdFor(Conversation::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->text('message');
