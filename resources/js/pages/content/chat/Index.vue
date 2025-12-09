@@ -56,13 +56,13 @@ const searchTerm = ref(route().params.search || '');
                     </div>
                 </CardContent>
             </Card>
-            <ResizablePanelGroup direction="horizontal">
-                <ResizablePanel :default-size="30" :min-size="30" :max-size="50" class="border-y">
-                    <ListConversation :conversations="conversations" />
-                </ResizablePanel>
-                <ResizableHandle with-handle />
-                <ResizablePanel :default-size="70" class="border-y"></ResizablePanel>
-            </ResizablePanelGroup>
         </div>
+        <ResizablePanelGroup direction="horizontal">
+            <ResizablePanel :default-size="30" :min-size="30" :max-size="50" class="border-t">
+                <ListConversation :conversations="conversations" :search="searchTerm" />
+            </ResizablePanel>
+            <ResizableHandle with-handle />
+            <ResizablePanel :default-size="70" class="border-t"></ResizablePanel>
+        </ResizablePanelGroup>
     </AppLayout>
 </template>

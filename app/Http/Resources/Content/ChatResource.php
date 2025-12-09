@@ -25,7 +25,7 @@ class ChatResource extends JsonResource
                 'metadata' => $this->metadata,
             ]),
             'user' => new UserResource($this->whenLoaded('user')),
-            'created_at' => $this->created_at->format('d F Y H:i:s T'),
+            'updated_at' => $this->updated_at->format('d F Y H:i:s T'),
         ];
     }
 }

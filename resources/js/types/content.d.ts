@@ -24,4 +24,16 @@ export interface Conversation {
         }
     >;
     updated_at: string;
+    messages?: Array<Chat>;
+    last_message?: Chat;
+}
+
+export interface Chat {
+    uuid: string;
+    user?: User;
+    conversation?: Conversation;
+    message: string;
+    type: string;
+    metadata: JSON | null;
+    updated_at: string;
 }
