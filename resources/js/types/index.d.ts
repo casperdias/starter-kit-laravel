@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-vue-next';
 import type { Config } from 'ziggy-js';
+export * from './content';
 
 export interface Auth {
     user: User;
@@ -122,32 +123,6 @@ export interface Role {
     display_name: string;
     description: string;
     created_at: string;
-}
-
-export interface News {
-    id: string;
-    title: string;
-    type: string;
-    content: string;
-    author?: string;
-    created_at: string;
-    diff_created_at: string;
-    updated_at: string;
-}
-
-export interface Conversation {
-    id: number;
-    type: 'private' | 'group';
-    name: string;
-    description: string | null;
-    avatar: string | null;
-    created_at: string;
-    participants: Array<
-        User & {
-            role: string;
-        }
-    >;
-    updated_at: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

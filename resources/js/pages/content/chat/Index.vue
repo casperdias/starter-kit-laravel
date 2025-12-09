@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { MakeGroup, MakePrivate } from '@/components/content/chat';
+import { ListConversation, MakeGroup, MakePrivate } from '@/components/content/chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Conversation, CursorPagination } from '@/types';
@@ -55,6 +56,13 @@ const searchTerm = ref(route().params.search || '');
                     </div>
                 </CardContent>
             </Card>
+            <ResizablePanelGroup direction="horizontal">
+                <ResizablePanel :default-size="30" :min-size="30" :max-size="50" class="border-y">
+                    <ListConversation :conversations="conversations" />
+                </ResizablePanel>
+                <ResizableHandle with-handle />
+                <ResizablePanel :default-size="70" class="border-y"></ResizablePanel>
+            </ResizablePanelGroup>
         </div>
     </AppLayout>
 </template>

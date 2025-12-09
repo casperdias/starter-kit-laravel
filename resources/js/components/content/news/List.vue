@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, CursorPagination, News } from '@/types';
-
 import { InfiniteScroll, Link, router, usePage } from '@inertiajs/vue3';
 import { ArchiveX, Megaphone, Newspaper, Plus, Search, ShieldPlus } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
