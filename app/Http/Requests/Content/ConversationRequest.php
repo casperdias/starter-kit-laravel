@@ -36,7 +36,7 @@ class ConversationRequest extends FormRequest
             'members' => [
                 Rule::requiredIf($this->type === 'group'),
                 'array',
-                'min:1',
+                'min:2',
                 'max:20',
             ],
 

@@ -56,6 +56,7 @@ const startChat = (userId: string | number) => {
         preserveState: true,
         onSuccess: () => {
             form.reset();
+            dialogOpen.value = false;
         },
     });
 };

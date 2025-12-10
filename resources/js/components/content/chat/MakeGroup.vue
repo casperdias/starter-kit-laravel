@@ -122,6 +122,10 @@ const createGroup = () => {
         preserveState: true,
         onSuccess: () => {
             form.reset();
+            dialogOpen.value = false;
+            form.avatar = null;
+            avatarFile.value = null;
+            reset();
         },
     });
 };

@@ -47,7 +47,7 @@ const conversationInfo = (data: Conversation) => {
             avatar: data.avatar,
             name: data.name,
             last_message: data.last_message?.message ?? '-',
-            last_update: data.last_message?.updated_at,
+            last_update: data.last_message?.updated_at ?? data.created_at,
         };
     } else {
         const otherUser = data.participants.find((user) => user.id !== me.id);
@@ -56,7 +56,7 @@ const conversationInfo = (data: Conversation) => {
             avatar: otherUser?.avatar,
             name: otherUser?.name,
             last_message: data.last_message?.message ?? '-',
-            last_update: data.last_message?.updated_at,
+            last_update: data.last_message?.updated_at ?? data.created_at,
         };
     }
 };
@@ -78,13 +78,18 @@ const conversationInfo = (data: Conversation) => {
                     <div v-for="item in conversations.data" :key="item.id" class="flex items-center justify-between rounded border p-2">
                         <div class="flex items-center gap-2">
                             <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
-                                <AvatarImage :src="conversationInfo(item).avatar!" :alt="conversationInfo(item).name" />
+                                <AvatarImage v-if="item.avatar" :src="conversationInfo(item).avatar!" :alt="conversationInfo(item).name" />
                                 <AvatarFallback class="rounded-lg text-black dark:text-white">
                                     {{ getInitials(conversationInfo(item).name) }}
                                 </AvatarFallback>
                             </Avatar>
                             <div class="grid flex-1 text-left text-sm leading-tight">
-                                <span class="truncate font-medium">{{ conversationInfo(item).name }}</span>
+                                <span class="flex items-center gap-1 truncate font-medium">
+                                    {{ conversationInfo(item).name }}
+                                    <p class="text-xs text-foreground italic">
+                                        {{ item.type === 'group' ? '(' + item.participants.length + ' members)' : '' }}
+                                    </p>
+                                </span>
                                 <span class="max-w-20 truncate text-xs text-muted-foreground">{{ conversationInfo(item).last_message }}</span>
                                 <span class="truncate text-xs text-muted-foreground">{{ conversationInfo(item).last_update }}</span>
                             </div>
