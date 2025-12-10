@@ -69,12 +69,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->roles()->where('status', 'ACTIVE')->first();
     }
 
-    public function activeRole()
-    {
-        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id')
-            ->wherePivot('status', 'ACTIVE');
-    }
-
     public function assignRole(Role $role)
     {
         if (! $this->roles()->where('role_id', $role->id)->exists()) {
@@ -102,22 +96,6 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return false;
-    }
-
-    public function changeRole(Role $role)
-    {
-        if (! $this->roles()->where('role_id', $role->id)->exists()) {
-            return false;
-        }
-
-        $this->roles()->updateExistingPivot(
-            $this->roles->pluck('id')->toArray(),
-            ['status' => 'INACTIVE']
-        );
-
-        $this->roles()->updateExistingPivot($role->id, ['status' => 'ACTIVE']);
-
-        return true;
     }
 
     public function hasRole($role)

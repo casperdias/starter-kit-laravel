@@ -64,7 +64,7 @@ const conversationInfo = (data: Conversation) => {
 
 <template>
     <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
-        <div class="h-[66vh] overflow-y-auto pr-5">
+        <div class="max-h-[66vh] overflow-y-auto pr-5">
             <InfiniteScroll data="conversations" class="space-y-4" preserve-url>
                 <template v-if="conversations.data.length === 0">
                     <Button variant="ghost" class="h-fit w-full border px-2 py-4">

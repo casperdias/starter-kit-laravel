@@ -6,12 +6,12 @@ import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, CursorPagination, News } from '@/types';
 import { InfiniteScroll, Link, router, usePage } from '@inertiajs/vue3';
 import { ArchiveX, Megaphone, Newspaper, Plus, Search, ShieldPlus } from 'lucide-vue-next';
-import { onBeforeUnmount, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import Filter from './Filter.vue';
 
 const route = useRoute();
 const page = usePage<AppPageProps>();
-const permissions = page.props.auth.user.permissions;
+const permissions = computed(() => page.props.auth.user.permissions);
 
 const props = defineProps<Props>();
 
@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
                 </Link>
             </CardContent>
         </Card>
-        <div class="h-[70vh] overflow-y-auto pr-5">
+        <div class="overflow-y-auto pr-5" :class="permissions.includes('create-news') ? 'max-h-[70vh]' : 'max-h-[75vh]'">
             <InfiniteScroll data="news" class="space-y-4" preserve-url>
                 <template v-if="news.data.length === 0">
                     <Button variant="ghost" class="h-fit w-full border px-2 py-4">
@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
                         <div class="flex w-full flex-col gap-2">
                             <div class="flex items-center gap-2 px-2">
                                 <component :is="icon(item.type)" class="size-10" />
-                                <h2 class="text-xl font-bold">{{ item.title || 'Judul' }}</h2>
+                                <h2 class="truncate text-xl font-bold">{{ item.title || 'Judul' }}</h2>
                             </div>
                             <div class="flex items-center justify-between px-2">
                                 <p class="text-sm font-semibold text-muted-foreground">By {{ item.author || 'Unknown' }}</p>
