@@ -29,7 +29,6 @@ watch(searchTerm, (newSearch) => {
                 search: newSearch,
             },
             {
-                preserveState: true,
                 preserveScroll: true,
                 replace: true,
             },

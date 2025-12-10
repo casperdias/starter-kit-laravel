@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Auth\Permission;
 use App\Models\Auth\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
@@ -24,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Model::preventLazyLoading(! $this->app->isProduction());
+        Model::preventSilentlyDiscardingAttributes(! $this->app->isProduction());
+
         JsonResource::withoutWrapping();
 
         if (Schema::hasTable('permissions')) {

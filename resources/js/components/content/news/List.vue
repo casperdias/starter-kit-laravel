@@ -46,7 +46,6 @@ watch([searchTerm, category], ([newTerm, newCategory]) => {
                 category: newCategory !== 'all' ? newCategory : undefined,
             },
             {
-                preserveState: true,
                 preserveScroll: true,
                 replace: true,
                 onFinish: () => {

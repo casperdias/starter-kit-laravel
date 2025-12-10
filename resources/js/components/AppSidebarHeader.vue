@@ -29,6 +29,7 @@ const changeRole = () => {
         route('change-role'),
         { role: role.value },
         {
+            preserveState: false,
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Role changed successfully.', {
