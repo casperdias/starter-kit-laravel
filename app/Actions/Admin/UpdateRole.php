@@ -2,9 +2,9 @@
 
 namespace App\Actions\Admin;
 
-use App\Models\Auth\User;
-use App\Models\Auth\Role;
 use App\Http\Requests\Admin\UserRoleRequest;
+use App\Models\Auth\Role;
+use App\Models\Auth\User;
 use Illuminate\Support\Facades\DB;
 
 class UpdateRole

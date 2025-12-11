@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Admin\UpdatePermission;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RolePermissionRequest;
 use App\Http\Requests\Admin\RoleRequest;
@@ -109,15 +110,11 @@ class RoleController extends Controller
             ->with('success', __('Role updated successfully.'));
     }
 
-    public function updatePermission(RolePermissionRequest $request, Role $role, Permission $permission)
+    public function updatePermission(RolePermissionRequest $request, Role $role, Permission $permission, UpdatePermission $updatePermission)
     {
         Gate::authorize('update', $role);
 
-        if ($request->status) {
-            $role->assignPermission($permission);
-        } else {
-            $role->revokePermission($permission);
-        }
+        $updatePermission->handle($request, $role, $permission);
 
         return back()
             ->with('success', __('Role permissions updated successfully.'));
