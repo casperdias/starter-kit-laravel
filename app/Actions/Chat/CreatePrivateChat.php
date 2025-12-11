@@ -16,7 +16,7 @@ class CreatePrivateChat
         //
     }
 
-    public function handle(ConversationRequest $request, User $me)
+    public function handle(ConversationRequest $request, User $me): Conversation
     {
         $user1 = $me->id;
         $user2 = $request->user_id;

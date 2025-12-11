@@ -5,6 +5,7 @@ namespace App\Actions\Chat;
 use App\Http\Requests\Content\ConversationRequest;
 use App\Models\Auth\User;
 use App\Models\Content\Conversation;
+use Illuminate\Http\UploadedFile;
 
 class CreateGroupChat
 {
@@ -16,7 +17,7 @@ class CreateGroupChat
         //
     }
 
-    public function handle(ConversationRequest $request, User $me)
+    public function handle(ConversationRequest $request, User $me): Conversation
     {
         $conversationData = [
             'name' => $request->name,
@@ -55,17 +56,15 @@ class CreateGroupChat
         return $conversation;
     }
 
-    /**
-     * Store avatar file in private storage
-     *
-     * @param  \Illuminate\Http\UploadedFile  $file
-     * @return string
-     */
-    protected function storeAvatar($file)
+    protected function storeAvatar(UploadedFile $file): string
     {
         $storagePath = 'avatars/conversations';
         $filename = 'avatar_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
         $path = $file->storeAs($storagePath, $filename);
+
+        if ($path === false) {
+            throw new \RuntimeException('Failed to store avatar file.');
+        }
 
         return $path;
     }

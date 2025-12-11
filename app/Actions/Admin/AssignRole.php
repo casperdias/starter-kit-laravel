@@ -15,7 +15,7 @@ class AssignRole
         //
     }
 
-    public function handle(User $user, Role $role)
+    public function handle(User $user, Role $role): bool
     {
         $user->load('roles');
 

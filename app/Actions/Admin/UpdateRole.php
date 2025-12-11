@@ -19,7 +19,7 @@ class UpdateRole
         //
     }
 
-    public function handle(UserRoleRequest $request, User $user, Role $role)
+    public function handle(UserRoleRequest $request, User $user, Role $role): bool
     {
         return DB::transaction(function () use ($request, $user, $role) {
             if ($request->status) {

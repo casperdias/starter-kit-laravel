@@ -3,6 +3,7 @@
 namespace App\Actions\Chat;
 
 use App\Http\Requests\Content\ConversationRequest;
+use App\Models\Content\Conversation;
 use Illuminate\Support\Facades\DB;
 
 class StartConversation
@@ -14,7 +15,7 @@ class StartConversation
         //
     }
 
-    public function handle(ConversationRequest $request)
+    public function handle(ConversationRequest $request): Conversation
     {
         $me = $request->user();
 

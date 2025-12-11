@@ -19,7 +19,7 @@ class UpdatePermission
         //
     }
 
-    public function handle(RolePermissionRequest $request, Role $role, Permission $permission)
+    public function handle(RolePermissionRequest $request, Role $role, Permission $permission): bool
     {
         return DB::transaction(function () use ($request, $role, $permission) {
             if ($request->status) {

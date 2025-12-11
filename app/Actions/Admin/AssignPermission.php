@@ -15,7 +15,7 @@ class AssignPermission
         //
     }
 
-    public function handle(Role $role, Permission $permission)
+    public function handle(Role $role, Permission $permission): bool
     {
         $role->load('permissions');
 
