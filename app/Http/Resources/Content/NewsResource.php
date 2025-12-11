@@ -2,15 +2,26 @@
 
 namespace App\Http\Resources\Content;
 
+use App\Models\Auth\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $type
+ * @property string $content
+ * @property User $author
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class NewsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function toArray(Request $request): array
     {
