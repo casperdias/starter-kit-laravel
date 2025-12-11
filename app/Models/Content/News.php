@@ -22,6 +22,24 @@ class News extends Model
         'created' => NewsCreated::class,
     ];
 
+    public function scopeSearchTitle($query, $search)
+    {
+        if (! $search) {
+            return $query;
+        }
+
+        return $query->where('title', 'like', "%{$search}%");
+    }
+
+    public function scopeFilterCategory($query, $category)
+    {
+        if (! $category || $category === 'all') {
+            return $query;
+        }
+
+        return $query->where('type', $category);
+    }
+
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');

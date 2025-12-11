@@ -29,10 +29,7 @@ class UserController extends Controller
         $perPage = request('per_page', 5);
 
         $users = User::query()
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            })
+            ->search($search)
             ->orderBy('id', 'desc')
             ->paginate($perPage, ['*'], 'page', $page);
 
@@ -78,10 +75,7 @@ class UserController extends Controller
         $perPage = request('per_page', 5);
 
         $roles = Role::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('display_name', 'like', "%{$search}%");
-            })
+            ->search($search)
             ->orderBy('id', 'desc')
             ->paginate($perPage, ['*'], 'page', $page);
 

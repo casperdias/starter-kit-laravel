@@ -13,20 +13,23 @@ class Permission extends Model
         'description',
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
+        $clearCache = fn () => Cache::forget('permissions');
 
-        static::created(function ($permission) {
-            Cache::forget('permissions');
-        });
+        static::saved($clearCache);
+        static::deleted($clearCache);
+    }
 
-        static::updated(function ($permission) {
-            Cache::forget('permissions');
-        });
+    public function scopeSearch($query, string $search)
+    {
+        if (! $search) {
+            return $query;
+        }
 
-        static::deleted(function ($permission) {
-            Cache::forget('permissions');
+        return $query->where(function ($query) use ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('display_name', 'like', "%{$search}%");
         });
     }
 
