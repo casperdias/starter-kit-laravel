@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\NewsRequest;
 use App\Http\Resources\Content\NewsResource;
 use App\Models\Content\News;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class NewsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $search = request('search', '');
         $perPage = request('per_page', 5);
@@ -37,7 +40,7 @@ class NewsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         Gate::authorize('create', News::class);
 
@@ -47,7 +50,7 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(NewsRequest $request)
+    public function store(NewsRequest $request): RedirectResponse
     {
         Gate::authorize('create', News::class);
 
@@ -63,7 +66,7 @@ class NewsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(News $news)
+    public function show(News $news): JsonResponse
     {
         return response()->json(new NewsResource($news->load('author')));
     }
@@ -71,24 +74,24 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(News $news)
-    {
-        //
-    }
+    // public function edit(News $news)
+    // {
+    //     //
+    // }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(NewsRequest $request, News $news)
-    {
-        //
-    }
+    // public function update(NewsRequest $request, News $news)
+    // {
+    //     //
+    // }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(News $news)
-    {
-        //
-    }
+    // public function destroy(News $news)
+    // {
+    //     //
+    // }
 }

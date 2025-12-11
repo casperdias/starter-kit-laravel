@@ -26,7 +26,7 @@ class EmailVerificationNotificationController extends Controller
         return back()->with('status', __('Verification Link Sent'));
     }
 
-    public function storeCustom(Request $request, User $user)
+    public function storeCustom(Request $request, User $user): RedirectResponse
     {
         Gate::authorize('email-verification', $user);
 

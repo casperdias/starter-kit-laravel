@@ -7,11 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\ConversationRequest;
 use App\Http\Resources\Content\ConversationResource;
 use App\Models\Content\Conversation;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ChatController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $perPage = request('per_page', 10);
         $search = request('search', '');
@@ -29,7 +31,7 @@ class ChatController extends Controller
         ]);
     }
 
-    public function store(ConversationRequest $request, StartConversation $startConversation)
+    public function store(ConversationRequest $request, StartConversation $startConversation): RedirectResponse
     {
         $conversation = $startConversation->handle($request);
 

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Setting\NotificationResource;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 5);
@@ -28,7 +30,7 @@ class NotificationController extends Controller
         ]);
     }
 
-    public function markAllAsRead(Request $request)
+    public function markAllAsRead(Request $request): RedirectResponse
     {
         $user = $request->user();
         $user->unreadNotifications->markAsRead();
@@ -36,7 +38,7 @@ class NotificationController extends Controller
         return back()->with('success', __('All notifications marked as read.'));
     }
 
-    public function markAsRead(Request $request)
+    public function markAsRead(Request $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -51,7 +53,7 @@ class NotificationController extends Controller
         return back()->withErrors(['message' => __('Notification not found.')]);
     }
 
-    public function markOneAsRead(Request $request, $notificationId)
+    public function markOneAsRead(Request $request, string $notificationId): RedirectResponse
     {
         $user = $request->user();
 

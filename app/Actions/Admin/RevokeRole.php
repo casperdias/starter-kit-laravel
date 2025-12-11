@@ -17,15 +17,16 @@ class RevokeRole
 
     public function handle(User $user, Role $role): bool
     {
-        $user->load('roles');
+        $detached = $user->roles()->detach($role);
 
-        if ($user->roles()->where('role_id', $role->id)->exists()) {
-            $user->roles()->detach($role);
+        if ($detached > 0) {
+            $hasActiveRole = $user->roles()->wherePivot('status', 'ACTIVE')->exists();
 
-            if ($user->roles()->where('status', 'ACTIVE')->doesntExist()) {
-                $firstRole = $user->roles()->first();
-                if ($firstRole) {
-                    $user->roles()->updateExistingPivot($firstRole->id, ['status' => 'ACTIVE']);
+            if (! $hasActiveRole) {
+                $firstRoleId = $user->roles()->value('id');
+
+                if ($firstRoleId) {
+                    $user->roles()->updateExistingPivot($firstRoleId, ['status' => 'ACTIVE']);
                 }
             }
 

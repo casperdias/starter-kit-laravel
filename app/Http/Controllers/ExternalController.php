@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Admin\UserResource;
 use App\Models\Auth\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ExternalController extends Controller
 {
-    public function userList(Request $request)
+    public function userList(Request $request): JsonResponse
     {
         $referer = $request->headers->get('referer');
         if (! $referer || ! Str::contains($referer, [

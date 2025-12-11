@@ -2,9 +2,22 @@
 
 namespace App\Models\Auth;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $display_name
+ * @property string|null $description
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read Collection<int, Role> $roles
+ */
 class Permission extends Model
 {
     protected $fillable = [
@@ -13,7 +26,7 @@ class Permission extends Model
         'description',
     ];
 
-    protected static function booted()
+    protected static function booted(): void
     {
         $clearCache = fn () => Cache::forget('permissions');
 
@@ -21,19 +34,26 @@ class Permission extends Model
         static::deleted($clearCache);
     }
 
-    public function scopeSearch($query, string $search)
+    /**
+     * @param  Builder<Permission>  $query
+     * @return Builder<Permission>
+     */
+    public function scopeSearch(Builder $query, string $search): Builder
     {
         if (! $search) {
             return $query;
         }
 
-        return $query->where(function ($query) use ($search) {
+        return $query->where(function (Builder $query) use ($search) {
             $query->where('name', 'like', "%{$search}%")
                 ->orWhere('display_name', 'like', "%{$search}%");
         });
     }
 
-    public function roles()
+    /**
+     * @return BelongsToMany<Role, Permission>
+     */
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_permission', 'permission_id', 'role_id');
     }
