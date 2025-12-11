@@ -21,10 +21,8 @@ class ChangeRole
             return false;
         }
 
-        $user->roles()->updateExistingPivot(
-            $user->roles->pluck('id')->toArray(),
-            ['status' => 'INACTIVE']
-        );
+        $user->roles()->newPivotQuery()->where('user_id', $user->id)
+            ->update(['status' => 'INACTIVE']);
 
         $user->roles()->updateExistingPivot($role->id, ['status' => 'ACTIVE']);
 

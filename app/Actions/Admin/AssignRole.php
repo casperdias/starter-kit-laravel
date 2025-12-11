@@ -17,10 +17,12 @@ class AssignRole
 
     public function handle(User $user, Role $role): bool
     {
-        $user->load('roles');
-
         if (! $user->roles()->where('role_id', $role->id)->exists()) {
-            $user->roles()->attach($role, ['status' => $user->roles->isEmpty() ? 'ACTIVE' : 'INACTIVE']);
+            $hasActiveRole = $user->roles()->wherePivot('status', 'ACTIVE')->exists();
+
+            $user->roles()->attach($role, [
+                'status' => $hasActiveRole ? 'INACTIVE' : 'ACTIVE',
+            ]);
 
             return true;
         }

@@ -20,13 +20,11 @@ class StartConversation
         $me = $request->user();
 
         return DB::transaction(function () use ($request, $me) {
-            if ($request->type === 'private') {
-                $conversation = $this->createPrivate->handle($request, $me);
-            } elseif ($request->type === 'group') {
-                $conversation = $this->createGroup->handle($request, $me);
-            }
-
-            return $conversation;
+            return match ($request->type) {
+                'private' => $this->createPrivate->handle($request, $me),
+                'group' => $this->createGroup->handle($request, $me),
+                default => throw new \InvalidArgumentException('Invalid conversation type: '.$request->type),
+            };
         });
     }
 }
