@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Admin\UpdateRole;
 use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
@@ -93,15 +94,11 @@ class UserController extends Controller
     /**
      * Update the user's role.
      */
-    public function updateRole(UserRoleRequest $request, User $user, Role $role)
+    public function updateRole(UserRoleRequest $request, User $user, Role $role, UpdateRole $updateRole)
     {
         Gate::authorize('update', $user);
 
-        if ($request->status) {
-            $user->assignRole($role);
-        } else {
-            $user->revokeRole($role);
-        }
+        $updateRole->handle($request, $user, $role);
 
         return back()
             ->with('success', 'User role updated successfully.');

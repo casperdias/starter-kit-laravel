@@ -3,7 +3,6 @@
 namespace App\Actions\Chat;
 
 use App\Http\Requests\Content\ConversationRequest;
-use App\Models\Auth\User;
 use Illuminate\Support\Facades\DB;
 
 class StartConversation
@@ -15,8 +14,10 @@ class StartConversation
         //
     }
 
-    public function create(ConversationRequest $request, User $me)
+    public function handle(ConversationRequest $request)
     {
+        $me = $request->user();
+
         return DB::transaction(function () use ($request, $me) {
             if ($request->type === 'private') {
                 $conversation = $this->createPrivate->handle($request, $me);

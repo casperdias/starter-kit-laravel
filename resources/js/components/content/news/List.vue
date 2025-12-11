@@ -34,6 +34,7 @@ const icon = (type: string) => {
 const searchTerm = ref(route().params.search || '');
 const category = ref(route().params.category || 'all');
 const filterOpen = ref(false);
+
 let searchTimeout: ReturnType<typeof setTimeout>;
 
 watch([searchTerm, category], ([newTerm, newCategory]) => {

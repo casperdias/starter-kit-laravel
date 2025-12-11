@@ -31,9 +31,7 @@ class ChatController extends Controller
 
     public function store(ConversationRequest $request, StartConversation $startConversation)
     {
-        $me = auth()->user();
-
-        $conversation = $startConversation->create($request, $me);
+        $conversation = $startConversation->handle($request);
 
         return back()->with('message', $conversation->id);
     }

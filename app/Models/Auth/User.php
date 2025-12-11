@@ -69,35 +69,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->roles()->where('status', 'ACTIVE')->first();
     }
 
-    public function assignRole(Role $role)
-    {
-        if (! $this->roles()->where('role_id', $role->id)->exists()) {
-            $this->roles()->attach($role, ['status' => $this->roles->isEmpty() ? 'ACTIVE' : 'INACTIVE']);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function revokeRole(Role $role)
-    {
-        if ($this->roles()->where('role_id', $role->id)->exists()) {
-            $this->roles()->detach($role);
-
-            if ($this->roles()->where('status', 'ACTIVE')->doesntExist()) {
-                $firstRole = $this->roles()->first();
-                if ($firstRole) {
-                    $this->roles()->updateExistingPivot($firstRole->id, ['status' => 'ACTIVE']);
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function hasRole($role)
     {
         return $this->roles()->where('name', $role)->exists();
