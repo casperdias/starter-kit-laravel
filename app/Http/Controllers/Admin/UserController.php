@@ -12,15 +12,18 @@ use App\Http\Resources\Admin\UserResource;
 use App\Models\Auth\Role;
 use App\Models\Auth\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         Gate::authorize('viewAny', User::class);
 
@@ -41,15 +44,15 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request, CreateNewUser $creator)
+    public function store(UserRequest $request, CreateNewUser $creator): RedirectResponse
     {
         Gate::authorize('create', User::class);
 
@@ -64,7 +67,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): Response
     {
         Gate::authorize('view', $user);
 
@@ -88,7 +91,7 @@ class UserController extends Controller
     /**
      * Update the user's role.
      */
-    public function updateRole(UserRoleRequest $request, User $user, Role $role, UpdateRole $updateRole)
+    public function updateRole(UserRoleRequest $request, User $user, Role $role, UpdateRole $updateRole): RedirectResponse
     {
         Gate::authorize('update', $user);
 
@@ -101,7 +104,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $user): JsonResponse
     {
         Gate::authorize('update', $user);
 
@@ -111,7 +114,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request, User $user): RedirectResponse
     {
         Gate::authorize('update', $user);
 
@@ -124,7 +127,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
         Gate::authorize('delete', $user);
 

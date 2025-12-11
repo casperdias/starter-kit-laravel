@@ -10,15 +10,18 @@ use App\Http\Resources\Admin\PermissionResource;
 use App\Http\Resources\Admin\RoleResource;
 use App\Models\Auth\Permission;
 use App\Models\Auth\Role;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         Gate::authorize('viewAny', Role::class);
 
@@ -39,15 +42,15 @@ class RoleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RoleRequest $request)
+    public function store(RoleRequest $request): RedirectResponse
     {
         Gate::authorize('create', Role::class);
 
@@ -60,7 +63,7 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show(Role $role): Response
     {
         Gate::authorize('view', $role);
 
@@ -84,7 +87,7 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Role $role)
+    public function edit(Role $role): JsonResponse
     {
         Gate::authorize('update', $role);
 
@@ -94,7 +97,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleRequest $request, Role $role)
+    public function update(RoleRequest $request, Role $role): RedirectResponse
     {
         Gate::authorize('update', $role);
 
@@ -104,7 +107,7 @@ class RoleController extends Controller
             ->with('success', __('Role updated successfully.'));
     }
 
-    public function updatePermission(RolePermissionRequest $request, Role $role, Permission $permission, UpdatePermission $updatePermission)
+    public function updatePermission(RolePermissionRequest $request, Role $role, Permission $permission, UpdatePermission $updatePermission): RedirectResponse
     {
         Gate::authorize('update', $role);
 
@@ -117,7 +120,7 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy(Role $role): RedirectResponse
     {
         Gate::authorize('delete', $role);
 
