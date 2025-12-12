@@ -25,13 +25,15 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
-    flash: {
-        success: string | null;
-        warning: string | null;
-        info: string | null;
-        message: string | null;
-    };
+    flash: FlashMessage;
 };
+
+export interface FlashMessage {
+    success: string | null;
+    warning: string | null;
+    info: string | null;
+    message: string | null;
+}
 
 export interface Notification {
     id: string;
