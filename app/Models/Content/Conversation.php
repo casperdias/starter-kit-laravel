@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property int $id
+ * @property-read int $id
  * @property string $type
  * @property string $name
  * @property string $description

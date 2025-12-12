@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property string $id
+ * @property-read string $id
  * @property string $title
  * @property string $type
  * @property string $content

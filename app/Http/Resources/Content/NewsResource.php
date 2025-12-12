@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Content;
 
-use App\Models\Auth\User;
 use App\Models\Content\News;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

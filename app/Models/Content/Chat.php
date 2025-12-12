@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property string $uuid
+ * @property-read string $uuid
  * @property int $conversation_id
  * @property int $user_id
  * @property string $message

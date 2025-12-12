@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * @property int $id
+ * @property-read int $id
  * @property string $name
  * @property string $display_name
  * @property string|null $description
