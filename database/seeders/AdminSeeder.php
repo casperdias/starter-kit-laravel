@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Actions\Admin\AssignPermission;
+use App\Actions\Admin\AssignRole;
 use App\Models\Auth\Permission;
 use App\Models\Auth\Role;
 use App\Models\Auth\User;
@@ -12,8 +14,10 @@ class AdminSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
-    {
+    public function run(
+        AssignPermission $assignPermission,
+        AssignRole $assignRole,
+    ): void {
         // Create user
         $admin = User::create([
             'name' => 'Admin User',
@@ -41,10 +45,10 @@ class AdminSeeder extends Seeder
 
         foreach ($permissions as $perm) {
             $permission = Permission::create($perm);
-            $adminRole->assignPermission($permission);
+            $assignPermission->handle($adminRole, $permission);
         }
 
         // Assign role to user
-        $admin->assignRole($adminRole);
+        $assignRole->handle($admin, $adminRole);
     }
 }

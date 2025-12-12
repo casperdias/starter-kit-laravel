@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Admin\AssignRole;
 use App\Models\Auth\Role;
 use App\Models\Auth\User;
 
@@ -45,8 +46,10 @@ describe('changing role', function () {
         $role1 = Role::create(['name' => 'Role 1', 'display_name' => 'Role 1', 'description' => 'Role 1']);
         $role2 = Role::create(['name' => 'Role 2', 'display_name' => 'Role 2', 'description' => 'Role 2']);
 
-        $user->assignRole($role1);
-        $user->assignRole($role2);
+        $assignRole = new AssignRole;
+
+        $assignRole->handle($user, $role1);
+        $assignRole->handle($user, $role2);
 
         $this->actingAs($user)
             ->put(route('change-role'), ['role' => $role2->id])
@@ -66,7 +69,9 @@ describe('changing role', function () {
         $role1 = Role::create(['name' => 'Role 1', 'display_name' => 'Role 1', 'description' => 'Role 1']);
         $role2 = Role::create(['name' => 'Role 2', 'display_name' => 'Role 2', 'description' => 'Role 2']);
 
-        $user->assignRole($role1);
+        $assignRole = new AssignRole;
+
+        $assignRole->handle($user, $role1);
 
         $this->actingAs($user)
             ->put(route('change-role'), ['role' => $role2->id])
@@ -85,7 +90,9 @@ describe('changing role', function () {
 
         $role1 = Role::create(['name' => 'Role 1', 'display_name' => 'Role 1', 'description' => 'Role 1']);
 
-        $user->assignRole($role1);
+        $assignRole = new AssignRole;
+
+        $assignRole->handle($user, $role1);
 
         $this->actingAs($user)
             ->put(route('change-role'), ['role' => 999])
