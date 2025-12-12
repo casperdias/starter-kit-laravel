@@ -57,14 +57,8 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
-    role: {
-        id: number;
-        display_name: string;
-    };
-    roles: Array<{
-        id: number;
-        display_name: string;
-    }>;
+    role: Role;
+    roles: Array<Role>;
     permissions: Array<string>;
 }
 
