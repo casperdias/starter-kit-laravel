@@ -3,15 +3,19 @@
 namespace App\Http\Resources\Content;
 
 use App\Http\Resources\Admin\UserResource;
+use App\Models\Content\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Chat
+ */
 class ChatResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function toArray(Request $request): array
     {

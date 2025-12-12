@@ -2,10 +2,14 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Models\Auth\Permission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Permission
+ */
 class PermissionResource extends JsonResource
 {
     /**

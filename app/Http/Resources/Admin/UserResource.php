@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Models\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin User
+ */
 class UserResource extends JsonResource
 {
     /**
@@ -18,8 +22,14 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'created_at' => $this->when($this->created_at, fn () => $this->created_at->toDateTimeString()),
-            'email_verified_at' => $this->when($this->email_verified_at, fn () => $this->email_verified_at->toDateTimeString()),
+            'created_at' => $this->whenNotNull($this->created_at?->toDateTimeString()),
+            'email_verified_at' => $this->whenNotNull($this->email_verified_at?->toDateTimeString()),
+            'role' => $this->when(
+                $this->relationLoaded('pivot'),
+                function () {
+                    return optional($this->pivot)->role;
+                }
+            ),
         ];
     }
 }

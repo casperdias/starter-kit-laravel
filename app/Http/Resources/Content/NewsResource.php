@@ -3,18 +3,14 @@
 namespace App\Http\Resources\Content;
 
 use App\Models\Auth\User;
-use Carbon\Carbon;
+use App\Models\Content\News;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property int $id
- * @property string $title
- * @property string $type
- * @property string $content
- * @property User $author
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @mixin News
+ *
+ * @property User|null $author
  */
 class NewsResource extends JsonResource
 {
