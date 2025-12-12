@@ -10,9 +10,7 @@ test('guests are redirected to the login page', function () {
 });
 
 test('authenticated but unverified users are redirected to the email verification notice', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
     $this->actingAs($user);
@@ -22,9 +20,7 @@ test('authenticated but unverified users are redirected to the email verificatio
 });
 
 test('authenticated and verified users can visit the dashboard', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
     $user->markEmailAsVerified();
@@ -36,9 +32,7 @@ test('authenticated and verified users can visit the dashboard', function () {
 
 describe('changing role', function () {
     test('user can switch roles', function () {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@test.com',
+        $user = User::factory()->unverified()->create([
             'password' => bcrypt('password'),
         ]);
         $user->markEmailAsVerified();
@@ -59,9 +53,7 @@ describe('changing role', function () {
     });
 
     test('user cannot change role that not assigned', function () {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@test.com',
+        $user = User::factory()->unverified()->create([
             'password' => bcrypt('password'),
         ]);
         $user->markEmailAsVerified();
@@ -81,9 +73,7 @@ describe('changing role', function () {
     });
 
     test('user cannot change role that not found', function () {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@test.com',
+        $user = User::factory()->unverified()->create([
             'password' => bcrypt('password'),
         ]);
         $user->markEmailAsVerified();

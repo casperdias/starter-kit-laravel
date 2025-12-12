@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Notification;
 test('email verification notification can be sent', function () {
     Notification::fake();
 
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -23,9 +21,7 @@ test('email verification notification can be sent', function () {
 test('email verification notification is not sent to verified users', function () {
     Notification::fake();
 
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
     $user->markEmailAsVerified();

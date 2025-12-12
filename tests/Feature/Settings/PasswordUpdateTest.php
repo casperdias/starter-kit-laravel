@@ -4,9 +4,7 @@ use App\Models\Auth\User;
 use Illuminate\Support\Facades\Hash;
 
 test('password can be updated', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -29,9 +27,7 @@ test('password can be updated', function () {
 });
 
 test('correct password must be provided to update password', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 

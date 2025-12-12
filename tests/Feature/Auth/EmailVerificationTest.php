@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
 test('email verification screen can be rendered', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -18,9 +16,7 @@ test('email verification screen can be rendered', function () {
 });
 
 test('email can be verified', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -40,9 +36,7 @@ test('email can be verified', function () {
 });
 
 test('email is not verified with invalid hash', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -61,9 +55,7 @@ test('email is not verified with invalid hash', function () {
 });
 
 test('email is not verified with invalid user id', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -82,9 +74,7 @@ test('email is not verified with invalid user id', function () {
 });
 
 test('verified user is redirected to dashboard from verification prompt', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
     $user->markEmailAsVerified();
@@ -98,9 +88,7 @@ test('verified user is redirected to dashboard from verification prompt', functi
 });
 
 test('already verify user visiting verify route is redirected without dispatching event', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
     $user->markEmailAsVerified();

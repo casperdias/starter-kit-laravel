@@ -3,9 +3,7 @@
 use App\Models\Auth\User;
 
 test('profile page is displayed', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -19,9 +17,7 @@ test('profile page is displayed', function () {
 });
 
 test('profile information can be updated', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -46,9 +42,7 @@ test('profile information can be updated', function () {
 });
 
 test('email verification status is unchanged when the email address is unchanged', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -69,9 +63,7 @@ test('email verification status is unchanged when the email address is unchanged
 });
 
 test('user can delete their account', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -92,9 +84,7 @@ test('user can delete their account', function () {
 });
 
 test('correct password must be provided to delete account', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 

@@ -11,9 +11,7 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -36,9 +34,7 @@ test('users with 2FA are redirected to the 2FA challenge', function () {
         'confirmPassword' => true,
     ]);
 
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -59,9 +55,7 @@ test('users with 2FA are redirected to the 2FA challenge', function () {
 });
 
 test('users can not authenticate with invalid password', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -74,9 +68,7 @@ test('users can not authenticate with invalid password', function () {
 });
 
 test('users can logout', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
@@ -87,9 +79,7 @@ test('users can logout', function () {
 });
 
 test('users are rate limited', function () {
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@test.com',
+    $user = User::factory()->unverified()->create([
         'password' => bcrypt('password'),
     ]);
 
