@@ -14,12 +14,9 @@ class ParticipantResource extends UserResource
      */
     public function toArray(Request $request): array
     {
-        $data = parent::toArray($request);
-
-        if ($this->resource->pivot) {
-            $data['role'] = $this->resource->pivot->role;
-        }
-
-        return $data;
+        return [
+            ...parent::toArray($request),
+            'role' => $this->resource->pivot?->role,
+        ];
     }
 }

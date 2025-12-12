@@ -9,8 +9,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @mixin News
- *
- * @property User|null $author
  */
 class NewsResource extends JsonResource
 {
