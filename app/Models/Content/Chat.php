@@ -3,10 +3,22 @@
 namespace App\Models\Content;
 
 use App\Models\Auth\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $uuid
+ * @property int $conversation_id
+ * @property int $user_id
+ * @property string $message
+ * @property string $type
+ * @property string $metadata
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class Chat extends Model
 {
     use HasUuids, SoftDeletes;
@@ -19,12 +31,18 @@ class Chat extends Model
         'metadata' => 'array',
     ];
 
-    public function conversation()
+    /**
+     * @return BelongsTo<Conversation, $this>
+     */
+    public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class);
     }
 
-    public function user()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

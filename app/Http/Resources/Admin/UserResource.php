@@ -22,14 +22,8 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'created_at' => $this->whenNotNull($this->created_at?->toDateTimeString()),
+            'created_at' => $this->whenNotNull($this->created_at->toDateTimeString()),
             'email_verified_at' => $this->whenNotNull($this->email_verified_at?->toDateTimeString()),
-            'role' => $this->when(
-                $this->relationLoaded('pivot'),
-                function () {
-                    return optional($this->pivot)->role;
-                }
-            ),
         ];
     }
 }

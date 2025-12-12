@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Admin;
 
 use App\Models\Auth\Role;
+use App\Models\Auth\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -12,6 +13,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class RoleResource extends JsonResource
 {
+    private ?User $user = null;
+
     /**
      * Transform the resource into an array.
      *
@@ -19,6 +22,11 @@ class RoleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if ($request->route()->getName() === 'admin.users.show') {
+            $user = $request->route('user');
+            $this->user = $user instanceof User ? $user : null;
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -26,20 +34,12 @@ class RoleResource extends JsonResource
             'description' => $this->description,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s T'),
             'status' => $this->when(
-                $request->route()->getName() === 'admin.users.show',
-                function () use ($request) {
-                    $user = $request->route('user');
-
-                    return $user->hasRole($this->name);
-                }
+                $this->user !== null,
+                fn () => $this->user->hasRole($this->name)
             ),
             'active' => $this->when(
-                $request->route()->getName() === 'admin.users.show',
-                function () use ($request) {
-                    $user = $request->route('user');
-
-                    return $user->role ? $user->role->name === $this->name : false;
-                }
+                $this->user !== null,
+                fn () => $this->user->role ? $this->user->role->name === $this->name : false
             ),
         ];
     }

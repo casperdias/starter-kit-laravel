@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Content;
 
-use App\Http\Resources\Admin\UserResource;
 use App\Models\Content\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,7 +30,7 @@ class ConversationResource extends JsonResource
             'description' => $this->description,
             'avatar' => $avatarUrl,
             'created_at' => $this->created_at->format('d F Y H:i:s T'),
-            'participants' => UserResource::collection($this->whenLoaded('participants')),
+            'participants' => ParticipantResource::collection($this->whenLoaded('participants')),
             'last_message' => new ChatResource($this->whenLoaded('lastMessage')),
             'updated_at' => $this->updated_at->format('d F Y H:i:s T'),
         ];

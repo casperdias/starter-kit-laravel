@@ -8,7 +8,7 @@ use App\Models\Content\News;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,14 +25,10 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read Role|null $role
- * @property-read Collection<int, Role> $roles
- * @property-read Collection<int, News> $news
- * @property-read Collection<int, Chat> $chats
- * @property-read Collection<int, Conversation> $conversations
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
@@ -72,12 +68,16 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Create a new factory instance for the model.
      */
-    protected static function newFactory()
+    protected static function newFactory(): UserFactory
     {
         return UserFactory::new();
     }
 
-    public function scopeSearch($query, string $search)
+    /**
+     * @param  Builder<User>  $query
+     * @return Builder<User>
+     */
+    public function scopeSearch(Builder $query, string $search): Builder
     {
         if (! $search) {
             return $query;
@@ -89,6 +89,9 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    /**
+     * @return BelongsToMany<Role, $this>
+     */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id')
@@ -100,21 +103,30 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->roles()->where('status', 'ACTIVE')->first();
     }
 
-    public function hasRole($role): bool
+    public function hasRole(string $role): bool
     {
         return $this->roles()->where('name', $role)->exists();
     }
 
+    /**
+     * @return HasMany<News, $this>
+     */
     public function news(): HasMany
     {
         return $this->hasMany(News::class, 'user_id');
     }
 
+    /**
+     * @return HasMany<Chat, $this>
+     */
     public function chats(): HasMany
     {
         return $this->hasMany(Chat::class, 'user_id');
     }
 
+    /**
+     * @return BelongsToMany<Conversation, $this>
+     */
     public function conversations(): BelongsToMany
     {
         return $this->belongsToMany(Conversation::class, 'conversation_participants')

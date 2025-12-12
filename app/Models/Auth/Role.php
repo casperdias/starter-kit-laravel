@@ -3,7 +3,7 @@
 namespace App\Models\Auth;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string|null $description
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read Collection<int, Permission> $permissions
- * @property-read Collection<int, User> $users
  */
 class Role extends Model
 {
@@ -25,7 +23,11 @@ class Role extends Model
         'description',
     ];
 
-    public function scopeSearch($query, string $search)
+    /**
+     * @param  Builder<Role>  $query
+     * @return Builder<Role>
+     */
+    public function scopeSearch(Builder $query, string $search): Builder
     {
         if (! $search) {
             return $query;
@@ -37,16 +39,22 @@ class Role extends Model
         });
     }
 
+    /**
+     * @return BelongsToMany<Permission, $this>
+     */
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'role_permission', 'role_id', 'permission_id');
     }
 
-    public function hasPermission($permissionName): bool
+    public function hasPermission(string $permissionName): bool
     {
         return $this->permissions()->where('name', $permissionName)->exists();
     }
 
+    /**
+     * @return BelongsToMany<User, $this>
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_role', 'role_id', 'user_id')
