@@ -3,7 +3,9 @@
 namespace App\Models\Auth;
 
 use Carbon\Carbon;
+use Database\Factories\RoleFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -17,11 +19,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Role extends Model
 {
+    /** @use HasFactory<RoleFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'display_name',
         'description',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): RoleFactory
+    {
+        return RoleFactory::new();
+    }
 
     /**
      * @param  Builder<Role>  $query

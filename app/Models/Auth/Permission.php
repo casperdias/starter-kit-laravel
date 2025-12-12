@@ -3,7 +3,9 @@
 namespace App\Models\Auth;
 
 use Carbon\Carbon;
+use Database\Factories\PermissionFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Cache;
@@ -18,11 +20,22 @@ use Illuminate\Support\Facades\Cache;
  */
 class Permission extends Model
 {
+    /** @use HasFactory<PermissionFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'display_name',
         'description',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): PermissionFactory
+    {
+        return PermissionFactory::new();
+    }
 
     protected static function booted(): void
     {
