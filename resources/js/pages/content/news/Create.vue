@@ -100,7 +100,7 @@ const publishNews = () => {
                         <Link :href="route('news.index')" class="w-full md:w-auto">
                             <Button class="w-full md:w-auto" variant="destructive">
                                 <X />
-                                <span class="ml-2">Cancel</span>
+                                Cancel
                             </Button>
                         </Link>
                     </div>

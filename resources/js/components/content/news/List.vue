@@ -31,6 +31,10 @@ const icon = (type: string) => {
     }
 };
 
+const emit = defineEmits<{
+    (e: 'select-news', news: News): void;
+}>();
+
 const searchTerm = ref(route().params.search || '');
 const category = ref(route().params.category || 'all');
 const filterOpen = ref(false);
@@ -60,6 +64,10 @@ watch([searchTerm, category], ([newTerm, newCategory]) => {
 onBeforeUnmount(() => {
     if (searchTimeout) clearTimeout(searchTimeout);
 });
+
+const selectNews = (news: News) => {
+    emit('select-news', news);
+};
 </script>
 
 <template>
@@ -94,13 +102,7 @@ onBeforeUnmount(() => {
                     </Button>
                 </template>
                 <template v-else>
-                    <Button
-                        v-for="item in news.data"
-                        :key="item.id"
-                        variant="ghost"
-                        class="h-fit w-full border px-2 py-4"
-                        @click="$emit('select-news', item)"
-                    >
+                    <Button v-for="item in news.data" :key="item.id" variant="ghost" class="h-fit w-full border px-2 py-4" @click="selectNews(item)">
                         <div class="flex w-full flex-col gap-2">
                             <div class="flex items-center gap-2 px-2">
                                 <component :is="icon(item.type)" class="size-10" />

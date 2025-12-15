@@ -21,8 +21,7 @@ class ExternalController extends Controller
 
         $search = $request->search ?? null;
 
-        $users = User::select('id', 'name', 'email')
-            ->whereNot('id', auth()->id())
+        $users = User::whereNot('id', auth()->id())
             ->when($search, function ($query, $search) {
                 return $query->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($search).'%'])
                     ->orWhereRaw('LOWER(email) LIKE ?', ['%'.strtolower($search).'%']);

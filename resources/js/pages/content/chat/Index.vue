@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ListConversation, MakeGroup, MakePrivate } from '@/components/content/chat';
+import { ChatRoom, ListConversation, MakeGroup, MakePrivate } from '@/components/content/chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
@@ -26,6 +26,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const searchTerm = ref(route().params.search || '');
+
+const conversation = ref<Conversation | null>(null);
 </script>
 
 <template>
@@ -59,10 +61,12 @@ const searchTerm = ref(route().params.search || '');
         </div>
         <ResizablePanelGroup direction="horizontal">
             <ResizablePanel :default-size="30" :min-size="30" :max-size="50" class="border-t">
-                <ListConversation :conversations="conversations" :search="searchTerm" />
+                <ListConversation :conversations="conversations" :search="searchTerm" @select-conversation="conversation = $event" />
             </ResizablePanel>
             <ResizableHandle with-handle />
-            <ResizablePanel :default-size="70" class="border-t"></ResizablePanel>
+            <ResizablePanel :default-size="70" class="border-t">
+                <ChatRoom :conversation="conversation" />
+            </ResizablePanel>
         </ResizablePanelGroup>
     </AppLayout>
 </template>

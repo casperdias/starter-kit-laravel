@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { conversationInfo } from '@/composables/converastionHelper';
 import { getInitials } from '@/composables/useInitials';
 import { AppPageProps, Conversation, CursorPagination } from '@/types';
 import { InfiniteScroll, router, usePage } from '@inertiajs/vue3';
@@ -11,6 +12,9 @@ const page = usePage<AppPageProps>();
 const me = page.props.auth.user;
 
 const props = defineProps<Props>();
+const emit = defineEmits<{
+    (e: 'select-conversation', conversation: Conversation): void;
+}>();
 
 interface Props {
     conversations: CursorPagination<Conversation>;
@@ -40,24 +44,8 @@ onBeforeUnmount(() => {
     if (searchTimeout) clearTimeout(searchTimeout);
 });
 
-const conversationInfo = (data: Conversation) => {
-    if (data.type == 'group') {
-        return {
-            avatar: data.avatar,
-            name: data.name,
-            last_message: data.last_message?.message ?? '-',
-            last_update: data.last_message?.updated_at ?? data.created_at,
-        };
-    } else {
-        const otherUser = data.participants.find((user) => user.id !== me.id);
-
-        return {
-            avatar: otherUser?.avatar,
-            name: otherUser?.name,
-            last_message: data.last_message?.message ?? '-',
-            last_update: data.last_message?.updated_at ?? data.created_at,
-        };
-    }
+const startChat = (conversation: Conversation) => {
+    emit('select-conversation', conversation);
 };
 </script>
 
@@ -77,23 +65,23 @@ const conversationInfo = (data: Conversation) => {
                     <div v-for="item in conversations.data" :key="item.id" class="flex items-center justify-between rounded border p-2">
                         <div class="flex items-center gap-2">
                             <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
-                                <AvatarImage v-if="item.avatar" :src="conversationInfo(item).avatar!" :alt="conversationInfo(item).name" />
+                                <AvatarImage v-if="item.avatar" :src="conversationInfo(item, me).avatar!" :alt="conversationInfo(item, me).name" />
                                 <AvatarFallback class="rounded-lg text-black dark:text-white">
-                                    {{ getInitials(conversationInfo(item).name) }}
+                                    {{ getInitials(conversationInfo(item, me).name) }}
                                 </AvatarFallback>
                             </Avatar>
                             <div class="grid flex-1 text-left text-sm leading-tight">
                                 <span class="flex items-center gap-1 truncate font-medium">
-                                    {{ conversationInfo(item).name }}
+                                    {{ conversationInfo(item, me).name }}
                                     <p class="text-xs text-foreground italic">
                                         {{ item.type === 'group' ? '(' + item.participants.length + ' members)' : '' }}
                                     </p>
                                 </span>
-                                <span class="max-w-20 truncate text-xs text-muted-foreground">{{ conversationInfo(item).last_message }}</span>
-                                <span class="truncate text-xs text-muted-foreground">{{ conversationInfo(item).last_update }}</span>
+                                <span class="max-w-20 truncate text-xs text-muted-foreground">{{ conversationInfo(item, me).last_message }}</span>
+                                <span class="truncate text-xs text-muted-foreground">{{ conversationInfo(item, me).last_update }}</span>
                             </div>
                         </div>
-                        <Button size="sm">
+                        <Button size="sm" class="cursor-pointer" @click="startChat(item)">
                             <MessageSquare />
                         </Button>
                     </div>

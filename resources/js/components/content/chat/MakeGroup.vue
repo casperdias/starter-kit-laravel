@@ -24,11 +24,14 @@ import {
     Plus,
     Search,
     SendHorizonal,
+    StepBack,
+    StepForward,
     Users,
     UsersRound,
     X,
 } from 'lucide-vue-next';
 import { onBeforeUnmount, ref, watch } from 'vue';
+import { toast } from 'vue-sonner';
 
 const route = useRoute();
 
@@ -117,6 +120,14 @@ onBeforeUnmount(() => {
 });
 
 const createGroup = () => {
+    if (!form.name.trim() || form.members.length < 2) {
+        toast.error('Failed to create group', {
+            description: 'Please provide a group name and select at least two members.',
+            closeButton: true,
+            duration: 1000,
+        });
+    }
+
     form.post(route('chats.store'), {
         preserveScroll: true,
         preserveState: true,
@@ -384,9 +395,18 @@ const createGroup = () => {
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <Button :disabled="stepIndex === 1" variant="outline" size="sm" @click="stepIndex--"> Back </Button>
-                    <Button v-if="stepIndex === steps.length" size="sm" type="submit" @click="createGroup"> Create Group </Button>
-                    <Button v-else type="button" size="sm" @click="stepIndex++"> Next </Button>
+                    <Button :disabled="stepIndex === 1" variant="outline" size="sm" @click="stepIndex--">
+                        <StepBack />
+                        Back
+                    </Button>
+                    <Button v-if="stepIndex === steps.length" size="sm" type="submit" @click="createGroup">
+                        <Plus />
+                        Create
+                    </Button>
+                    <Button v-else type="button" size="sm" @click="stepIndex++">
+                        <StepForward />
+                        Next
+                    </Button>
                 </div>
             </Stepper>
         </DialogContent>

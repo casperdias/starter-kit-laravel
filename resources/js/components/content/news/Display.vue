@@ -73,7 +73,7 @@ onMounted(async () => {
 <template>
     <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
         <template v-if="newsDetail">
-            <ScrollArea class="h-[85vh] w-full rounded-md border p-3">
+            <ScrollArea class="h-[86vh] w-full">
                 <div class="flex w-full flex-col gap-2">
                     <div class="flex items-center gap-2 px-2">
                         <component :is="icon" class="size-10" />
@@ -92,7 +92,7 @@ onMounted(async () => {
             </ScrollArea>
         </template>
         <template v-else>
-            <div class="flex h-[85vh] w-full flex-col items-center justify-center rounded-md border p-3 text-center text-muted-foreground">
+            <div class="flex h-[86vh] w-full flex-col items-center justify-center text-center text-muted-foreground">
                 <Newspaper class="mb-4 size-12 opacity-30" />
                 <div class="space-y-2">
                     <h2 class="text-xl font-bold">No News Selected</h2>
