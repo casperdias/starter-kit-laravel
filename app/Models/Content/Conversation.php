@@ -61,8 +61,8 @@ class Conversation extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function isParticipant(int $userId): bool
+    public function isParticipant(int $userId): User
     {
-        return $this->participants()->where('user_id', $userId)->exists();
+        return $this->participants()->where('user_id', $userId)->first();
     }
 }
