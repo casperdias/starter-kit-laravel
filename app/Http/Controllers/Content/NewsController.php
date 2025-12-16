@@ -22,6 +22,7 @@ class NewsController extends Controller
         $search = request('search', '');
         $perPage = request('per_page', 5);
         $category = request('category', 'all');
+        $selectedNews = request('news', null);
 
         $news = News::query()
             ->with('author')
@@ -34,6 +35,7 @@ class NewsController extends Controller
 
         return Inertia::render('content/news/Index', [
             'news' => Inertia::scroll(NewsResource::collection($news)),
+            'selectedNews' => $selectedNews ? new NewsResource(News::with('author')->findOrFail($selectedNews)) : null,
         ]);
     }
 

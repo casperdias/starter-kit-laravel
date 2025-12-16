@@ -10,12 +10,12 @@ import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue';
 const route = useRoute();
 
 const props = defineProps<{
-    news: News | null;
+    news: string | null;
 }>();
 
 const icon = computed(() => {
-    if (!props.news) return Newspaper;
-    switch (props.news.type) {
+    if (!newsDetail.value) return Newspaper;
+    switch (newsDetail.value.type) {
         case 'announcement':
             return Megaphone;
         case 'update':
@@ -50,8 +50,8 @@ const fetchNewsDetail = async (id: string) => {
 watch(
     () => props.news,
     async (news) => {
-        if (news?.id) {
-            await fetchNewsDetail(news.id);
+        if (news) {
+            await fetchNewsDetail(news);
         } else {
             newsDetail.value = null;
             localContent.value = '';
@@ -64,8 +64,8 @@ onMounted(async () => {
     const { QuillyEditor: QE } = await import('vue-quilly');
     QuillyEditor.value = QE;
     await nextTick();
-    if (props.news?.id) {
-        await fetchNewsDetail(props.news.id);
+    if (props.news) {
+        await fetchNewsDetail(props.news);
     }
 });
 </script>

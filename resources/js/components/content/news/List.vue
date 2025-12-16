@@ -32,7 +32,7 @@ const icon = (type: string) => {
 };
 
 const emit = defineEmits<{
-    (e: 'select-news', news: News): void;
+    (e: 'select-news', newsId: string): void;
 }>();
 
 const searchTerm = ref(route().params.search || '');
@@ -44,15 +44,19 @@ let searchTimeout: ReturnType<typeof setTimeout>;
 watch([searchTerm, category], ([newTerm, newCategory]) => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
+        const currentParams = new URLSearchParams(window.location.search);
+        currentParams.delete('search');
+        currentParams.delete('category');
         router.get(
             props.news.meta.path,
             {
+                ...Object.fromEntries(currentParams.entries()),
                 search: newTerm,
                 category: newCategory !== 'all' ? newCategory : undefined,
             },
             {
+                preserveState: true,
                 preserveScroll: true,
-                replace: true,
                 onFinish: () => {
                     filterOpen.value = false;
                 },
@@ -66,7 +70,7 @@ onBeforeUnmount(() => {
 });
 
 const selectNews = (news: News) => {
-    emit('select-news', news);
+    emit('select-news', news.id);
 };
 </script>
 

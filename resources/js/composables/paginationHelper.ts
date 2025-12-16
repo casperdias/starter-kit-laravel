@@ -9,7 +9,6 @@ import { router } from '@inertiajs/vue3';
  */
 export function changePage(route: string, page: number | string, pageParam: string = 'page', only: string[]) {
     const currentParams = new URLSearchParams(window.location.search);
-    // Remove the current page parameter if it exists
     currentParams.delete(pageParam);
 
     router.get(

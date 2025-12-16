@@ -22,7 +22,19 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const selectedNews = ref<News | null>(null);
+const selectedNews = ref<string | null>(route().params.id || null);
+
+const updateNews = (newsId: string) => {
+    selectedNews.value = newsId;
+    const url = new URL(window.location.href);
+
+    if (newsId) {
+        url.searchParams.set('id', newsId);
+    } else {
+        url.searchParams.delete('id');
+    }
+    window.history.replaceState({}, '', url.toString());
+};
 </script>
 
 <template>
@@ -31,7 +43,7 @@ const selectedNews = ref<News | null>(null);
     <AppLayout :breadcrumbs="breadcrumbs">
         <ResizablePanelGroup direction="horizontal">
             <ResizablePanel :default-size="30" :min-size="30" :max-size="50">
-                <List :news="news" @select-news="selectedNews = $event" />
+                <List :news="news" @select-news="updateNews" />
             </ResizablePanel>
             <ResizableHandle with-handle />
             <ResizablePanel :default-size="70">
