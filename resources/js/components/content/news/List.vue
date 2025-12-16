@@ -51,11 +51,10 @@ watch([searchTerm, category], ([newTerm, newCategory]) => {
             props.news.meta.path,
             {
                 ...Object.fromEntries(currentParams.entries()),
-                search: newTerm,
+                search: newTerm.trim() !== '' ? newTerm : undefined,
                 category: newCategory !== 'all' ? newCategory : undefined,
             },
             {
-                preserveState: true,
                 preserveScroll: true,
                 onFinish: () => {
                     filterOpen.value = false;

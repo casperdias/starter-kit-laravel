@@ -46,7 +46,9 @@ watch(
                     <h2 class="text-lg font-bold">
                         {{ conversationInfo(conversation, me).name }}
                     </h2>
-                    <p class="truncate text-xs text-muted-foreground">{{ conversation.type === 'group' ? conversationInfo(conversation, me).members.join(', ') : 'Private Chat' }}</p>
+                    <p class="truncate text-xs text-muted-foreground">
+                        {{ conversation.type === 'group' ? conversationInfo(conversation, me).members.join(', ') : 'Private Chat' }}
+                    </p>
                 </div>
             </div>
             <Separator class="my-2" />

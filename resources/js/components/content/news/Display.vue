@@ -13,6 +13,11 @@ const props = defineProps<{
     news: string | null;
 }>();
 
+const newsDetail = ref<News | null>(null);
+const localContent = ref('');
+const QuillyEditor = shallowRef();
+const editor = ref();
+
 const icon = computed(() => {
     if (!newsDetail.value) return Newspaper;
     switch (newsDetail.value.type) {
@@ -20,7 +25,6 @@ const icon = computed(() => {
             return Megaphone;
         case 'update':
             return ShieldPlus;
-        case 'news':
         default:
             return Newspaper;
     }
@@ -31,11 +35,12 @@ const options = {
     placeholder: 'No content',
     readOnly: true,
 };
-const editor = ref();
-const QuillyEditor = shallowRef();
 
-const localContent = ref('');
-const newsDetail = ref<News | null>(null);
+onMounted(async () => {
+    const { QuillyEditor: QE } = await import('vue-quilly');
+    QuillyEditor.value = QE;
+    await nextTick();
+});
 
 const fetchNewsDetail = async (id: string) => {
     const response = await axios.get(route('news.show', { news: id }));
@@ -59,15 +64,6 @@ watch(
     },
     { immediate: true },
 );
-
-onMounted(async () => {
-    const { QuillyEditor: QE } = await import('vue-quilly');
-    QuillyEditor.value = QE;
-    await nextTick();
-    if (props.news) {
-        await fetchNewsDetail(props.news);
-    }
-});
 </script>
 
 <template>
