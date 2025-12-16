@@ -31,7 +31,7 @@ watch(
 <template>
     <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
         <template v-if="conversation">
-            <div class="flex w-full flex-col gap-2">
+            <div class="flex w-full items-center gap-2">
                 <Avatar class="size-10 overflow-hidden rounded-lg">
                     <AvatarImage
                         v-if="conversation.avatar"
@@ -42,6 +42,12 @@ watch(
                         {{ getInitials(conversationInfo(conversation, me).name) }}
                     </AvatarFallback>
                 </Avatar>
+                <div class="grid flex-1 text-left text-sm leading-tight">
+                    <h2 class="text-lg font-bold">
+                        {{ conversationInfo(conversation, me).name }}
+                    </h2>
+                    <p class="truncate text-xs text-muted-foreground">{{ conversation.type === 'group' ? conversationInfo(conversation, me).members.join(', ') : 'Private Chat' }}</p>
+                </div>
             </div>
             <Separator class="my-2" />
         </template>

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('conversations', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->enum('type', ['private', 'group'])->default('private');
             $table->string('name')->nullable();
             $table->text('description')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration
         });
 
         Schema::create('chats', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->uuid('id')->primary();
             $table->foreignIdFor(Conversation::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->text('message');

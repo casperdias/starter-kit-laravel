@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property-read string $uuid
+ * @property-read string $id
  * @property int $conversation_id
  * @property int $user_id
  * @property string $message
@@ -22,8 +22,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Chat extends Model
 {
     use HasUuids, SoftDeletes;
-
-    protected $primaryKey = 'uuid';
 
     protected $fillable = ['conversation_id', 'user_id', 'message', 'type', 'metadata'];
 

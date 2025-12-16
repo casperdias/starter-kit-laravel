@@ -6,7 +6,7 @@ export const conversationInfo = (data: Conversation, me: User) => {
             avatar: data.avatar,
             name: data.name,
             last_message: data.last_message?.message ?? '-',
-            last_update: data.last_message?.updated_at ?? data.created_at,
+            last_update: data.last_update,
             members: data.participants.map((member) => member.name),
         };
     } else {
@@ -16,7 +16,7 @@ export const conversationInfo = (data: Conversation, me: User) => {
             avatar: otherUser?.avatar,
             name: otherUser?.name,
             last_message: data.last_message?.message ?? '-',
-            last_update: data.last_message?.updated_at ?? data.created_at,
+            last_update: data.last_update,
             members: data.participants.map((member) => member.name),
         };
     }

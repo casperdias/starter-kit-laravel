@@ -12,7 +12,7 @@ export interface News {
 }
 
 export interface Conversation {
-    id: number;
+    id: string;
     type: 'private' | 'group';
     name: string;
     description: string | null;
@@ -26,10 +26,11 @@ export interface Conversation {
     updated_at: string;
     messages?: Array<Chat>;
     last_message?: Chat;
+    last_update: string;
 }
 
 export interface Chat {
-    uuid: string;
+    id: string;
     user?: User;
     conversation?: Conversation;
     message: string;

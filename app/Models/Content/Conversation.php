@@ -4,6 +4,7 @@ namespace App\Models\Content;
 
 use App\Models\Auth\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property-read int $id
+ * @property-read string $id
  * @property string $type
  * @property string $name
  * @property string $description
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Conversation extends Model
 {
+    use HasUuids;
+
     protected $fillable = ['type', 'name', 'description', 'avatar', 'created_by'];
 
     protected $casts = [

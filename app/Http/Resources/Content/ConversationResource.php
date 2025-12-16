@@ -33,6 +33,9 @@ class ConversationResource extends JsonResource
             'participants' => ParticipantResource::collection($this->whenLoaded('participants')),
             'last_message' => new ChatResource($this->whenLoaded('lastMessage')),
             'updated_at' => $this->updated_at->format('d F Y H:i:s T'),
+            'last_update' => $this->whenLoaded('lastMessage')
+                ? $this->lastMessage->updated_at->diffForHumans()
+                : $this->updated_at->diffForHumans(),
         ];
     }
 }

@@ -22,7 +22,7 @@ class ChatResource extends JsonResource
         $hideContent = $request->boolean('hide_content', false);
 
         return [
-            'uuid' => $this->uuid,
+            'uuid' => $this->id,
             'type' => $this->type,
             'message' => $this->message,
             $this->mergeWhen(! $hideContent, [

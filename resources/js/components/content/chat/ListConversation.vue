@@ -72,7 +72,9 @@ const startChat = (conversation: Conversation) => {
                             </Avatar>
                             <div class="grid flex-1 text-left text-sm leading-tight">
                                 <span class="flex items-center gap-1 truncate font-medium">
-                                    {{ conversationInfo(item, me).name }}
+                                    <p class="font-bold">
+                                        {{ conversationInfo(item, me).name }}
+                                    </p>
                                     <p class="text-xs text-foreground italic">
                                         {{ item.type === 'group' ? '(' + item.participants.length + ' members)' : '' }}
                                     </p>
