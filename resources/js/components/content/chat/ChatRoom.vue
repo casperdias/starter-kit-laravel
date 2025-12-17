@@ -32,12 +32,16 @@ watch(
     <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
         <template v-if="conversation">
             <div class="flex w-full items-center gap-2">
-                <Avatar class="size-10 overflow-hidden rounded-lg">
+                <Avatar class="size-10 overflow-hidden rounded-lg" v-if="conversation.avatar">
                     <AvatarImage
-                        v-if="conversation.avatar"
                         :src="conversationInfo(conversation, me).avatar!"
                         :alt="conversationInfo(conversation, me).name"
                     />
+                    <AvatarFallback class="rounded-lg text-black dark:text-white">
+                        {{ getInitials(conversationInfo(conversation, me).name) }}
+                    </AvatarFallback>
+                </Avatar>
+                <Avatar class="size-10 overflow-hidden rounded-lg" v-else>
                     <AvatarFallback class="rounded-lg text-black dark:text-white">
                         {{ getInitials(conversationInfo(conversation, me).name) }}
                     </AvatarFallback>
