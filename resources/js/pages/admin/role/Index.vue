@@ -4,7 +4,7 @@ import Confirmation from '@/components/Confirmation.vue';
 import DefaultPagination from '@/components/DefaultPagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -91,12 +91,13 @@ onBeforeUnmount(() => {
                             <CardDescription class="hidden font-semibold lg:block"> Manage your roles here. </CardDescription>
                         </div>
                     </div>
-                    <div class="relative flex h-full w-full items-center">
-                        <Input id="search" type="text" name="search" placeholder="Search..." class="w-full pl-10" v-model="searchTerm" />
-                        <span class="absolute inset-y-0 start-0 flex items-center justify-center px-2">
-                            <Search class="size-6 text-muted-foreground" />
-                        </span>
-                    </div>
+                    <InputGroup>
+                        <InputGroupInput placeholder="Search..." v-model="searchTerm" />
+                        <InputGroupAddon>
+                            <Search />
+                        </InputGroupAddon>
+                        <InputGroupAddon align="inline-end"> {{ roles.meta.total }} Result/s </InputGroupAddon>
+                    </InputGroup>
                 </CardHeader>
                 <CardContent class="space-y-4">
                     <AddRole />
@@ -117,7 +118,7 @@ onBeforeUnmount(() => {
                                     <TableCell class="text-center">{{ role.id }}</TableCell>
                                     <TableCell>{{ role.name }}</TableCell>
                                     <TableCell>{{ role.display_name }}</TableCell>
-                                    <TableCell class="max-w-[250px] break-words whitespace-normal">{{ role.description }}</TableCell>
+                                    <TableCell class="max-w-62.5 wrap-break-word whitespace-normal">{{ role.description }}</TableCell>
                                     <TableCell>{{ role.created_at }}</TableCell>
                                     <TableCell class="flex items-center justify-center gap-2">
                                         <EditRole :id="role.id" />

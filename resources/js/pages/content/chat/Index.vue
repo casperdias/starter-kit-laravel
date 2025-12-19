@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ChatRoom, ListConversation, MakeGroup, MakePrivate } from '@/components/content/chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useRoute } from '@/composables/useRoute';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -56,12 +56,12 @@ const updateChat = (conversationId: string) => {
                             <CardDescription class="hidden font-semibold lg:block"> View and Create your own chat room. </CardDescription>
                         </div>
                     </div>
-                    <div class="relative flex h-full w-full items-center">
-                        <Input id="search" type="text" name="search" placeholder="Search..." class="w-full pl-10" v-model="searchTerm" />
-                        <span class="absolute inset-y-0 start-0 flex items-center justify-center px-2">
-                            <Search class="size-6 text-muted-foreground" />
-                        </span>
-                    </div>
+                    <InputGroup>
+                        <InputGroupInput placeholder="Search..." v-model="searchTerm" />
+                        <InputGroupAddon>
+                            <Search />
+                        </InputGroupAddon>
+                    </InputGroup>
                 </CardHeader>
                 <CardContent>
                     <div class="grid grid-cols-2 gap-2">

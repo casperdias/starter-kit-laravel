@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, CursorPagination, News } from '@/types';
 import { InfiniteScroll, Link, router, usePage } from '@inertiajs/vue3';
@@ -77,12 +77,12 @@ const selectNews = (news: News) => {
     <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
         <Card>
             <CardHeader class="grid grid-cols-1 gap-x-0 gap-y-4 md:grid-cols-4 md:gap-x-4 md:gap-y-0">
-                <div class="relative col-span-1 flex h-full w-full items-center md:col-span-3">
-                    <Input id="search" type="text" name="search" placeholder="Search..." class="w-full pl-10" v-model="searchTerm" />
-                    <span class="absolute inset-y-0 start-0 flex items-center justify-center px-2">
-                        <Search class="size-6 text-muted-foreground" />
-                    </span>
-                </div>
+                <InputGroup class="md:col-span-3">
+                    <InputGroupInput placeholder="Search..." v-model="searchTerm" />
+                    <InputGroupAddon>
+                        <Search />
+                    </InputGroupAddon>
+                </InputGroup>
                 <Filter v-model:category="category" v-model:open="filterOpen" />
             </CardHeader>
             <CardContent v-if="permissions.includes('create-news')">

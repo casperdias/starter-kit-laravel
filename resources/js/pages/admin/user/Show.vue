@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRoute } from '@/composables/useRoute';
@@ -100,12 +100,13 @@ onBeforeUnmount(() => {
                             <CardDescription class="hidden font-semibold lg:block"> Manage User Role </CardDescription>
                         </div>
                     </div>
-                    <div class="relative flex h-full w-full items-center">
-                        <Input id="search" type="text" name="search" placeholder="Search..." class="w-full pl-10" v-model="searchTerm" />
-                        <span class="absolute inset-y-0 start-0 flex items-center justify-center px-2">
-                            <Search class="size-6 text-muted-foreground" />
-                        </span>
-                    </div>
+                    <InputGroup>
+                        <InputGroupInput placeholder="Search..." v-model="searchTerm" />
+                        <InputGroupAddon>
+                            <Search />
+                        </InputGroupAddon>
+                        <InputGroupAddon align="inline-end"> {{ roles.meta.total }} Result/s </InputGroupAddon>
+                    </InputGroup>
                 </CardHeader>
                 <CardContent class="space-y-4">
                     <Table>

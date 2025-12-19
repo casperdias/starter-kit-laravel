@@ -19,7 +19,7 @@ const props = defineProps<{
     conversation: string | null;
 }>();
 
-const conversationDetail = ref<Conversation | null>(null)
+const conversationDetail = ref<Conversation | null>(null);
 
 watch(
     () => props.conversation,
@@ -35,10 +35,7 @@ watch(
         <template v-if="conversationDetail">
             <div class="flex w-full items-center gap-2">
                 <Avatar class="size-10 overflow-hidden rounded-lg" v-if="conversationDetail.avatar">
-                    <AvatarImage
-                        :src="conversationInfo(conversationDetail, me).avatar!"
-                        :alt="conversationInfo(conversationDetail, me).name"
-                    />
+                    <AvatarImage :src="conversationInfo(conversationDetail, me).avatar!" :alt="conversationInfo(conversationDetail, me).name" />
                     <AvatarFallback class="rounded-lg text-black dark:text-white">
                         {{ getInitials(conversationInfo(conversationDetail, me).name) }}
                     </AvatarFallback>
