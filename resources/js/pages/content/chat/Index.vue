@@ -27,7 +27,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const searchTerm = ref(route().params.search || '');
 
-const conversation = ref<Conversation | null>(null);
+const conversation = ref<string | null>(route().params.id || null);
+
+const updateChat = (conversationId: string) => {
+    conversation.value = conversationId;
+    const url = new URL(window.location.href);
+
+    if (conversationId) {
+        url.searchParams.set('id', conversationId);
+    } else {
+        url.searchParams.delete('id');
+    }
+    window.history.replaceState({}, '', url.toString());
+};
 </script>
 
 <template>
@@ -61,7 +73,7 @@ const conversation = ref<Conversation | null>(null);
         </div>
         <ResizablePanelGroup direction="horizontal">
             <ResizablePanel :default-size="30" :min-size="30" :max-size="50" class="border-t">
-                <ListConversation :conversations="conversations" :search="searchTerm" @select-conversation="conversation = $event" />
+                <ListConversation :conversations="conversations" :search="searchTerm" @select-conversation="updateChat" />
             </ResizablePanel>
             <ResizableHandle with-handle />
             <ResizablePanel :default-size="70" class="border-t">

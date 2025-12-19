@@ -7,7 +7,7 @@ import { useRoute } from '@/composables/useRoute';
 import { AppPageProps, Conversation } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import { MessageCircleX } from 'lucide-vue-next';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 
 const page = usePage<AppPageProps>();
@@ -16,13 +16,15 @@ const me = page.props.auth.user;
 const route = useRoute();
 
 const props = defineProps<{
-    conversation: Conversation | null;
+    conversation: string | null;
 }>();
+
+const conversationDetail = ref<Conversation | null>(null)
 
 watch(
     () => props.conversation,
     (newConversation) => {
-        toast.success(`Selected conversation with ID: ${newConversation?.id}` || 'No conversation selected');
+        toast.success(`Selected conversation with ID: ${newConversation}` || 'No conversation selected');
     },
     { immediate: true },
 );
@@ -30,28 +32,28 @@ watch(
 
 <template>
     <div class="grid grid-cols-1 gap-4 px-4 pt-6 pb-4">
-        <template v-if="conversation">
+        <template v-if="conversationDetail">
             <div class="flex w-full items-center gap-2">
-                <Avatar class="size-10 overflow-hidden rounded-lg" v-if="conversation.avatar">
+                <Avatar class="size-10 overflow-hidden rounded-lg" v-if="conversationDetail.avatar">
                     <AvatarImage
-                        :src="conversationInfo(conversation, me).avatar!"
-                        :alt="conversationInfo(conversation, me).name"
+                        :src="conversationInfo(conversationDetail, me).avatar!"
+                        :alt="conversationInfo(conversationDetail, me).name"
                     />
                     <AvatarFallback class="rounded-lg text-black dark:text-white">
-                        {{ getInitials(conversationInfo(conversation, me).name) }}
+                        {{ getInitials(conversationInfo(conversationDetail, me).name) }}
                     </AvatarFallback>
                 </Avatar>
                 <Avatar class="size-10 overflow-hidden rounded-lg" v-else>
                     <AvatarFallback class="rounded-lg text-black dark:text-white">
-                        {{ getInitials(conversationInfo(conversation, me).name) }}
+                        {{ getInitials(conversationInfo(conversationDetail, me).name) }}
                     </AvatarFallback>
                 </Avatar>
                 <div class="grid flex-1 text-left text-sm leading-tight">
                     <h2 class="text-lg font-bold">
-                        {{ conversationInfo(conversation, me).name }}
+                        {{ conversationInfo(conversationDetail, me).name }}
                     </h2>
                     <p class="truncate text-xs text-muted-foreground">
-                        {{ conversation.type === 'group' ? conversationInfo(conversation, me).members.join(', ') : 'Private Chat' }}
+                        {{ conversationDetail.type === 'group' ? conversationInfo(conversationDetail, me).members.join(', ') : 'Private Chat' }}
                     </p>
                 </div>
             </div>

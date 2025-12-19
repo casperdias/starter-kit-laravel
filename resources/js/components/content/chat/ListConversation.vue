@@ -13,7 +13,7 @@ const me = page.props.auth.user;
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-    (e: 'select-conversation', conversation: Conversation): void;
+    (e: 'select-conversation', conversation: string): void;
 }>();
 
 interface Props {
@@ -45,7 +45,7 @@ onBeforeUnmount(() => {
 });
 
 const startChat = (conversation: Conversation) => {
-    emit('select-conversation', conversation);
+    emit('select-conversation', conversation.id);
 };
 </script>
 
