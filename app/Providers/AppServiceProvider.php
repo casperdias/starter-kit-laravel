@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Auth\Permission;
 use App\Models\Auth\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,14 +30,12 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
 
         if (Schema::hasTable('permissions')) {
-            $permissions = cache()->rememberForever('permissions', function () {
-                return Permission::all();
-            });
+            Gate::before(function (User $user, string $ability) {
+                if ($user->role && $user->role->permissions->contains('name', $ability)) {
+                    return true;
+                }
 
-            $permissions->each(function (Permission $permission) {
-                Gate::define($permission->name, function (User $user) use ($permission) {
-                    return $user->role && $user->role->permissions->contains($permission);
-                });
+                return null;
             });
         }
     }
