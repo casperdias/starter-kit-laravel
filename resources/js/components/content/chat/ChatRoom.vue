@@ -4,11 +4,11 @@ import { Separator } from '@/components/ui/separator';
 import { conversationInfo } from '@/composables/converastionHelper';
 import { getInitials } from '@/composables/useInitials';
 import { useRoute } from '@/composables/useRoute';
-import { AppPageProps, Conversation } from '@/types';
+import { AppPageProps, Chat, Conversation } from '@/types';
 import { usePage } from '@inertiajs/vue3';
+import axios from 'axios';
 import { MessageCircleX } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
-import { toast } from 'vue-sonner';
 
 const page = usePage<AppPageProps>();
 const me = page.props.auth.user;
@@ -20,14 +20,26 @@ const props = defineProps<{
 }>();
 
 const conversationDetail = ref<Conversation | null>(null);
+const messages = ref<Array<Chat[]>>([]);
 
 watch(
     () => props.conversation,
     (newConversation) => {
-        toast.success(`Selected conversation with ID: ${newConversation}` || 'No conversation selected');
+        if (newConversation) {
+            fetchConversation(newConversation);
+        } else {
+            conversationDetail.value = null;
+        }
     },
     { immediate: true },
 );
+
+const fetchConversation = (uuid: string) => {
+    axios.get(route('chats.show', { chat: uuid })).then((response) => {
+        conversationDetail.value = response.data;
+        messages.value = response.data.messages;
+    });
+};
 </script>
 
 <template>

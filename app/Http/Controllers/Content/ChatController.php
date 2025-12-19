@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\ConversationRequest;
 use App\Http\Resources\Content\ConversationResource;
 use App\Models\Content\Conversation;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,9 +23,8 @@ class ChatController extends Controller
         request()->merge(['hide_content' => true]);
 
         $conversations = Conversation::with(['participants', 'lastMessage.user'])
-            ->WhereHas('participants', function ($query) use ($me) {
-                $query->where('id', $me->id);
-            })->cursorPaginate(8);
+            ->myChat()
+            ->cursorPaginate(8);
 
         return Inertia::render('content/chat/Index', [
             'conversations' => Inertia::scroll(ConversationResource::collection($conversations)),
@@ -36,5 +36,10 @@ class ChatController extends Controller
         $conversation = $startConversation->handle($request);
 
         return back()->with('message', $conversation->id);
+    }
+
+    public function show(Conversation $chat): JsonResponse
+    {
+        return response()->json(new ConversationResource($chat->load(['participants', 'messages.user'])));
     }
 }

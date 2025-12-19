@@ -4,6 +4,7 @@ namespace App\Models\Content;
 
 use App\Models\Auth\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,19 @@ class Conversation extends Model
     protected $casts = [
         'metadata' => 'array',
     ];
+
+    /**
+     * @param  Builder<Conversation>  $query
+     * @return Builder<Conversation>
+     */
+    public function scopeMyChat(Builder $query): Builder
+    {
+        $me = auth()->user();
+
+        return $query->whereHas('participants', function ($q) use ($me) {
+            $q->where('user_id', $me->id);
+        });
+    }
 
     /**
      * @return BelongsToMany<User, $this>
