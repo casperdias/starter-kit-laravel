@@ -14,6 +14,7 @@ const route = useRoute();
 defineProps<{
     status?: string;
     canResetPassword: boolean;
+    hasRegisterRoute: boolean;
 }>();
 </script>
 
@@ -73,7 +74,7 @@ defineProps<{
                 </Button>
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-center text-sm text-muted-foreground" v-if="hasRegisterRoute">
                 Don't have an account?
                 <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
             </div>
